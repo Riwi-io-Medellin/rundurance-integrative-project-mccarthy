@@ -1,4 +1,4 @@
-const athleteModel = require('../models/athleteModel');
+const { findAllByTrainer } = require('../models/athleteModel');
 
 // =============================================================================
 // ATHLETE CONTROLLER — TODO LIST
@@ -24,6 +24,32 @@ const athleteModel = require('../models/athleteModel');
 // - Call athleteModel.findAllByTrainer(trainerId)
 // - Return res.json(athletes) with the list
 // - On error: return res.status(500).json({ error: 'Error al obtener atletas' })
+
+// Funtion to get all athletes for the logged-in trainer
+async function getAll(req, res) {
+
+  try {
+    // Get trainer_id from req.trainer (set by auth middleware)
+    const trainerId = req.trainer.trainer_id;
+
+    // Call model function to get athletes for this trainer
+    const athletes = await findAllByTrainer(trainerId);
+
+    // Return the list of athletes as JSON
+    res.json(athletes);
+
+  } catch (error) {
+    console.error(error);
+    // Log the error for debugging
+    res.status(500).json({
+      error: 'Error al obtener atletas',
+      details: error.message,
+    });
+
+  }
+
+}
+
 
 // TODO 2: Create function getOne(req, res)
 // - Endpoint: GET /api/athletes/:id
@@ -57,7 +83,7 @@ const athleteModel = require('../models/athleteModel');
 
 module.exports = {
   // Export your functions here as you create them:
-  // getAll,
+   getAll,
   // getOne,
   // create,
   // update,
