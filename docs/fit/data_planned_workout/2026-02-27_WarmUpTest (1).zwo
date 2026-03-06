@@ -1,0 +1,17 @@
+<workout_file>
+	<author>Mauricio Cadavid (via TrainingPeaks)</author>
+	<name>Warm Up Test Milla UdeA</name>
+	<description></description>
+	<sportType>run</sportType>
+	<thresholdSecPerKm>245</thresholdSecPerKm>
+	<durationType>time</durationType>
+	<tags/>
+	<workout>
+		<SteadyState Duration="600" Power="0.82" pace="2" units="1">
+		</SteadyState>
+		<SteadyState Duration="300" Power="0.86" pace="2" units="1">
+		</SteadyState>
+		<IntervalsT Repeat="4" OnDuration="30" OnPower="1.11" OffDuration="45" OffPower="0.79">
+		</IntervalsT>
+	</workout>
+</workout_file>

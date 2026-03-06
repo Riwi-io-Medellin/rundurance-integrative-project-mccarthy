@@ -1,0 +1,13 @@
+<workout_file>
+	<author>Mauricio Cadavid (via TrainingPeaks)</author>
+	<name>Recovery</name>
+	<description></description>
+	<sportType>run</sportType>
+	<thresholdSecPerKm>245</thresholdSecPerKm>
+	<durationType>time</durationType>
+	<tags/>
+	<workout>
+		<SteadyState Duration="1800" Power="0.82" pace="2" units="1">
+		</SteadyState>
+	</workout>
+</workout_file>

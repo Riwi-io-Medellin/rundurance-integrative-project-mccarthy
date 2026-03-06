@@ -1,0 +1,114 @@
+Este man estaba mal en este punto: hacer análisis de cadencia.
+Bacano reducir tiempo de programación 15 min por atleta, 5 min análisis previo, informe en menos de 1 min para saber cómo va.
+Tener proyecciones, tendencias de 16 km a 18 km, hacer x repeticiones de 3 min corriendo a x %, cómo subimos ese %.
+Datos en crudo muy buenos.
+Semanal se crea rutina, se analiza, se envía audio de 2 a 3 min resumen con correcciones y proyecciones, análisis de 4 a 5 min, audio 4 a 8 min, programación 12 min por atleta: 20 min.
+Toma tiempo trabajar con tanta gente: 12 a 14 hrs programación semanal.
+Rojo no cumple.
+Verde ejecuta al 100 %.
+Amarillo no lo hizo bien.
+Sensor Stride.
+Tiempo - potencia %FTP - 280-320 W.
+Según HR, la frecuencia cardíaca sube por calor.
+Alta FC sube o baja.
+Lap = km.
+FC muy interesante, pace, cadencia y potencia.
+Rangos específicos de potencia.
+Ver ese índice de cumplimiento del deportista y ver alertas, que se note eso, que a mí me diga: acá hubo un wattaje bajo o la cadencia estuvo baja.
+Alarmas: baja cadencia, este man debe tener esto en tanto.
+El deportista tiene su app para ver que se cargan planes.
+Trabajo programado se sincroniza al reloj, en el reloj se ve a través de Garmin.
+Primero en TrainingPeaks se programa, sincroniza el deportista con la app Garmin.
+Garmin Connect: reloj que sincroniza puente entre reloj y TrainingPeaks.
+En el reloj se muestra el trabajo de TrainingPeaks.
+Flujo:
+Peaks → Garmin → Reloj (sin automático).
+Garmin más comercial.
+Garmin siempre puente.
+TrainingPeaks resume mejor que Connect.
+Métricas del deportista.
+Cómo va la forma del deportista.
+Azul: el nivel que sube, subiría.
+Rosa: fatiga baja.
+Amarillo: subiría.
+Puntos de entrenamiento.
+Atleta se basa en info de la app y audio de WhatsApp.
+Para mí es un limitante.
+Busco que el atleta sea consciente de lo que sucedió.
+El atleta sabe, pero sin mucha info o sin ser consciente de qué pasa con su data.
+Me gustaría que la percepción del entrenamiento vaya mucho más allá, que no solo sea hacerlo, sino dar feedback de su sesión.
+Variables importantes, que sea más fluido esto sin gastar tanto tiempo.
+Tipos de entrenamiento.
+La data cambia según entrenamiento.
+La data es la misma, pero la importancia cambia.
+Long run: me interesa acá FC y relación FC con velocidad.
+A esto me gustaría hacer seguimiento al drift cardíaco o desacople.
+Qué tanto se desvía el rojo y azul, disposición FC respecto al ritmo, condición aeróbica.
+-5 % excelente.
+Trote baja intensidad.
+70 % del tiempo trabajo suave, cómodo, relación FC, ritmo, velocidad y cadencia.
+En qué cambia lo que se hacía antes a ahora.
+Gente reacia, gomosos se parchan 1-2 semanas, comprenden y les gusta comprender cómo se ven los entrenamientos.
+Flujo de info mucho mejor.
+Prioriza mucho el tiempo, con más tiempo manejo más personas.
+Automático excelente, muy fluido, mucho más sencillo.
+Con dashboard tengo mejor acceso confiable y práctico de tener info en la mano.
+Atleta solo tiene resumen.
+Qué chimba tener el cumplimiento que todo sea automatizado para atleta.
+Un día antes son los entrenamientos.
+Proceso muy tedioso en Excel.
+A uno le gusta la plata, pero no estar pendiente fechas de pago. A mí hasta se me olvida eso.
+Cuando me acuerdo reviso si paga o no.
+Paga fecha.
+Lo financiero es bastante sencillo.
+DEFINIR FRUSTRACIONES
+NO ME GUSTA DE TRAININGPEAKS:
+Le gusta la app. Yo vengo de trabajar súper rudimentario, me parece una belleza.
+Individualizo mucho, no cojo a 5 y les hago lo mismo. Me gusta tomarme tiempo para generar.
+Me da mucha pereza hacer la retroalimentación.
+Entrar en cada entrenamiento y ver ejecución y enviar audio es: ahh mk, qué pereza.
+Eso es divertido 3 o 4 veces, luego aburre.
+Asocio variables, veo cosas de ejecución, pero hacer esto para todos es tedioso.
+Incluso a veces lo hago incompleto. Me da pereza, le cojo pereza a eso.
+Me gusta programar, individualizar promesa de valor como trainer no la bajo ni por el hp.
+Programar de manera individual no negociable, pero la consecuencia es que la retro debería ser muy buena.
+Me toma tiempo dar retro y dejo de atender atletas.
+Si el atleta cumple todo, es muy fijo que la data está muy buena.
+Yo tengo toda la info de mi atleta, me lo sé de memoria en la cabeza.
+Tedioso dar feedback uno a uno, es tedioso, cuesta.
+Más tiempo quita.
+Retro mamona, enviar audio, estar durante ese audio revisando data, se hace cansón esa parte.
+60 % programación. Estoy bien con la programación.
+Respecto al feedback, suelen pasar errores al dar feedback.
+Programación y ejecución bien. Yo programo y atleta ejecuta.
+Relación atleta-entrenador-app es muy buena, no le encuentro rollo a eso. Es más el tema de que el atleta siga lo que hay.
+Cosas muy puntuales les dejo info, rara vez pasa esto.
+A ojo categorizo deportistas.
+Lo hago por la distancia.
+Fuerza: solo fuerza.
+Correr 10K: solo 10K.
+Correr 21 km: media maratón.
+Maratón: son menos.
+Saber qué maratones corre.
+Éxito rotundo.
+Se ganan el cielo con esto.
+Mk el tiempo, yo considero que si la retro se logra es una locura.
+Entrenamiento de una semana, al finde le llega un mensaje, un documento, algo escrito que el deportista pueda decir: mk, se leyó el entrenamiento y lo mostró.
+Eso que yo analizo como trainer, variables asociativas y todo el rollo, que la app haga lo mismo que yo es difícil, pero que se acerque, uff.
+Que le pegue a variables que a mí me interesan según las altas o bajas.
+Flujo de info muy interesante.
+Quiero entregarle mi capacidad de análisis a su app.
+Aquí se bajó cadencia, aquí se baja ritmo, tal cosa, otra cosa.
+Que yo no tenga que hacer eso, que lo haga su desarrollo y que tenga tanta afinidad como yo lo haría.
+Aumentos del 10 al 8 según.
+Decirle a la app esas recomendaciones que podría dar en función de teoría del entrenamiento.
+Yo entrenarla.
+5 rep de 3 min, haga la otra semana 7 de 3 min.
+Sugerencias de programación.
+Prioridad: feedback.
+Tema administrativo.
+Programación de las sesiones.
+Sugerencias de programación.
+Prompt: tengo este deportista, quiero esto, variables, generamos prompt automático.
+Cuando atleta contacta me dice: quiero que me entrenes con base a una maratón.
+Planteamos objetivos con base a carreras y la más cercana es la carrera, tiempos estimatorios.
