@@ -24,8 +24,13 @@ const router = express.Router();
 // TODO 1: GET /api/athletes — List all athletes of the logged-in coach
 // router.get('/', auth, controller.getAll);
 
+router.get('/', auth, controller.getAll);   
+
+
+
 // TODO 2: GET /api/athletes/:id — Get one athlete by ID
 // router.get('/:id', auth, controller.getOne);
+
 
 // TODO 3: POST /api/athletes — Create a new athlete
 // router.post('/', auth, controller.create);
