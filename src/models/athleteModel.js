@@ -29,6 +29,21 @@ const db = require('../db/connection');
 // - Return: single athlete object or null
 // - Tip: return rows[0] ?? null
 
+async function findById(trainerId) {
+
+  const text = `
+  SELECT * 
+  FROM athlete
+  WHERE athlete_id = $1 
+  `;
+
+  const params = [trainerId];
+
+  const result = await db.query(text,params);
+
+  return result.rows ?? null;
+}
+
 // TODO 3: Create function create(data)
 // - Query: INSERT INTO athlete (trainer_id, first_name, last_name, document, email, birth_date)
 //          VALUES ($1,$2,$3,$4,$5,$6) RETURNING *
@@ -50,7 +65,7 @@ const db = require('../db/connection');
 module.exports = {
   // Export your functions here as you create them, for example:
   // findAllByTrainer,
-  // findById,
+   findById,
   // create,
   // update,
   // deactivate,
