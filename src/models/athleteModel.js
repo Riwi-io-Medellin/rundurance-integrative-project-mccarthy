@@ -19,15 +19,9 @@ const db = require('../db/connection');
 // =============================================================================
 
 // TODO 1: Create function findAllByTrainer(trainerId)
-// - Query: SELECT all athletes WHERE trainer_id = $1 AND is_active = TRUE
-// - ORDER BY first_name ASC (alphabetical)
-// - Return: array of athlete rows
-// - Tip: Use db.query(...) and return rows (see userModel.findByEmail for pattern)
 
-
-// Function to find all active athletes for a given trainer, ordered by first name
 async function findAllByTrainer(trainerId) {
- // Query for all active athletes of a trainer, ordered by first name
+
   const text = `    
   SELECT * 
   FROM athlete
@@ -43,9 +37,6 @@ async function findAllByTrainer(trainerId) {
 };
 
 // TODO 2: Create function findById(athleteId)
-// - Query: SELECT * FROM athlete WHERE athlete_id = $1
-// - Return: single athlete object or null
-// - Tip: return rows[0] ?? null
 
 async function findById(athleteId) {
 
@@ -69,6 +60,22 @@ async function findById(athleteId) {
 // - Return: the inserted row
 // - Tip: Look at userModel.createTrainer for the exact pattern
 
+async function createAthlete (data) {
+  
+  const { trainer_id, first_name, last_name, document, email, birth_date } = data;
+
+  const text = `
+  INSERT INTO athlete (trainer_id, first_name, last_name, document, email, birth_date)
+  VALUES ($1,$2,$3,$4,$5,$6) RETURNING *
+  `;
+
+  const params = [trainer_id, first_name, last_name, document, email, birth_date];
+
+  const result = await db.query(text, params);
+
+  return result.rows[0];
+}
+
 // TODO 4: Create function update(athleteId, data)
 // - Query: UPDATE athlete SET first_name=$1, last_name=$2, document=$3, email=$4, birth_date=$5,
 //          updated_at=NOW() WHERE athlete_id=$6 RETURNING *
@@ -84,7 +91,7 @@ module.exports = {
   // Export your functions here as you create them, for example:
   findAllByTrainer,
   findById,
-  // create,
+  createAthlete,
   // update,
   // deactivate,
 };
