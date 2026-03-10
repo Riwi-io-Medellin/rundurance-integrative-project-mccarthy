@@ -24,10 +24,43 @@ const db = require('../db/connection');
 // - Return: array of athlete rows
 // - Tip: Use db.query(...) and return rows (see userModel.findByEmail for pattern)
 
+
+// Function to find all active athletes for a given trainer, ordered by first name
+async function findAllByTrainer(trainerId) {
+ // Query for all active athletes of a trainer, ordered by first name
+  const text = `    
+  SELECT * 
+  FROM athlete
+  WHERE trainer_id = $1 AND is_active = TRUE
+  ORDER BY first_name ASC
+  `;
+
+  const param = [trainerId];
+
+  const result = await db.query(text, param)
+
+  return result.rows;
+};
+
 // TODO 2: Create function findById(athleteId)
 // - Query: SELECT * FROM athlete WHERE athlete_id = $1
 // - Return: single athlete object or null
 // - Tip: return rows[0] ?? null
+
+async function findById(athleteId) {
+
+  const text = `
+  SELECT * 
+  FROM athlete
+  WHERE athlete_id = $1 
+  `;
+
+  const params = [athleteId];
+
+  const result = await db.query(text,params);
+
+  return result.rows[0] ?? null;
+}
 
 // TODO 3: Create function create(data)
 // - Query: INSERT INTO athlete (trainer_id, first_name, last_name, document, email, birth_date)
@@ -49,8 +82,8 @@ const db = require('../db/connection');
 
 module.exports = {
   // Export your functions here as you create them, for example:
-  // findAllByTrainer,
-  // findById,
+  findAllByTrainer,
+  findById,
   // create,
   // update,
   // deactivate,

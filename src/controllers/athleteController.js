@@ -1,4 +1,4 @@
-const athleteModel = require('../models/athleteModel');
+const { findAllByTrainer, findById } = require('../models/athleteModel');
 
 // =============================================================================
 // ATHLETE CONTROLLER — TODO LIST
@@ -25,12 +25,62 @@ const athleteModel = require('../models/athleteModel');
 // - Return res.json(athletes) with the list
 // - On error: return res.status(500).json({ error: 'Error al obtener atletas' })
 
+// Funtion to get all athletes for the logged-in trainer
+async function getAll(req, res) {
+
+  try {
+    // Get trainer_id from req.trainer (set by auth middleware)
+    const trainerId = req.trainer.trainer_id;
+
+    // Call model function to get athletes for this trainer
+    const athletes = await findAllByTrainer(trainerId);
+
+    // Return the list of athletes as JSON
+    res.json(athletes);
+
+  } catch (error) {
+    console.error(error);
+    // Log the error for debugging
+    res.status(500).json({
+      error: 'Error al obtener atletas',
+      details: error.message,
+    });
+
+  }
+
+}
+
+
 // TODO 2: Create function getOne(req, res)
 // - Endpoint: GET /api/athletes/:id
 // - Get athleteId from req.params.id (use parseInt)
 // - Call athleteModel.findById(athleteId)
 // - If not found: return res.status(404).json({ error: 'Atleta no encontrado' })
 // - Return res.json(athlete)
+
+async function getOne (req, res) {      
+  try {
+    const athleteId = parseInt(req.params.id, 10);
+
+    if (Number.isNaN(athleteId)) {
+      return res.status(400).json({ error: 'ID de atleta inválido' });
+    }
+
+    const athlete = await findById(athleteId);
+
+    if (!athlete){
+      return res.status(404).json({ error: 'Atleta no encontrado' });
+    }
+
+    res.json(athlete);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({
+      error: 'Error al obtener atleta',
+      details: error.message,
+    });    
+  }
+}
 
 // TODO 3: Create function create(req, res)
 // - Endpoint: POST /api/athletes
@@ -57,8 +107,8 @@ const athleteModel = require('../models/athleteModel');
 
 module.exports = {
   // Export your functions here as you create them:
-  // getAll,
-  // getOne,
+   getAll,
+   getOne,
   // create,
   // update,
   // deactivate,
