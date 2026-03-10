@@ -47,6 +47,21 @@ async function findAllByTrainer(trainerId) {
 // - Return: single athlete object or null
 // - Tip: return rows[0] ?? null
 
+async function findById(athleteId) {
+
+  const text = `
+  SELECT * 
+  FROM athlete
+  WHERE athlete_id = $1 
+  `;
+
+  const params = [athleteId];
+
+  const result = await db.query(text,params);
+
+  return result.rows[0] ?? null;
+}
+
 // TODO 3: Create function create(data)
 // - Query: INSERT INTO athlete (trainer_id, first_name, last_name, document, email, birth_date)
 //          VALUES ($1,$2,$3,$4,$5,$6) RETURNING *
@@ -68,7 +83,7 @@ async function findAllByTrainer(trainerId) {
 module.exports = {
   // Export your functions here as you create them, for example:
   findAllByTrainer,
-  // findById,
+  findById,
   // create,
   // update,
   // deactivate,

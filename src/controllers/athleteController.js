@@ -1,4 +1,4 @@
-const { findAllByTrainer } = require('../models/athleteModel');
+const { findAllByTrainer, findById } = require('../models/athleteModel');
 
 // =============================================================================
 // ATHLETE CONTROLLER — TODO LIST
@@ -58,6 +58,30 @@ async function getAll(req, res) {
 // - If not found: return res.status(404).json({ error: 'Atleta no encontrado' })
 // - Return res.json(athlete)
 
+async function getOne (req, res) {      
+  try {
+    const athleteId = parseInt(req.params.id, 10);
+
+    if (Number.isNaN(athleteId)) {
+      return res.status(400).json({ error: 'ID de atleta inválido' });
+    }
+
+    const athlete = await findById(athleteId);
+
+    if (!athlete){
+      return res.status(404).json({ error: 'Atleta no encontrado' });
+    }
+
+    res.json(athlete);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({
+      error: 'Error al obtener atleta',
+      details: error.message,
+    });    
+  }
+}
+
 // TODO 3: Create function create(req, res)
 // - Endpoint: POST /api/athletes
 // - Extract { first_name, last_name, document, email, birth_date } from req.body
@@ -84,7 +108,7 @@ async function getAll(req, res) {
 module.exports = {
   // Export your functions here as you create them:
    getAll,
-  // getOne,
+   getOne,
   // create,
   // update,
   // deactivate,
