@@ -82,6 +82,25 @@ async function createAthlete (data) {
 // - Return: the updated row
 // - Tip: Same pattern as create, but use UPDATE instead of INSERT
 
+async function updateAthlete(athleteId, data) {
+
+  const { first_name, last_name, document, email, birth_date } = data;
+
+  const text = `
+  UPDATE athlete 
+  SET first_name=$1, last_name=$2, document=$3, email=$4, birth_date=$5, updated_at=NOW() 
+  WHERE athlete_id=$6 RETURNING *
+  `;
+  
+  const params = [first_name, last_name, document, email, birth_date, athleteId];
+
+  const result = await db.query(text, params);
+
+  return result.rows[0];
+  
+}
+
+
 // TODO 5: Create function deactivate(athleteId)
 // - Query: UPDATE athlete SET is_active = FALSE, updated_at = NOW() WHERE athlete_id = $1 RETURNING *
 // - We don't DELETE rows — we set is_active = FALSE (this is called "soft delete")
@@ -92,6 +111,6 @@ module.exports = {
   findAllByTrainer,
   findById,
   createAthlete,
-  // update,
+  updateAthlete,
   // deactivate,
 };

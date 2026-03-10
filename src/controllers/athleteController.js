@@ -1,4 +1,4 @@
-const { findAllByTrainer, findById, createAthlete } = require('../models/athleteModel');
+const { findAllByTrainer, findById, createAthlete, updateAthlete } = require('../models/athleteModel');
 const { createTrainer } = require('../models/userModel');
 
 // =============================================================================
@@ -106,14 +106,6 @@ async function create(req, res) {
 }
 
 // TODO 4: Create function update(req, res)
-// - Endpoint: POST /api/athletes
-// - Extract { first_name, last_name, document, email, birth_date } from req.body
-// - Validate: first_name, last_name, document, email are required (return 400 if missing)
-// - Add trainer_id from req.trainer.trainer_id to the data
-// - Call athleteModel.create(data)
-// - Return res.status(201).json(athlete)
-// - On error: if duplicate email/document, return 409. Otherwise 500.
-//   Tip: PostgreSQL duplicate errors have code '23505'
 
 async function create (req, res) {
 
@@ -152,6 +144,44 @@ async function create (req, res) {
 // - Call athleteModel.update(athleteId, data)
 // - Return res.json(updated)
 
+async function update (req, res) {
+  
+  try {
+    
+    const athleteId = parseInt(req.params.id, 10);
+
+    if (Number.isNaN(athleteId)) {
+      return res.status(400).json({ error: 'ID de atleta inválido' });
+    }
+
+    const { first_name, last_name, document, email, birth_date } = req.body;
+
+    if (!first_name || !last_name || !document || !email) {
+      return res.status(400).json({ error: 'Faltan campos requeridos' });
+    } 
+    const updatedAthlete = await updateAthlete(athleteId, { first_name, last_name, document, email, birth_date });
+    
+    if (!updatedAthlete) {
+      return res.status(404).json({ error: 'Atleta no encontrado' });
+    }
+    res.json(updatedAthlete);
+  } catch (error) {
+    console.error(error);
+
+    if (error.code === '23505') {
+      return res.status(409).json({
+        error: 'Documento o email ya existe',
+      });
+    }
+
+    res.status(500).json({
+      error: 'Error al actualizar atleta',
+      details: error.message,
+    });
+  }
+}
+
+
 // TODO 5: Create function deactivate(req, res)
 // - Endpoint: DELETE /api/athletes/:id
 // - Get athleteId from req.params.id
@@ -163,6 +193,6 @@ module.exports = {
    getAll,
    getOne,
    create,
-  // update,
+   update,
   // deactivate,
 };
