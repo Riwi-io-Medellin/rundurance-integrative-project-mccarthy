@@ -58,23 +58,27 @@ async function getAll(req, res) {
 // - If not found: return res.status(404).json({ error: 'Atleta no encontrado' })
 // - Return res.json(athlete)
 
-async function getOne (req, res) {
+async function getOne (req, res) {      
   try {
-    const athleteId = parseInt(req.params.id);
+    const athleteId = parseInt(req.params.id, 10);
+
+    if (Number.isNaN(athleteId)) {
+      return res.status(400).json({ error: 'ID de atleta inválido' });
+    }
 
     const athlete = await findById(athleteId);
 
     if (!athlete){
-      return res.status(404).json({error: 'Atleta no encontrado'})
+      return res.status(404).json({ error: 'Atleta no encontrado' });
     }
 
-    res.json(athlete)
+    res.json(athlete);
   } catch (error) {
-    console.error(error)
+    console.error(error);
     res.status(500).json({
       error: 'Error al obtener atleta',
-      details: error.message
-    })    
+      details: error.message,
+    });    
   }
 }
 

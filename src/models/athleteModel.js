@@ -47,7 +47,7 @@ async function findAllByTrainer(trainerId) {
 // - Return: single athlete object or null
 // - Tip: return rows[0] ?? null
 
-async function findById(trainerId) {
+async function findById(athleteId) {
 
   const text = `
   SELECT * 
@@ -55,11 +55,11 @@ async function findById(trainerId) {
   WHERE athlete_id = $1 
   `;
 
-  const params = [trainerId];
+  const params = [athleteId];
 
   const result = await db.query(text,params);
 
-  return result.rows ?? null;
+  return result.rows[0] ?? null;
 }
 
 // TODO 3: Create function create(data)
