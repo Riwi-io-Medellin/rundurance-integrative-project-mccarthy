@@ -36,10 +36,27 @@ const financeModel = require('../models/financeModel');
 // - Call financeModel.markAsPaid(paymentId)
 // - Return res.json(updated)
 
+async function create(req, res) {
+  const { athlete_id, amount, due_date, notes } = req.body;
+
+  if (!athlete_id || !amount || !due_date) {
+    return res.status(400).json({ error: 'athlete_id, amount y due_date son requeridos' });
+  }
+
+  const payment = await financeModel.create({
+    athlete_id,
+    trainer_id: req.trainer.trainer_id,
+    amount,
+    due_date,
+    notes,
+  });
+
+  res.status(201).json(payment);
+}
+
 module.exports = {
-  // Export your functions here as you create them:
   // getAll,
   // getByAthlete,
-  // create,
+  create,
   // markPaid,
 };

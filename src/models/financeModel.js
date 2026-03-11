@@ -50,11 +50,21 @@ const db = require('../db/connection');
 // - Return: the count of updated rows
 // - Tip: This could be called periodically or on each finance page load
 
+async function create(data) {
+  const { athlete_id, trainer_id, amount, due_date, notes } = data;
+  const result = await db.query(
+    `INSERT INTO payment (athlete_id, trainer_id, amount, due_date, notes)
+     VALUES ($1, $2, $3, $4, $5)
+     RETURNING *`,
+    [athlete_id, trainer_id, amount, due_date, notes]
+  );
+  return result.rows[0];
+}
+
 module.exports = {
-  // Export your functions here as you create them:
   // findAllByTrainer,
   // findByAthlete,
-  // create,
+  create,
   // markAsPaid,
   // updateOverduePayments,
 };
