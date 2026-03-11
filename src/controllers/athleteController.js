@@ -196,6 +196,34 @@ async function update(req, res) {
 // - Call athleteModel.deactivate(athleteId)
 // - Return res.json({ message: 'Atleta desactivado' })
 
+async function deactivate (req, res) {
+  
+  try {
+    
+    const athleteId = parseInt(req.params.id, 10);
+
+    if (Number.isNaN(athleteId)) {
+      return res.status(400).json({ error: 'ID de atleta inválido' });
+    }
+
+    const deactivatedAthlete = await deactivateAthlete(athleteId);
+
+    if (!deactivatedAthlete) {
+      return res.status(404).json({ error: 'Atleta no encontrado' });
+    }
+
+    res.json({ message: 'Atleta desactivado' });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({
+      error: 'Error al desactivar atleta',
+      details: error.message,
+    }); 
+  }
+
+}
+
+
 module.exports = {
   // Export your functions here as you create them:
   getAll,
