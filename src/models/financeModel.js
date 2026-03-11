@@ -50,6 +50,28 @@ const db = require('../db/connection');
 // - Return: the count of updated rows
 // - Tip: This could be called periodically or on each finance page load
 
+async function findAllByTrainer(trainerId) {
+  const result = await db.query(
+    `SELECT p.*, a.first_name, a.last_name
+     FROM payment p
+     JOIN athlete a ON p.athlete_id = a.athlete_id
+     WHERE p.trainer_id = $1
+     ORDER BY p.due_date DESC`,
+    [trainerId]
+  );
+  return result.rows;
+}
+
+async function updateOverduePayments() {
+  const result = await db.query(
+    `UPDATE payment SET status = 'vencido', updated_at = NOW()
+     WHERE status = 'pendiente'
+       AND paid_at IS NULL
+       AND due_date < NOW() - INTERVAL '5 days'`
+  );
+  return result.rowCount;
+}
+
 async function create(data) {
   const { athlete_id, trainer_id, amount, due_date, notes } = data;
   const result = await db.query(
@@ -62,9 +84,9 @@ async function create(data) {
 }
 
 module.exports = {
-  // findAllByTrainer,
+  findAllByTrainer,
   // findByAthlete,
   create,
   // markAsPaid,
-  // updateOverduePayments,
+  updateOverduePayments,
 };
