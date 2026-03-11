@@ -11,8 +11,8 @@ const router = express.Router();
 // All finance routes need 'auth' middleware (only logged-in coaches can access).
 // =============================================================================
 
-// TODO 1: GET /api/finances — List all payments for the logged-in coach
-// router.get('/', auth, controller.getAll);
+// GET /api/finances — List all payments for the logged-in coach
+router.get('/', auth, controller.getAll);
 
 // TODO 2: GET /api/finances/athlete/:athleteId — Payments for one athlete
 // router.get('/athlete/:athleteId', auth, controller.getByAthlete);
