@@ -175,26 +175,6 @@ CREATE TABLE workout_feedback (
 
 
 -- -----------------------------------------------------
--- athlete_fitness_snapshot
--- Weekly ATL/CTL/TSB snapshot per athlete.
--- Powers the Forma vs Fatiga charts on the dashboard.
--- ATL = Acute Training Load (fatiga)
--- CTL = Chronic Training Load (forma)
--- TSB = CTL - ATL (training stress balance)
--- -----------------------------------------------------
-CREATE TABLE athlete_fitness_snapshot (
-  snapshot_id SERIAL PRIMARY KEY,
-  athlete_id  INT         NOT NULL REFERENCES athlete(athlete_id),
-  week_start  DATE        NOT NULL,
-  atl         NUMERIC(8, 2),   -- fatiga
-  ctl         NUMERIC(8, 2),   -- forma
-  tsb         NUMERIC(8, 2),   -- forma - fatiga
-  created_at  TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-  UNIQUE (athlete_id, week_start)
-);
-
-
--- -----------------------------------------------------
 -- athlete_alert
 -- Active alerts for the coach dashboard.
 -- e.g. overtraining, missed sessions, payment overdue

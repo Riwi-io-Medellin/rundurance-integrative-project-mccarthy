@@ -1,4 +1,10 @@
-const { findAllByTrainer, findById } = require('../models/athleteModel');
+const {
+  findAllByTrainer,
+  findById,
+  createAthlete,
+  updateAthlete,
+} = require("../models/athleteModel");
+const { createTrainer } = require("../models/userModel");
 
 // =============================================================================
 // ATHLETE CONTROLLER — TODO LIST
@@ -19,78 +25,122 @@ const { findAllByTrainer, findById } = require('../models/athleteModel');
 // =============================================================================
 
 // TODO 1: Create function getAll(req, res)
-// - Endpoint: GET /api/athletes
-// - Get trainer_id from req.trainer.trainer_id (the logged-in coach)
-// - Call athleteModel.findAllByTrainer(trainerId)
-// - Return res.json(athletes) with the list
-// - On error: return res.status(500).json({ error: 'Error al obtener atletas' })
 
-// Funtion to get all athletes for the logged-in trainer
 async function getAll(req, res) {
-
   try {
-    // Get trainer_id from req.trainer (set by auth middleware)
     const trainerId = req.trainer.trainer_id;
 
-    // Call model function to get athletes for this trainer
     const athletes = await findAllByTrainer(trainerId);
 
-    // Return the list of athletes as JSON
     res.json(athletes);
-
   } catch (error) {
     console.error(error);
     // Log the error for debugging
     res.status(500).json({
-      error: 'Error al obtener atletas',
+      error: "Error al obtener atletas",
       details: error.message,
     });
-
   }
-
 }
 
-
 // TODO 2: Create function getOne(req, res)
-// - Endpoint: GET /api/athletes/:id
-// - Get athleteId from req.params.id (use parseInt)
-// - Call athleteModel.findById(athleteId)
-// - If not found: return res.status(404).json({ error: 'Atleta no encontrado' })
-// - Return res.json(athlete)
 
-async function getOne (req, res) {      
+async function getOne(req, res) {
   try {
     const athleteId = parseInt(req.params.id, 10);
 
     if (Number.isNaN(athleteId)) {
-      return res.status(400).json({ error: 'ID de atleta inválido' });
+      return res.status(400).json({ error: "ID de atleta inválido" });
     }
 
     const athlete = await findById(athleteId);
 
-    if (!athlete){
-      return res.status(404).json({ error: 'Atleta no encontrado' });
+    if (!athlete) {
+      return res.status(404).json({ error: "Atleta no encontrado" });
     }
 
     res.json(athlete);
   } catch (error) {
     console.error(error);
     res.status(500).json({
-      error: 'Error al obtener atleta',
+      error: "Error al obtener atleta",
       details: error.message,
-    });    
+    });
   }
 }
 
 // TODO 3: Create function create(req, res)
-// - Endpoint: POST /api/athletes
-// - Extract { first_name, last_name, document, email, birth_date } from req.body
-// - Validate: first_name, last_name, document, email are required (return 400 if missing)
-// - Add trainer_id from req.trainer.trainer_id to the data
-// - Call athleteModel.create(data)
-// - Return res.status(201).json(athlete)
-// - On error: if duplicate email/document, return 409. Otherwise 500.
-//   Tip: PostgreSQL duplicate errors have code '23505'
+async function create(req, res) {
+  try {
+    const { first_name, last_name, document, email, birth_date } = req.body;
+
+    if (!first_name || !last_name || !document || !email) {
+      return res.status(400).json({
+        error: "first_name, last_name, document y email son obligatorios",
+      });
+    }
+
+    const trainerId = req.trainer.trainer_id;
+
+    const athleteData = {
+      trainer_id: trainerId,
+      first_name,
+      last_name,
+      document,
+      email,
+      birth_date: birth_date || null,
+    };
+
+    const athlete = await createAthlete(athleteData);
+    res.status(201).json(athlete);
+  } catch (error) {
+    console.error(error);
+    if (error.code === "23505") {
+      return res.status(409).json({ error: "Email o documento ya existe" });
+    }
+    res.status(500).json({
+      error: "Error al crear atleta",
+      details: error.message,
+    });
+  }
+}
+
+// TODO 4: Create function update(req, res)
+
+async function create(req, res) {
+  try {
+    const { first_name, last_name, document, email, birth_date } = req.body;
+
+    // Validate required fields
+    if (!first_name || !last_name || !document || !email) {
+      return res.status(400).json({ error: "Faltan campos requeridos" });
+    }
+
+    const trainer_id = req.trainer.trainer_id;
+
+    const newAthlete = await createAthlete({
+      trainer_id,
+      first_name,
+      last_name,
+      document,
+      email,
+      birth_date,
+    });
+
+    res.status(201).json(newAthlete);
+  } catch (error) {
+    console.error(error);
+
+    if (error.code === "23505") {
+      return res.status(409).json({ error: "Documento o email ya existe" });
+    }
+
+    res.status(500).json({
+      error: "Error al crear atleta",
+      details: error.message,
+    });
+  }
+}
 
 // TODO 4: Create function update(req, res)
 // - Endpoint: PUT /api/athletes/:id
@@ -98,6 +148,47 @@ async function getOne (req, res) {
 // - Extract updated fields from req.body
 // - Call athleteModel.update(athleteId, data)
 // - Return res.json(updated)
+
+async function update(req, res) {
+  try {
+    const athleteId = parseInt(req.params.id, 10);
+
+    if (Number.isNaN(athleteId)) {
+      return res.status(400).json({ error: "ID de atleta inválido" });
+    }
+
+    const { first_name, last_name, document, email, birth_date } = req.body;
+
+    if (!first_name || !last_name || !document || !email) {
+      return res.status(400).json({ error: "Faltan campos requeridos" });
+    }
+    const updatedAthlete = await updateAthlete(athleteId, {
+      first_name,
+      last_name,
+      document,
+      email,
+      birth_date,
+    });
+
+    if (!updatedAthlete) {
+      return res.status(404).json({ error: "Atleta no encontrado" });
+    }
+    res.json(updatedAthlete);
+  } catch (error) {
+    console.error(error);
+
+    if (error.code === "23505") {
+      return res.status(409).json({
+        error: "Documento o email ya existe",
+      });
+    }
+
+    res.status(500).json({
+      error: "Error al actualizar atleta",
+      details: error.message,
+    });
+  }
+}
 
 // TODO 5: Create function deactivate(req, res)
 // - Endpoint: DELETE /api/athletes/:id
@@ -107,9 +198,9 @@ async function getOne (req, res) {
 
 module.exports = {
   // Export your functions here as you create them:
-   getAll,
-   getOne,
-  // create,
-  // update,
+  getAll,
+  getOne,
+  create,
+  update,
   // deactivate,
 };

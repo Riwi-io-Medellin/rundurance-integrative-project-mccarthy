@@ -1,7 +1,7 @@
 <div align="center">
   <br />
   <a href="https://youtu.be/rOpEN1JDaD0?si=WfOjLV57WfR9x6QK" target="_blank">
-    <img src="./public/assets/images/Gemini_Generated_Image_62s6k062s6k062s6 (2).png" alt="Rundurance Banner" width="600">
+    <img src="./public/assets/images/hero_readme.png" alt="Rundurance Banner" width="600">
   </a>
   <br />
 
@@ -14,6 +14,7 @@
     <img src="https://img.shields.io/badge/PostgreSQL-316192?style=for-the-badge&logo=postgresql&logoColor=white" alt="PostgreSQL" />
     <img src="https://img.shields.io/badge/Amazon_S3-FF9900?style=for-the-badge&logo=amazons3&logoColor=white" alt="Amazon S3" />
     <img src="https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white" alt="Tailwind CSS" />
+    <img src="https://img.shields.io/badge/n8n-EA4B71?style=for-the-badge&logo=n8n&logoColor=white" alt="n8n" />
   </div>
 </div>
 
@@ -96,8 +97,8 @@ rundurance/
 ### 1. Clone and install dependencies
 
 ```bash
-git clone <https://github.com/PI-Riwi/Rundurance>
-cd Rundurance
+git clone <https://github.com/Riwi-io-Medellin/rundurance-integrative-project-mccarthy>
+cd rundurance-integrative-project-mccarthy
 npm install
 ```
 

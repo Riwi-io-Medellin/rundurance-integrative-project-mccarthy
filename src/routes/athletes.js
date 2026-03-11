@@ -22,21 +22,20 @@ const router = express.Router();
 // =============================================================================
 
 // TODO 1: GET /api/athletes — List all athletes of the logged-in coach
-// router.get('/', auth, controller.getAll);
 
 router.get('/', auth, controller.getAll);
 
 // TODO 2: GET /api/athletes/:id — Get one athlete by ID
- //router.get('/:id', auth, controller.getOne); 
 
 router.get('/:id', auth, controller.getOne);
 
-
 // TODO 3: POST /api/athletes — Create a new athlete
-// router.post('/', auth, controller.create);
+
+router.post('/', auth, controller.create);
 
 // TODO 4: PUT /api/athletes/:id — Update an athlete
-// router.put('/:id', auth, controller.update);
+
+router.put('/:id', auth, controller.update);
 
 // TODO 5: DELETE /api/athletes/:id — Deactivate an athlete (soft delete)
 // router.delete('/:id', auth, controller.deactivate);
