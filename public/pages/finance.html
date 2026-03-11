@@ -13,7 +13,11 @@
       rel="stylesheet"
       href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css"
     />
-    <link rel="icon" href="../assets/images/favicon_rundurance.png" type="image/png" />
+    <link
+      rel="icon"
+      href="../assets/images/favicon_rundurance.png"
+      type="image/png"
+    />
   </head>
   <body class="bg-slate-100 text-slate-900 min-h-screen flex font-[Inter]">
     <!-- Sidebar -->
@@ -22,7 +26,11 @@
     >
       <div class="p-6">
         <div class="flex items-center gap-3">
-          <img class="rounded-md" src="../assets/images/logo_rundurance.png" alt="Rundurance Logo" />
+          <img
+            class="rounded-md"
+            src="../assets/images/logo_rundurance.png"
+            alt="Rundurance Logo"
+          />
         </div>
       </div>
 
@@ -125,7 +133,10 @@
               <p class="text-2xl font-bold">$8,000,000</p>
             </div>
           </div>
-          <span class="text-red-500 text-sm font-bold bg-red-500/10 px-2 py-1 rounded">-6,3%</span>
+          <span
+            class="text-red-500 text-sm font-bold bg-red-500/10 px-2 py-1 rounded"
+            >-6,3%</span
+          >
         </div>
 
         <div
@@ -142,7 +153,10 @@
               <p class="text-2xl font-bold">$5,000,000</p>
             </div>
           </div>
-          <span class="text-emerald-500 text-sm font-bold bg-emerald-500/10 px-2 py-1 rounded">+5,3%</span>
+          <span
+            class="text-emerald-500 text-sm font-bold bg-emerald-500/10 px-2 py-1 rounded"
+            >+5,3%</span
+          >
         </div>
 
         <div
@@ -159,7 +173,10 @@
               <p class="text-2xl font-bold">$3,000,000</p>
             </div>
           </div>
-          <span class="text-emerald-500 text-sm font-bold bg-emerald-500/10 px-2 py-1 rounded">+5,3%</span>
+          <span
+            class="text-emerald-500 text-sm font-bold bg-emerald-500/10 px-2 py-1 rounded"
+            >+5,3%</span
+          >
         </div>
       </section>
 
@@ -179,7 +196,10 @@
               <p class="text-2xl font-bold">$180,000</p>
             </div>
           </div>
-          <span class="text-emerald-500 text-sm font-bold bg-emerald-500/10 px-2 py-1 rounded">+5,3%</span>
+          <span
+            class="text-emerald-500 text-sm font-bold bg-emerald-500/10 px-2 py-1 rounded"
+            >+5,3%</span
+          >
         </div>
 
         <div
@@ -196,7 +216,10 @@
               <p class="text-2xl font-bold">70%</p>
             </div>
           </div>
-          <span class="text-emerald-500 text-sm font-bold bg-emerald-500/10 px-2 py-1 rounded">+5,3%</span>
+          <span
+            class="text-emerald-500 text-sm font-bold bg-emerald-500/10 px-2 py-1 rounded"
+            >+5,3%</span
+          >
         </div>
 
         <div
@@ -213,7 +236,10 @@
               <p class="text-2xl font-bold">12</p>
             </div>
           </div>
-          <span class="text-red-500 text-sm font-bold bg-red-500/10 px-2 py-1 rounded">+3</span>
+          <span
+            class="text-red-500 text-sm font-bold bg-red-500/10 px-2 py-1 rounded"
+            >+3</span
+          >
         </div>
       </section>
 
@@ -261,32 +287,15 @@
                   <th class="px-6 py-4 font-medium text-right">Acciones</th>
                 </tr>
               </thead>
-              <tbody class="divide-y divide-slate-200">
-                <tr class="hover:bg-slate-50 transition-colors">
-                  <td class="px-6 py-4">
-                    <span class="font-medium">Juan Jose</span>
-                  </td>
-                  <td class="px-6 py-4">$190,000</td>
-                  <td class="px-6 py-4 text-sm text-slate-600">21 feb 2026</td>
-                  <td class="px-6 py-4">
-                    <span class="text-xs px-2 py-1 rounded-full bg-emerald-500/10 text-emerald-500 font-medium">Pagado</span>
-                  </td>
-                  <td class="px-6 py-4">
-                    <span class="text-sm text-slate-600">21 ene 2026</span>
-                  </td>
-                  <td class="px-6 py-4 text-right">
-                    <button
-                      class="text-sky-500 hover:text-sky-700 text-sm font-medium"
-                    >
-                      Detalle
-                    </button>
-                  </td>
-                </tr>
-              </tbody>
+              <tbody
+                id="payments-tbody"
+                class="divide-y divide-slate-200"
+              ></tbody>
             </table>
           </div>
         </div>
       </section>
     </main>
+    <script src="../assets/js/finance.js"></script>
   </body>
 </html>
