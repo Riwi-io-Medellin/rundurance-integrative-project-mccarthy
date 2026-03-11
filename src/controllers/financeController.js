@@ -36,6 +36,12 @@ const financeModel = require('../models/financeModel');
 // - Call financeModel.markAsPaid(paymentId)
 // - Return res.json(updated)
 
+async function getAll(req, res) {
+  await financeModel.updateOverduePayments();
+  const payments = await financeModel.findAllByTrainer(req.trainer.trainer_id);
+  res.json(payments);
+}
+
 async function create(req, res) {
   const { athlete_id, amount, due_date, notes } = req.body;
 
@@ -55,7 +61,7 @@ async function create(req, res) {
 }
 
 module.exports = {
-  // getAll,
+  getAll,
   // getByAthlete,
   create,
   // markPaid,
