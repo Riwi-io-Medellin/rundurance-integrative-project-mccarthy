@@ -106,11 +106,27 @@ async function updateAthlete(athleteId, data) {
 // - We don't DELETE rows — we set is_active = FALSE (this is called "soft delete")
 // - Return: the updated row
 
+async function deactivateAthlete(athleteId) {
+  
+  const text = `
+  UPDATE athlete 
+  SET is_active = FALSE, updated_at = NOW() 
+  WHERE athlete_id = $1 RETURNING *
+  `;
+
+  const params = [athleteId];
+
+  const result = await db.query(text, params);
+
+  return result.rows[0];
+
+}
+
 module.exports = {
   // Export your functions here as you create them, for example:
   findAllByTrainer,
   findById,
   createAthlete,
   updateAthlete,
-  // deactivate,
+  deactivateAthlete,
 };

@@ -38,6 +38,7 @@ router.post('/', auth, controller.create);
 router.put('/:id', auth, controller.update);
 
 // TODO 5: DELETE /api/athletes/:id — Deactivate an athlete (soft delete)
-// router.delete('/:id', auth, controller.deactivate);
+
+router.delete('/:id', auth, controller.deactivate);
 
 module.exports = router;
