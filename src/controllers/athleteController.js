@@ -1,5 +1,10 @@
-const { findAllByTrainer, findById, createAthlete, updateAthlete } = require('../models/athleteModel');
-const { createTrainer } = require('../models/userModel');
+const {
+  findAllByTrainer,
+  findById,
+  createAthlete,
+  updateAthlete,
+} = require("../models/athleteModel");
+const { createTrainer } = require("../models/userModel");
 
 // =============================================================================
 // ATHLETE CONTROLLER — TODO LIST
@@ -22,50 +27,45 @@ const { createTrainer } = require('../models/userModel');
 // TODO 1: Create function getAll(req, res)
 
 async function getAll(req, res) {
-
   try {
     const trainerId = req.trainer.trainer_id;
 
     const athletes = await findAllByTrainer(trainerId);
 
     res.json(athletes);
-
   } catch (error) {
     console.error(error);
     // Log the error for debugging
     res.status(500).json({
-      error: 'Error al obtener atletas',
+      error: "Error al obtener atletas",
       details: error.message,
     });
-
   }
-
 }
-
 
 // TODO 2: Create function getOne(req, res)
 
-async function getOne (req, res) {      
+async function getOne(req, res) {
   try {
     const athleteId = parseInt(req.params.id, 10);
 
     if (Number.isNaN(athleteId)) {
-      return res.status(400).json({ error: 'ID de atleta inválido' });
+      return res.status(400).json({ error: "ID de atleta inválido" });
     }
 
     const athlete = await findById(athleteId);
 
-    if (!athlete){
-      return res.status(404).json({ error: 'Atleta no encontrado' });
+    if (!athlete) {
+      return res.status(404).json({ error: "Atleta no encontrado" });
     }
 
     res.json(athlete);
   } catch (error) {
     console.error(error);
     res.status(500).json({
-      error: 'Error al obtener atleta',
+      error: "Error al obtener atleta",
       details: error.message,
-    });    
+    });
   }
 }
 
@@ -76,7 +76,7 @@ async function create(req, res) {
 
     if (!first_name || !last_name || !document || !email) {
       return res.status(400).json({
-        error: 'first_name, last_name, document y email son obligatorios',
+        error: "first_name, last_name, document y email son obligatorios",
       });
     }
 
@@ -95,11 +95,11 @@ async function create(req, res) {
     res.status(201).json(athlete);
   } catch (error) {
     console.error(error);
-    if (error.code === '23505') {
-      return res.status(409).json({ error: 'Email o documento ya existe' });
+    if (error.code === "23505") {
+      return res.status(409).json({ error: "Email o documento ya existe" });
     }
     res.status(500).json({
-      error: 'Error al crear atleta',
+      error: "Error al crear atleta",
       details: error.message,
     });
   }
@@ -107,31 +107,36 @@ async function create(req, res) {
 
 // TODO 4: Create function update(req, res)
 
-async function create (req, res) {
-
+async function create(req, res) {
   try {
-    
     const { first_name, last_name, document, email, birth_date } = req.body;
 
     // Validate required fields
     if (!first_name || !last_name || !document || !email) {
-      return res.status(400).json({ error: 'Faltan campos requeridos' });
+      return res.status(400).json({ error: "Faltan campos requeridos" });
     }
 
     const trainer_id = req.trainer.trainer_id;
 
-    const newAthlete = await createAthlete({ trainer_id, first_name, last_name, document, email, birth_date });
+    const newAthlete = await createAthlete({
+      trainer_id,
+      first_name,
+      last_name,
+      document,
+      email,
+      birth_date,
+    });
 
-    res.status(201).json(newAthlete); 
+    res.status(201).json(newAthlete);
   } catch (error) {
     console.error(error);
 
-    if (error.code === '23505') {
-      return res.status(409).json({ error: 'Documento o email ya existe' });
+    if (error.code === "23505") {
+      return res.status(409).json({ error: "Documento o email ya existe" });
     }
 
     res.status(500).json({
-      error: 'Error al crear atleta',
+      error: "Error al crear atleta",
       details: error.message,
     });
   }
@@ -144,43 +149,46 @@ async function create (req, res) {
 // - Call athleteModel.update(athleteId, data)
 // - Return res.json(updated)
 
-async function update (req, res) {
-  
+async function update(req, res) {
   try {
-    
     const athleteId = parseInt(req.params.id, 10);
 
     if (Number.isNaN(athleteId)) {
-      return res.status(400).json({ error: 'ID de atleta inválido' });
+      return res.status(400).json({ error: "ID de atleta inválido" });
     }
 
     const { first_name, last_name, document, email, birth_date } = req.body;
 
     if (!first_name || !last_name || !document || !email) {
-      return res.status(400).json({ error: 'Faltan campos requeridos' });
-    } 
-    const updatedAthlete = await updateAthlete(athleteId, { first_name, last_name, document, email, birth_date });
-    
+      return res.status(400).json({ error: "Faltan campos requeridos" });
+    }
+    const updatedAthlete = await updateAthlete(athleteId, {
+      first_name,
+      last_name,
+      document,
+      email,
+      birth_date,
+    });
+
     if (!updatedAthlete) {
-      return res.status(404).json({ error: 'Atleta no encontrado' });
+      return res.status(404).json({ error: "Atleta no encontrado" });
     }
     res.json(updatedAthlete);
   } catch (error) {
     console.error(error);
 
-    if (error.code === '23505') {
+    if (error.code === "23505") {
       return res.status(409).json({
-        error: 'Documento o email ya existe',
+        error: "Documento o email ya existe",
       });
     }
 
     res.status(500).json({
-      error: 'Error al actualizar atleta',
+      error: "Error al actualizar atleta",
       details: error.message,
     });
   }
 }
-
 
 // TODO 5: Create function deactivate(req, res)
 // - Endpoint: DELETE /api/athletes/:id
@@ -190,9 +198,9 @@ async function update (req, res) {
 
 module.exports = {
   // Export your functions here as you create them:
-   getAll,
-   getOne,
-   create,
-   update,
+  getAll,
+  getOne,
+  create,
+  update,
   // deactivate,
 };
