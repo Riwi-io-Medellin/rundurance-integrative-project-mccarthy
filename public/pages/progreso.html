@@ -71,21 +71,16 @@
       </nav>
 
       <div class="p-4 border-t border-slate-200">
-        <div
-          class="flex items-center gap-3 p-2 rounded-lg hover:bg-slate-100 transition-colors cursor-pointer"
-        >
-          <img
-            src="https://st2.depositphotos.com/4196725/6217/i/450/depositphotos_62170405-stock-photo-young-cool-black-man-proud.jpg"
-            alt="Trainer"
-            class="w-10 h-10 rounded-full border border-slate-300"
-          />
+        <div class="flex items-center gap-3 p-2 rounded-lg">
+          <img src="https://st2.depositphotos.com/4196725/6217/i/450/depositphotos_62170405-stock-photo-young-cool-black-man-proud.jpg" alt="Trainer" class="w-10 h-10 rounded-full border border-slate-300" />
           <div>
-            <p class="text-sm font-semibold">Carlos Méndez</p>
-            <p class="text-xs text-slate-400 uppercase tracking-wider">
-              Trainer
-            </p>
+            <p id="sidebar-name" class="text-sm font-semibold">Trainer</p>
+            <p class="text-xs text-slate-400 uppercase tracking-wider">Coach</p>
           </div>
         </div>
+        <button onclick="sessionStorage.clear(); window.location.href='login.html'" class="mt-2 w-full flex items-center gap-2 px-3 py-2 text-sm text-slate-500 hover:text-red-500 hover:bg-red-50 rounded-md transition-colors">
+          <i class="bi bi-box-arrow-right"></i> Cerrar sesion
+        </button>
       </div>
     </aside>
 
@@ -203,43 +198,12 @@
                   <th class="px-6 py-4 font-medium text-right">Acciones</th>
                 </tr>
               </thead>
-              <tbody class="divide-y divide-slate-200">
-                <tr class="hover:bg-slate-50 transition-colors">
-                  <td class="px-6 py-4">
-                    <div class="flex items-center gap-3">
-                      <span class="font-medium">Juan Jose</span>
-                    </div>
-                  </td>
-                  <td class="px-6 py-4">
-                    <div class="w-full bg-slate-200 rounded-full h-1.5">
-                      <div
-                        class="bg-sky-400 h-1.5 rounded-full"
-                        style="width: 10%"
-                      ></div>
-                    </div>
-                    <span class="text-xs text-slate-500 mt-1 block">10%</span>
-                  </td>
-                  <td class="px-6 py-4 text-sm text-slate-600">12.5 km</td>
-                  <td class="px-6 py-4 text-sm text-slate-600">141 bpm</td>
-                  <td class="px-6 py-4">
-                    <span
-                      class="text-xs px-2 py-1 rounded-full bg-emerald-500/10 text-emerald-500 font-medium"
-                      >Baja</span
-                    >
-                  </td>
-                  <td class="px-6 py-4 text-right">
-                    <button
-                      class="text-sky-500 hover:text-sky-700 text-sm font-medium"
-                    >
-                      Detalle
-                    </button>
-                  </td>
-                </tr>
-              </tbody>
+              <tbody id="progress-tbody" class="divide-y divide-slate-200"></tbody>
             </table>
           </div>
         </div>
       </section>
     </main>
+    <script type="module" src="../assets/js/progreso.js"></script>
   </body>
 </html>

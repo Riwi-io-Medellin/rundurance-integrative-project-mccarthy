@@ -73,21 +73,16 @@
       </nav>
 
       <div class="p-4 border-t border-slate-200">
-        <div
-          class="flex items-center gap-3 p-2 rounded-lg hover:bg-slate-100 transition-colors cursor-pointer"
-        >
-          <img
-            src="https://st2.depositphotos.com/4196725/6217/i/450/depositphotos_62170405-stock-photo-young-cool-black-man-proud.jpg"
-            alt="Trainer"
-            class="w-10 h-10 rounded-full border border-slate-300"
-          />
+        <div class="flex items-center gap-3 p-2 rounded-lg">
+          <img src="https://st2.depositphotos.com/4196725/6217/i/450/depositphotos_62170405-stock-photo-young-cool-black-man-proud.jpg" alt="Trainer" class="w-10 h-10 rounded-full border border-slate-300" />
           <div>
-            <p class="text-sm font-semibold">Carlos Méndez</p>
-            <p class="text-xs text-slate-400 uppercase tracking-wider">
-              Trainer
-            </p>
+            <p id="sidebar-name" class="text-sm font-semibold">Trainer</p>
+            <p class="text-xs text-slate-400 uppercase tracking-wider">Coach</p>
           </div>
         </div>
+        <button onclick="sessionStorage.clear(); window.location.href='login.html'" class="mt-2 w-full flex items-center gap-2 px-3 py-2 text-sm text-slate-500 hover:text-red-500 hover:bg-red-50 rounded-md transition-colors">
+          <i class="bi bi-box-arrow-right"></i> Cerrar sesion
+        </button>
       </div>
     </aside>
 
@@ -109,137 +104,78 @@
             EXPORTAR .CSV
           </button>
           <button
+            id="btn-new-payment"
             class="px-4 py-2 bg-sky-400 hover:bg-sky-500 text-white rounded-md text-sm font-medium transition-colors inline-flex items-center gap-2"
           >
-            <i class="bi bi-box-arrow-up"></i>
-            IMPORTAR .CSV
+            <i class="bi bi-plus-lg"></i>
+            Nuevo pago
           </button>
         </div>
       </header>
 
       <!-- Stats Row 1 -->
       <section class="px-8 py-4 flex gap-x-4">
-        <div
-          class="p-6 flex-1 bg-white border border-slate-200 rounded-xl flex justify-between items-center gap-4"
-        >
-          <div class="flex gap-4">
-            <div
-              class="w-12 h-12 rounded-lg bg-emerald-500/10 flex items-center justify-center text-emerald-500"
-            >
-              <i class="bi bi-currency-dollar"></i>
-            </div>
-            <div>
-              <p class="text-sm text-slate-500">TOTAL ESPERADO</p>
-              <p class="text-2xl font-bold">$8,000,000</p>
-            </div>
+        <div class="p-6 flex-1 bg-white border border-slate-200 rounded-xl flex items-center gap-4">
+          <div class="w-12 h-12 rounded-lg bg-emerald-500/10 flex items-center justify-center text-emerald-500">
+            <i class="bi bi-currency-dollar"></i>
           </div>
-          <span
-            class="text-red-500 text-sm font-bold bg-red-500/10 px-2 py-1 rounded"
-            >-6,3%</span
-          >
+          <div>
+            <p class="text-sm text-slate-500">TOTAL ESPERADO</p>
+            <p id="stat-total-expected" class="text-2xl font-bold">—</p>
+          </div>
         </div>
 
-        <div
-          class="p-6 flex-1 bg-white border border-slate-200 rounded-xl flex justify-between items-center gap-4"
-        >
-          <div class="flex gap-4">
-            <div
-              class="w-12 h-12 rounded-lg bg-yellow-500/10 flex items-center justify-center text-yellow-500"
-            >
-              <i class="bi bi-currency-dollar"></i>
-            </div>
-            <div>
-              <p class="text-sm text-slate-500">TOTAL RECAUDADO</p>
-              <p class="text-2xl font-bold">$5,000,000</p>
-            </div>
+        <div class="p-6 flex-1 bg-white border border-slate-200 rounded-xl flex items-center gap-4">
+          <div class="w-12 h-12 rounded-lg bg-yellow-500/10 flex items-center justify-center text-yellow-500">
+            <i class="bi bi-currency-dollar"></i>
           </div>
-          <span
-            class="text-emerald-500 text-sm font-bold bg-emerald-500/10 px-2 py-1 rounded"
-            >+5,3%</span
-          >
+          <div>
+            <p class="text-sm text-slate-500">TOTAL RECAUDADO</p>
+            <p id="stat-total-collected" class="text-2xl font-bold">—</p>
+          </div>
         </div>
 
-        <div
-          class="p-6 flex-1 bg-white border border-slate-200 rounded-xl flex justify-between items-center gap-4"
-        >
-          <div class="flex gap-4">
-            <div
-              class="w-12 h-12 rounded-lg bg-red-500/10 flex items-center justify-center text-red-500"
-            >
-              <i class="bi bi-currency-dollar"></i>
-            </div>
-            <div>
-              <p class="text-sm text-slate-500">TOTAL PENDIENTE</p>
-              <p class="text-2xl font-bold">$3,000,000</p>
-            </div>
+        <div class="p-6 flex-1 bg-white border border-slate-200 rounded-xl flex items-center gap-4">
+          <div class="w-12 h-12 rounded-lg bg-red-500/10 flex items-center justify-center text-red-500">
+            <i class="bi bi-currency-dollar"></i>
           </div>
-          <span
-            class="text-emerald-500 text-sm font-bold bg-emerald-500/10 px-2 py-1 rounded"
-            >+5,3%</span
-          >
+          <div>
+            <p class="text-sm text-slate-500">TOTAL PENDIENTE</p>
+            <p id="stat-total-pending" class="text-2xl font-bold">—</p>
+          </div>
         </div>
       </section>
 
       <!-- Stats Row 2 -->
       <section class="px-8 py-4 flex gap-x-4">
-        <div
-          class="p-6 flex-1 bg-white border border-slate-200 rounded-xl flex justify-between items-center gap-4"
-        >
-          <div class="flex gap-4">
-            <div
-              class="w-12 h-12 rounded-lg bg-emerald-500/10 flex items-center justify-center text-emerald-500"
-            >
-              <i class="bi bi-currency-dollar"></i>
-            </div>
-            <div>
-              <p class="text-sm text-slate-500">INGRESO PROMEDIO</p>
-              <p class="text-2xl font-bold">$180,000</p>
-            </div>
+        <div class="p-6 flex-1 bg-white border border-slate-200 rounded-xl flex items-center gap-4">
+          <div class="w-12 h-12 rounded-lg bg-emerald-500/10 flex items-center justify-center text-emerald-500">
+            <i class="bi bi-currency-dollar"></i>
           </div>
-          <span
-            class="text-emerald-500 text-sm font-bold bg-emerald-500/10 px-2 py-1 rounded"
-            >+5,3%</span
-          >
+          <div>
+            <p class="text-sm text-slate-500">INGRESO PROMEDIO</p>
+            <p id="stat-avg-income" class="text-2xl font-bold">—</p>
+          </div>
         </div>
 
-        <div
-          class="p-6 flex-1 bg-white border border-slate-200 rounded-xl flex justify-between items-center gap-4"
-        >
-          <div class="flex gap-4">
-            <div
-              class="w-12 h-12 rounded-lg bg-yellow-500/10 flex items-center justify-center text-yellow-500"
-            >
-              <i class="bi bi-percent"></i>
-            </div>
-            <div>
-              <p class="text-sm text-slate-500">% RECAUDADO</p>
-              <p class="text-2xl font-bold">70%</p>
-            </div>
+        <div class="p-6 flex-1 bg-white border border-slate-200 rounded-xl flex items-center gap-4">
+          <div class="w-12 h-12 rounded-lg bg-yellow-500/10 flex items-center justify-center text-yellow-500">
+            <i class="bi bi-percent"></i>
           </div>
-          <span
-            class="text-emerald-500 text-sm font-bold bg-emerald-500/10 px-2 py-1 rounded"
-            >+5,3%</span
-          >
+          <div>
+            <p class="text-sm text-slate-500">% RECAUDADO</p>
+            <p id="stat-pct-collected" class="text-2xl font-bold">—</p>
+          </div>
         </div>
 
-        <div
-          class="p-6 flex-1 bg-white border border-slate-200 rounded-xl flex justify-between items-center gap-4"
-        >
-          <div class="flex gap-4">
-            <div
-              class="w-12 h-12 rounded-lg bg-red-500/10 flex items-center justify-center text-red-500"
-            >
-              <i class="bi bi-exclamation-circle"></i>
-            </div>
-            <div>
-              <p class="text-sm text-slate-500">ATLETAS EN MORA</p>
-              <p class="text-2xl font-bold">12</p>
-            </div>
+        <div class="p-6 flex-1 bg-white border border-slate-200 rounded-xl flex items-center gap-4">
+          <div class="w-12 h-12 rounded-lg bg-red-500/10 flex items-center justify-center text-red-500">
+            <i class="bi bi-exclamation-circle"></i>
           </div>
-          <span
-            class="text-red-500 text-sm font-bold bg-red-500/10 px-2 py-1 rounded"
-            >+3</span
-          >
+          <div>
+            <p class="text-sm text-slate-500">ATLETAS EN MORA</p>
+            <p id="stat-overdue-count" class="text-2xl font-bold">—</p>
+          </div>
         </div>
       </section>
 
@@ -296,6 +232,37 @@
         </div>
       </section>
     </main>
-    <script src="../assets/js/finance.js"></script>
+    <!-- New Payment Modal -->
+    <div id="modal-new-payment" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black/40">
+      <div class="bg-white rounded-xl shadow-xl w-full max-w-md mx-4 p-6">
+        <div class="flex items-center justify-between mb-5">
+          <h3 class="text-lg font-semibold">Nuevo pago</h3>
+          <button id="modal-close" class="text-slate-400 hover:text-slate-600"><i class="bi bi-x-lg"></i></button>
+        </div>
+        <form id="form-new-payment" class="flex flex-col gap-4">
+          <div>
+            <label class="block text-sm text-slate-500 mb-1">Atleta</label>
+            <select id="pay-athlete" required class="w-full border border-slate-200 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-sky-400">
+              <option value="">Cargando atletas...</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-sm text-slate-500 mb-1">Monto (COP)</label>
+            <input id="pay-amount" type="number" min="1" required placeholder="150000"
+              class="w-full border border-slate-200 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-sky-400" />
+          </div>
+          <div>
+            <label class="block text-sm text-slate-500 mb-1">Fecha límite</label>
+            <input id="pay-due-date" type="date" required
+              class="w-full border border-slate-200 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-sky-400" />
+          </div>
+          <div class="flex justify-end gap-3 pt-2">
+            <button type="button" id="modal-cancel" class="px-4 py-2 border border-slate-300 rounded-md text-sm font-medium hover:bg-slate-50 transition-colors">Cancelar</button>
+            <button type="submit" class="px-4 py-2 bg-sky-400 hover:bg-sky-500 text-white rounded-md text-sm font-medium transition-colors">Guardar</button>
+          </div>
+        </form>
+      </div>
+    </div>
+    <script type="module" src="../assets/js/finance.js"></script>
   </body>
 </html>

@@ -34,13 +34,16 @@
         </a>
       </nav>
       <div class="p-4 border-t border-slate-200">
-        <div class="flex items-center gap-3 p-2 rounded-lg hover:bg-slate-100 transition-colors cursor-pointer">
+        <div class="flex items-center gap-3 p-2 rounded-lg">
           <img src="https://st2.depositphotos.com/4196725/6217/i/450/depositphotos_62170405-stock-photo-young-cool-black-man-proud.jpg" alt="Trainer" class="w-10 h-10 rounded-full border border-slate-300" />
           <div>
-            <p class="text-sm font-semibold">Carlos Méndez</p>
-            <p class="text-xs text-slate-400 uppercase tracking-wider">Trainer</p>
+            <p id="sidebar-name" class="text-sm font-semibold">Trainer</p>
+            <p class="text-xs text-slate-400 uppercase tracking-wider">Coach</p>
           </div>
         </div>
+        <button onclick="sessionStorage.clear(); window.location.href='login.html'" class="mt-2 w-full flex items-center gap-2 px-3 py-2 text-sm text-slate-500 hover:text-red-500 hover:bg-red-50 rounded-md transition-colors">
+          <i class="bi bi-box-arrow-right"></i> Cerrar sesion
+        </button>
       </div>
     </aside>
 
@@ -67,19 +70,19 @@
       <section class="px-8 py-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         <div class="p-6 bg-white border border-slate-200 rounded-xl flex items-center gap-4">
           <div class="w-12 h-12 rounded-lg bg-sky-500/10 flex items-center justify-center text-sky-500 text-lg"><i class="bi bi-people"></i></div>
-          <div><p class="text-2xl font-bold">8</p><p class="text-sm text-slate-500">Atletas activos</p></div>
+          <div><p id="stat-athletes" class="text-2xl font-bold">—</p><p class="text-sm text-slate-500">Atletas activos</p></div>
         </div>
         <div class="p-6 bg-white border border-slate-200 rounded-xl flex items-center gap-4">
           <div class="w-12 h-12 rounded-lg bg-amber-500/10 flex items-center justify-center text-amber-500 text-lg"><i class="bi bi-exclamation-triangle"></i></div>
-          <div><p class="text-2xl font-bold">8</p><p class="text-sm text-slate-500">Alertas activas</p></div>
+          <div><p id="stat-alerts" class="text-2xl font-bold">—</p><p class="text-sm text-slate-500">Alertas activas</p></div>
         </div>
         <div class="p-6 bg-white border border-slate-200 rounded-xl flex items-center gap-4">
           <div class="w-12 h-12 rounded-lg bg-emerald-500/10 flex items-center justify-center text-emerald-500 text-lg"><i class="bi bi-bar-chart-line"></i></div>
-          <div><p class="text-2xl font-bold">82%</p><p class="text-sm text-slate-500">Cumplimiento prom.</p></div>
+          <div><p id="stat-compliance" class="text-2xl font-bold">—</p><p class="text-sm text-slate-500">Cumplimiento prom.</p></div>
         </div>
         <div class="p-6 bg-white border border-slate-200 rounded-xl flex items-center gap-4">
           <div class="w-12 h-12 rounded-lg bg-blue-500/10 flex items-center justify-center text-blue-500 text-lg"><i class="bi bi-lightning-charge"></i></div>
-          <div><p class="text-2xl font-bold">3</p><p class="text-sm text-slate-500">Sesiones hoy</p></div>
+          <div><p id="stat-sessions-today" class="text-2xl font-bold">—</p><p class="text-sm text-slate-500">Sesiones hoy</p></div>
         </div>
       </section>
 
@@ -89,50 +92,8 @@
         <!-- Bar chart: Cumplimiento por atleta -->
         <div class="bg-white border border-slate-200 rounded-xl p-6">
           <h3 class="text-base font-semibold mb-6">Cumplimiento por atleta</h3>
-          <!-- Y-axis guide lines -->
-          <div class="relative">
-            <div class="absolute inset-0 flex flex-col justify-between pointer-events-none" style="height:160px">
-              <div class="border-t border-slate-100 w-full flex items-center"><span class="text-xs text-slate-300 -mt-2 pr-1 w-7 text-right">100</span></div>
-              <div class="border-t border-slate-100 w-full flex items-center"><span class="text-xs text-slate-300 -mt-2 pr-1 w-7 text-right">75</span></div>
-              <div class="border-t border-slate-100 w-full flex items-center"><span class="text-xs text-slate-300 -mt-2 pr-1 w-7 text-right">50</span></div>
-              <div class="border-t border-slate-100 w-full flex items-center"><span class="text-xs text-slate-300 -mt-2 pr-1 w-7 text-right">25</span></div>
-              <div class="border-t border-slate-200 w-full flex items-center"><span class="text-xs text-slate-300 -mt-2 pr-1 w-7 text-right">0</span></div>
-            </div>
-            <!-- Bars -->
-            <div class="flex items-end gap-2 pl-8" style="height:160px">
-              <div class="flex-1 flex flex-col items-center gap-1 h-full justify-end">
-                <div class="w-full bg-sky-400 rounded-t-sm" style="height:133px"></div>
-                <span class="text-xs text-slate-400 truncate w-full text-center">Carlos</span>
-              </div>
-              <div class="flex-1 flex flex-col items-center gap-1 h-full justify-end">
-                <div class="w-full bg-sky-400 rounded-t-sm" style="height:115px"></div>
-                <span class="text-xs text-slate-400 truncate w-full text-center">María</span>
-              </div>
-              <div class="flex-1 flex flex-col items-center gap-1 h-full justify-end">
-                <div class="w-full bg-sky-400 rounded-t-sm" style="height:95px"></div>
-                <span class="text-xs text-slate-400 truncate w-full text-center">Andrés</span>
-              </div>
-              <div class="flex-1 flex flex-col items-center gap-1 h-full justify-end">
-                <div class="w-full bg-sky-400 rounded-t-sm" style="height:127px"></div>
-                <span class="text-xs text-slate-400 truncate w-full text-center">Lucía</span>
-              </div>
-              <div class="flex-1 flex flex-col items-center gap-1 h-full justify-end">
-                <div class="w-full bg-sky-400 rounded-t-sm" style="height:104px"></div>
-                <span class="text-xs text-slate-400 truncate w-full text-center">Diego</span>
-              </div>
-              <div class="flex-1 flex flex-col items-center gap-1 h-full justify-end">
-                <div class="w-full bg-sky-400 rounded-t-sm" style="height:136px"></div>
-                <span class="text-xs text-slate-400 truncate w-full text-center">Valentina</span>
-              </div>
-              <div class="flex-1 flex flex-col items-center gap-1 h-full justify-end">
-                <div class="w-full bg-sky-400 rounded-t-sm" style="height:84px"></div>
-                <span class="text-xs text-slate-400 truncate w-full text-center">Sebastián</span>
-              </div>
-              <div class="flex-1 flex flex-col items-center gap-1 h-full justify-end">
-                <div class="w-full bg-sky-400 rounded-t-sm" style="height:81px"></div>
-                <span class="text-xs text-slate-400 truncate w-full text-center">Camila</span>
-              </div>
-            </div>
+          <div id="chart-compliance-bars" class="flex items-center justify-center" style="height:160px">
+            <p class="text-sm text-slate-400">Sin datos de cumplimiento disponibles</p>
           </div>
         </div>
 
@@ -145,79 +106,8 @@
               <span class="flex items-center gap-1"><span class="w-3 h-3 rounded-sm bg-red-400 inline-block"></span> fatiga</span>
             </div>
           </div>
-          <div class="relative">
-            <div class="absolute inset-0 flex flex-col justify-between pointer-events-none" style="height:160px">
-              <div class="border-t border-slate-100 w-full"></div>
-              <div class="border-t border-slate-100 w-full"></div>
-              <div class="border-t border-slate-100 w-full"></div>
-              <div class="border-t border-slate-200 w-full"></div>
-            </div>
-            <div class="flex items-end gap-2" style="height:160px">
-              <!-- Carlos F=72 Fat=35 -->
-              <div class="flex-1 flex flex-col items-center gap-1 h-full justify-end">
-                <div class="w-full flex gap-0.5 items-end h-full justify-center">
-                  <div class="flex-1 bg-emerald-400 rounded-t-sm" style="height:101px"></div>
-                  <div class="flex-1 bg-red-400 rounded-t-sm" style="height:49px"></div>
-                </div>
-                <span class="text-xs text-slate-400 truncate w-full text-center">Carlos</span>
-              </div>
-              <!-- María F=65 Fat=58 -->
-              <div class="flex-1 flex flex-col items-center gap-1 h-full justify-end">
-                <div class="w-full flex gap-0.5 items-end h-full justify-center">
-                  <div class="flex-1 bg-emerald-400 rounded-t-sm" style="height:91px"></div>
-                  <div class="flex-1 bg-red-400 rounded-t-sm" style="height:81px"></div>
-                </div>
-                <span class="text-xs text-slate-400 truncate w-full text-center">María</span>
-              </div>
-              <!-- Andrés F=48 Fat=72 -->
-              <div class="flex-1 flex flex-col items-center gap-1 h-full justify-end">
-                <div class="w-full flex gap-0.5 items-end h-full justify-center">
-                  <div class="flex-1 bg-emerald-400 rounded-t-sm" style="height:67px"></div>
-                  <div class="flex-1 bg-red-400 rounded-t-sm" style="height:101px"></div>
-                </div>
-                <span class="text-xs text-slate-400 truncate w-full text-center">Andrés</span>
-              </div>
-              <!-- Lucía F=80 Fat=28 -->
-              <div class="flex-1 flex flex-col items-center gap-1 h-full justify-end">
-                <div class="w-full flex gap-0.5 items-end h-full justify-center">
-                  <div class="flex-1 bg-emerald-400 rounded-t-sm" style="height:112px"></div>
-                  <div class="flex-1 bg-red-400 rounded-t-sm" style="height:39px"></div>
-                </div>
-                <span class="text-xs text-slate-400 truncate w-full text-center">Lucía</span>
-              </div>
-              <!-- Diego F=55 Fat=65 -->
-              <div class="flex-1 flex flex-col items-center gap-1 h-full justify-end">
-                <div class="w-full flex gap-0.5 items-end h-full justify-center">
-                  <div class="flex-1 bg-emerald-400 rounded-t-sm" style="height:77px"></div>
-                  <div class="flex-1 bg-red-400 rounded-t-sm" style="height:91px"></div>
-                </div>
-                <span class="text-xs text-slate-400 truncate w-full text-center">Diego</span>
-              </div>
-              <!-- Valentina F=85 Fat=22 -->
-              <div class="flex-1 flex flex-col items-center gap-1 h-full justify-end">
-                <div class="w-full flex gap-0.5 items-end h-full justify-center">
-                  <div class="flex-1 bg-emerald-400 rounded-t-sm" style="height:119px"></div>
-                  <div class="flex-1 bg-red-400 rounded-t-sm" style="height:31px"></div>
-                </div>
-                <span class="text-xs text-slate-400 truncate w-full text-center">Valentina</span>
-              </div>
-              <!-- Sebastián F=40 Fat=80 -->
-              <div class="flex-1 flex flex-col items-center gap-1 h-full justify-end">
-                <div class="w-full flex gap-0.5 items-end h-full justify-center">
-                  <div class="flex-1 bg-emerald-400 rounded-t-sm" style="height:56px"></div>
-                  <div class="flex-1 bg-red-400 rounded-t-sm" style="height:112px"></div>
-                </div>
-                <span class="text-xs text-slate-400 truncate w-full text-center">Sebastián</span>
-              </div>
-              <!-- Camila F=70 Fat=42 -->
-              <div class="flex-1 flex flex-col items-center gap-1 h-full justify-end">
-                <div class="w-full flex gap-0.5 items-end h-full justify-center">
-                  <div class="flex-1 bg-emerald-400 rounded-t-sm" style="height:98px"></div>
-                  <div class="flex-1 bg-red-400 rounded-t-sm" style="height:59px"></div>
-                </div>
-                <span class="text-xs text-slate-400 truncate w-full text-center">Camila</span>
-              </div>
-            </div>
+          <div id="chart-forma-fatiga" class="flex items-center justify-center" style="height:160px">
+            <p class="text-sm text-slate-400">Sin datos de forma/fatiga disponibles</p>
           </div>
         </div>
       </section>
@@ -285,53 +175,31 @@
           <div class="grid grid-cols-2 gap-4 mb-6">
             <div>
               <p class="text-xs text-slate-400 uppercase tracking-wide">Total esperado</p>
-              <p class="text-xl font-bold mt-1">$1.520.000</p>
+              <p id="stat-total-expected" class="text-xl font-bold mt-1">—</p>
             </div>
             <div>
               <p class="text-xs text-slate-400 uppercase tracking-wide">Total recaudado</p>
-              <p class="text-xl font-bold mt-1 text-emerald-500">$950.000</p>
+              <p id="stat-total-collected" class="text-xl font-bold mt-1 text-emerald-500">—</p>
             </div>
             <div>
               <p class="text-xs text-slate-400 uppercase tracking-wide">Pendiente</p>
-              <p class="text-xl font-bold mt-1 text-amber-500">$570.000</p>
+              <p id="stat-total-pending" class="text-xl font-bold mt-1 text-amber-500">—</p>
             </div>
             <div>
               <p class="text-xs text-slate-400 uppercase tracking-wide">% Recaudado</p>
-              <p class="text-xl font-bold mt-1">63%</p>
+              <p id="stat-pct-collected" class="text-xl font-bold mt-1">—</p>
             </div>
           </div>
           <!-- Mini bar chart: monthly revenue -->
           <div class="border-t border-slate-100 pt-4">
             <p class="text-xs text-slate-400 mb-3">Ingresos mensuales</p>
-            <div class="flex items-end gap-2" style="height:80px">
-              <div class="flex-1 flex flex-col items-center gap-1 h-full justify-end">
-                <div class="w-full bg-sky-300 rounded-t-sm" style="height:56px"></div>
-                <span class="text-xs text-slate-400">Sep</span>
-              </div>
-              <div class="flex-1 flex flex-col items-center gap-1 h-full justify-end">
-                <div class="w-full bg-sky-400 rounded-t-sm" style="height:66px"></div>
-                <span class="text-xs text-slate-400">Oct</span>
-              </div>
-              <div class="flex-1 flex flex-col items-center gap-1 h-full justify-end">
-                <div class="w-full bg-sky-400 rounded-t-sm" style="height:72px"></div>
-                <span class="text-xs text-slate-400">Nov</span>
-              </div>
-              <div class="flex-1 flex flex-col items-center gap-1 h-full justify-end">
-                <div class="w-full bg-sky-500 rounded-t-sm" style="height:76px"></div>
-                <span class="text-xs text-slate-400">Dic</span>
-              </div>
-              <div class="flex-1 flex flex-col items-center gap-1 h-full justify-end">
-                <div class="w-full bg-sky-400 rounded-t-sm" style="height:72px"></div>
-                <span class="text-xs text-slate-400">Ene</span>
-              </div>
-              <div class="flex-1 flex flex-col items-center gap-1 h-full justify-end">
-                <div class="w-full bg-sky-400 rounded-t-sm" style="height:64px"></div>
-                <span class="text-xs text-slate-400">Feb</span>
-              </div>
+            <div id="chart-monthly-revenue" class="flex items-center justify-center" style="height:80px">
+              <p class="text-xs text-slate-400">Sin historial disponible</p>
             </div>
           </div>
         </div>
       </section>
     </main>
+    <script type="module" src="../assets/js/dashboard.js"></script>
   </body>
 </html>
