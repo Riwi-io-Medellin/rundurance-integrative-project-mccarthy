@@ -1,9 +1,16 @@
+require('dotenv').config();
 const API_BASE = '/api';
 
+
 async function request(path, options = {}) {
+    //prueva token 
+  const token = TEST_TOKEN || localStorage.getItem('token','Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0cmFpbmVyX2lkIjozLCJlbWFpbCI6ImFkbWluQG1haWwuY29tIiwicm9sZSI6ImNvYWNoIiwiaWF0IjoxNzczMjQwNzI4LCJleHAiOjE3NzM4NDU1Mjh9.hjRLY9zI8saZdX4v6IXTg8IytzaGjLGNNs0bsHqcWR0') || '';
+
   const res = await fetch(`${API_BASE}${path}`, {
     headers: {
       'Content-Type': 'application/json',
+      // prueba token
+      Authorization: token ? `Bearer ${token}` : undefined,
       ...(options.headers || {}),
     },
     credentials: 'include',
