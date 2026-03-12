@@ -100,7 +100,7 @@
             </div>
           </div>
           <div class="px-6 py-4 border-t border-slate-100 flex justify-end">
-            <button class="px-4 py-2 bg-sky-400 hover:bg-sky-500 text-white rounded-md text-sm font-medium transition-colors">
+            <button id="btn-save-profile" class="px-4 py-2 bg-sky-400 hover:bg-sky-500 text-white rounded-md text-sm font-medium transition-colors">
               Guardar cambios
             </button>
           </div>
@@ -217,7 +217,7 @@
             <h3 class="font-semibold">Seguridad</h3>
           </div>
           <div class="p-6 flex flex-col sm:flex-row gap-3">
-            <button class="px-4 py-2 border border-slate-300 rounded-md text-sm font-medium hover:bg-slate-50 transition-colors inline-flex items-center gap-2">
+            <button id="btn-change-password" class="px-4 py-2 border border-slate-300 rounded-md text-sm font-medium hover:bg-slate-50 transition-colors inline-flex items-center gap-2">
               <i class="bi bi-key"></i> Cambiar contraseña
             </button>
             <button id="btn-logout" class="px-4 py-2 border border-amber-300 text-amber-600 rounded-md text-sm font-medium hover:bg-amber-50 transition-colors inline-flex items-center gap-2">
@@ -231,6 +231,46 @@
 
       </div>
     </main>
+    <!-- Toast -->
+    <div id="toast" class="fixed bottom-6 right-6 z-50 hidden items-center gap-3 px-4 py-3 rounded-lg shadow-lg text-sm font-medium text-white transition-all">
+      <i id="toast-icon" class="bi"></i>
+      <span id="toast-msg"></span>
+    </div>
+
+    <!-- Password Modal -->
+    <div id="modal-password" class="fixed inset-0 z-40 hidden items-center justify-center bg-black/40 backdrop-blur-sm">
+      <div class="bg-white rounded-xl shadow-xl w-full max-w-sm mx-4 overflow-hidden">
+        <div class="px-6 py-4 border-b border-slate-200 flex items-center justify-between">
+          <h3 class="font-semibold text-slate-800">Cambiar contraseña</h3>
+          <button id="btn-close-password-modal" class="text-slate-400 hover:text-slate-600 transition-colors">
+            <i class="bi bi-x-lg"></i>
+          </button>
+        </div>
+        <div class="p-6 flex flex-col gap-4">
+          <div>
+            <label class="block text-sm text-slate-500 mb-1">Contraseña actual</label>
+            <input id="pwd-current" type="password" placeholder="••••••••"
+              class="w-full bg-white border border-slate-200 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-sky-400 transition-all" />
+          </div>
+          <div>
+            <label class="block text-sm text-slate-500 mb-1">Nueva contraseña</label>
+            <input id="pwd-new" type="password" placeholder="••••••••"
+              class="w-full bg-white border border-slate-200 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-sky-400 transition-all" />
+          </div>
+          <div>
+            <label class="block text-sm text-slate-500 mb-1">Confirmar nueva contraseña</label>
+            <input id="pwd-confirm" type="password" placeholder="••••••••"
+              class="w-full bg-white border border-slate-200 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-sky-400 transition-all" />
+          </div>
+          <p id="pwd-error" class="text-xs text-red-500 hidden"></p>
+        </div>
+        <div class="px-6 py-4 border-t border-slate-100 flex justify-end gap-2">
+          <button id="btn-cancel-password" class="px-4 py-2 border border-slate-200 rounded-md text-sm font-medium hover:bg-slate-50 transition-colors">Cancelar</button>
+          <button id="btn-submit-password" class="px-4 py-2 bg-sky-400 hover:bg-sky-500 text-white rounded-md text-sm font-medium transition-colors">Guardar</button>
+        </div>
+      </div>
+    </div>
+
     <script type="module" src="../assets/js/configuracion.js"></script>
   </body>
 </html>

@@ -28,7 +28,7 @@ app.use('/api/finances',  financesRouter);
 
 // Fallback: serve index for any unmatched route (SPA support)
 app.get('*', (_req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'pages', 'index.html'));
+  res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
 app.listen(PORT, () => {
