@@ -15,33 +15,46 @@ const db = require('../db/connection');
 //   - After 5 days past due_date without paid_at → status becomes 'vencido'
 // =============================================================================
 
-// TODO 1: Create function findAllByTrainer(trainerId)
-// - Query: SELECT payments joined with athlete name WHERE trainer_id = $1
-// - Suggested query:
-//     SELECT p.*, a.first_name, a.last_name
-//     FROM payment p
-//     JOIN athlete a ON p.athlete_id = a.athlete_id
-//     WHERE p.trainer_id = $1
-//     ORDER BY p.due_date DESC
-// - Return: array of payment rows (each row includes athlete name)
+async function findAllByTrainer(trainerId) {
+  const result = await db.query(
+    `SELECT p.*, a.first_name, a.last_name
+     FROM payment p
+     JOIN athlete a ON p.athlete_id = a.athlete_id
+     WHERE p.trainer_id = $1
+     ORDER BY p.due_date DESC`,
+    [trainerId]
+  );
+  return result.rows;
+}
 
-// TODO 2: Create function findByAthlete(athleteId)
-// - Query: SELECT * FROM payment WHERE athlete_id = $1 ORDER BY due_date DESC
-// - Return: array of payments for one athlete
+async function findByAthlete(athleteId) {
+  const result = await db.query(
+    `SELECT * FROM payment WHERE athlete_id = $1 ORDER BY due_date DESC`,
+    [athleteId]
+  );
+  return result.rows;
+}
 
-// TODO 3: Create function create(data)
-// - Query: INSERT INTO payment (athlete_id, trainer_id, amount, due_date, notes)
-//          VALUES ($1,$2,$3,$4,$5) RETURNING *
-// - data: { athlete_id, trainer_id, amount, due_date, notes }
-// - Return: the inserted row
+async function create(data) {
+  const { athlete_id, trainer_id, amount, due_date, notes } = data;
+  const result = await db.query(
+    `INSERT INTO payment (athlete_id, trainer_id, amount, due_date, notes)
+     VALUES ($1, $2, $3, $4, $5) RETURNING *`,
+    [athlete_id, trainer_id, amount, due_date, notes]
+  );
+  return result.rows[0];
+}
 
-// TODO 4: Create function markAsPaid(paymentId)
-// - Query: UPDATE payment SET status = 'pagado', paid_at = NOW(), updated_at = NOW()
-//          WHERE payment_id = $1 RETURNING *
-// - This is called when the coach clicks "Marcar como pagado"
-// - Return: the updated row
+async function markAsPaid(paymentId) {
+  const result = await db.query(
+    `UPDATE payment SET status = 'pagado', paid_at = NOW(), updated_at = NOW()
+     WHERE payment_id = $1 RETURNING *`,
+    [paymentId]
+  );
+  return result.rows[0];
+}
 
-// TODO 5: Create function updateOverduePayments()
+// updateOverduePayments()
 // - This runs the 5-day grace period logic:
 //   UPDATE payment SET status = 'vencido', updated_at = NOW()
 //   WHERE status = 'pendiente'
@@ -50,11 +63,21 @@ const db = require('../db/connection');
 // - Return: the count of updated rows
 // - Tip: This could be called periodically or on each finance page load
 
+async function updateOverduePayments() {
+  const result = await db.query(
+    `UPDATE payment
+     SET status = 'vencido', updated_at = NOW()
+     WHERE status = 'pendiente'
+       AND paid_at IS NULL
+       AND due_date < NOW() - INTERVAL '5 days'`
+  );
+  return result.rowCount;
+}
+
 module.exports = {
-  // Export your functions here as you create them:
-  // findAllByTrainer,
-  // findByAthlete,
-  // create,
-  // markAsPaid,
-  // updateOverduePayments,
+  findAllByTrainer,
+  findByAthlete,
+  create,
+  markAsPaid,
+  updateOverduePayments,
 };
