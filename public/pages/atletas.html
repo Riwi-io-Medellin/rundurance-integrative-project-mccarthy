@@ -65,7 +65,7 @@
       <section class="p-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         <div class="p-6 bg-white border border-slate-200 rounded-xl flex items-center gap-4">
           <div class="w-12 h-12 rounded-lg bg-sky-500/10 flex items-center justify-center text-sky-500"><i class="bi bi-people"></i></div>
-          <div><p class="text-2xl font-bold">8</p><p class="text-sm text-slate-500">Atletas activos</p></div>
+          <div><p id="athletes-count" class="text-2xl font-bold">0</p><p class="text-sm text-slate-500">Atletas activos</p></div>
         </div>
         <div class="p-6 bg-white border border-slate-200 rounded-xl flex items-center gap-4">
           <div class="w-12 h-12 rounded-lg bg-emerald-500/10 flex items-center justify-center text-emerald-500"><i class="bi bi-check-circle"></i></div>
@@ -85,7 +85,7 @@
       <section class="px-8 pb-8 grid grid-cols-1 xl:grid-cols-3 gap-8">
         <div class="xl:col-span-2 bg-white border border-slate-200 rounded-xl overflow-hidden">
           <div class="p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-200">
-            <h3 class="text-lg font-semibold">Resumen Atletas <span class="text-sm font-normal text-slate-400 ml-2">8 atletas activos</span></h3>
+            <h3 class="text-lg font-semibold">Resumen Atletas <span id="athletes-summary" class="text-sm font-normal text-slate-400 ml-2">0 atletas activos</span></h3>
             <div class="flex items-center gap-3">
               <div class="relative">
                 <i class="bi bi-search absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"></i>
@@ -105,26 +105,11 @@
                   <th class="px-6 py-4 font-medium text-right">Acción</th>
                 </tr>
               </thead>
-              <tbody class="divide-y divide-slate-200">
-                <!-- Row template: Atleta, compliance bar, last session, alerts badge, forma/fatiga bars, detail button -->
-                <tr class="hover:bg-slate-50 transition-colors">
-                  <td class="px-6 py-4 font-medium">Carlos Méndez</td>
-                  <td class="px-6 py-4"><span class="text-xs px-2 py-1 rounded-full bg-emerald-500/10 text-emerald-600 font-semibold">95%</span></td>
-                  <td class="px-6 py-4 text-sm text-slate-500">17 feb</td>
-                  <td class="px-6 py-4"><span class="text-xs px-2 py-1 rounded-full bg-emerald-500/10 text-emerald-500">✓ OK</span></td>
-                  <td class="px-6 py-4">
-                    <div class="flex items-center gap-2 text-xs text-slate-400">
-                      <span>F</span>
-                      <div class="w-10 h-1.5 rounded-full bg-sky-400"></div>
-                      <span>72</span>
-                      <span class="ml-1">Fat</span>
-                      <div class="w-5 h-1.5 rounded-full bg-amber-400"></div>
-                      <span>35</span>
-                    </div>
-                  </td>
-                  <td class="px-6 py-4 text-right"><button class="text-sky-500 hover:text-sky-700 text-sm font-medium inline-flex items-center gap-1"><i class="bi bi-eye"></i> Detalle</button></td>
+              <tbody id="athletes-tbody" class="divide-y divide-slate-200">
+                <tr>
+                  <td colspan="6" class="px-6 py-8 text-center text-slate-400">Cargando atletas...</td>
                 </tr>
-                <tr class="hover:bg-slate-50 transition-colors">
+              </tbody>                <tr class="hover:bg-slate-50 transition-colors">
                   <td class="px-6 py-4 font-medium">María López</td>
                   <td class="px-6 py-4"><span class="text-xs px-2 py-1 rounded-full bg-emerald-500/10 text-emerald-600 font-semibold">82%</span></td>
                   <td class="px-6 py-4 text-sm text-slate-500">16 feb</td>
@@ -235,4 +220,5 @@
       </section>
     </main>
   </body>
+    <script type="module" src="../assets/js/atletas.js"></script>
 </html>
