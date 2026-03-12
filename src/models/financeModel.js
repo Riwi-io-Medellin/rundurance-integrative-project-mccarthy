@@ -44,9 +44,31 @@ async function markPaid(paymentId, trainerId) {
   return rows[0];
 }
 
+/**
+ * Returns monthly revenue aggregation for the last 6 months.
+ * @param {number} trainerId
+ * @returns {Promise<Array<{month: string, expected: string, collected: string}>>}
+ */
+async function getMonthlyRevenueSummary(trainerId) {
+  const { rows } = await db.query(
+    `SELECT
+       TO_CHAR(DATE_TRUNC('month', due_date), 'YYYY-MM')        AS month,
+       SUM(amount)                                               AS expected,
+       SUM(CASE WHEN status = 'pagado' THEN amount ELSE 0 END)  AS collected
+     FROM payment
+     WHERE trainer_id = $1
+       AND due_date >= NOW() - INTERVAL '6 months'
+     GROUP BY 1
+     ORDER BY 1`,
+    [trainerId]
+  );
+  return rows;
+}
+
 module.exports = {
   findAllByTrainer,
   updateOverduePayments,
   createPayment,
   markPaid,
+  getMonthlyRevenueSummary,
 };

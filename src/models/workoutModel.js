@@ -153,10 +153,63 @@ async function getCompletedWorkoutsByAthlete(athleteId, limit = 20) {
   return rows;
 }
 
+/**
+ * Returns a single completed workout with its laps and most recent feedback.
+ * @param {number} completedWorkoutId
+ * @returns {Promise<object|null>}
+ */
+async function getWorkoutById(completedWorkoutId) {
+  const { rows } = await db.query(
+    `SELECT cw.*,
+            a.first_name, a.last_name,
+            wf.feedback, wf.source AS feedback_source, wf.created_at AS feedback_at
+     FROM completed_workout cw
+     JOIN athlete a ON a.athlete_id = cw.athlete_id
+     LEFT JOIN workout_feedback wf ON wf.completed_workout_id = cw.completed_workout_id
+     WHERE cw.completed_workout_id = $1
+     ORDER BY wf.created_at DESC
+     LIMIT 1`,
+    [completedWorkoutId]
+  );
+  if (!rows[0]) return null;
+
+  const { rows: laps } = await db.query(
+    `SELECT * FROM completed_workout_lap WHERE completed_workout_id = $1 ORDER BY lap_number`,
+    [completedWorkoutId]
+  );
+
+  return { ...rows[0], laps };
+}
+
+/**
+ * Calculates compliance % for an athlete: completed / planned sessions up to today.
+ * Returns null if no planned workouts exist.
+ * @param {number} athleteId
+ * @returns {Promise<number|null>}
+ */
+async function getComplianceByAthlete(athleteId) {
+  const { rows } = await db.query(
+    `SELECT
+       COUNT(pw.planned_workout_id)                         AS planned_count,
+       COUNT(cw.planned_workout_id)                         AS completed_count
+     FROM planned_workout pw
+     JOIN workout_plan wp ON wp.workout_plan_id = pw.workout_plan_id
+     LEFT JOIN completed_workout cw ON cw.planned_workout_id = pw.planned_workout_id
+     WHERE wp.athlete_id = $1
+       AND pw.scheduled_date <= CURRENT_DATE`,
+    [athleteId]
+  );
+  const planned  = parseInt(rows[0].planned_count,  10);
+  const completed = parseInt(rows[0].completed_count, 10);
+  return planned > 0 ? Math.round((completed / planned) * 100) : null;
+}
+
 module.exports = {
   insertCompletedWorkout,
   insertLaps,
   insertFeedback,
   findPlannedWorkoutByDate,
   getCompletedWorkoutsByAthlete,
+  getWorkoutById,
+  getComplianceByAthlete,
 };

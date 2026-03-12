@@ -30,11 +30,17 @@ function renderAthletes(athletes) {
     .map((athlete) => {
       const fullName = `${athlete.first_name || ''} ${athlete.last_name || ''}`.trim() || 'Sin nombre';
       const birthDate = athlete.birth_date ? athlete.birth_date.substring(0, 10) : '';
+      const lastSession = athlete.lastSessionDate
+        ? `<span class="text-sm text-slate-600">${athlete.lastSessionDate}</span>`
+        : `<span class="text-sm text-slate-400">Sin sesiones</span>`;
+      const sessionBadge = athlete.sessionCount > 0
+        ? `<span class="text-xs px-2 py-1 rounded-full bg-sky-100 text-sky-700 font-medium">${athlete.sessionCount} sesiones</span>`
+        : `<span class="text-xs px-2 py-1 rounded-full bg-slate-100 text-slate-500 font-medium">Sin sesiones</span>`;
       return `
         <tr class="hover:bg-slate-50 transition-colors">
           <td class="px-6 py-4 font-medium">${fullName}</td>
-          <td class="px-6 py-4"><span class="text-xs px-2 py-1 rounded-full bg-slate-100 text-slate-500 font-medium">—</span></td>
-          <td class="px-6 py-4 text-sm text-slate-500">—</td>
+          <td class="px-6 py-4">${sessionBadge}</td>
+          <td class="px-6 py-4">${lastSession}</td>
           <td class="px-6 py-4"><span class="text-xs px-2 py-1 rounded-full bg-slate-100 text-slate-500 font-medium">—</span></td>
           <td class="px-6 py-4 text-sm text-slate-400">—</td>
           <td class="px-6 py-4 text-right">
@@ -202,7 +208,25 @@ async function cargarAtletas() {
 
   try {
     const atletas = await apiGet('/athletes');
-    renderAthletes(atletas);
+
+    // Enrich with last session data (fire-and-forget per athlete)
+    const workoutResults = await Promise.allSettled(
+      atletas.map(a => apiGet(`/workouts/athlete/${a.athlete_id}?limit=5`))
+    );
+
+    const enriched = atletas.map((a, i) => {
+      const workouts = workoutResults[i].status === 'fulfilled' ? workoutResults[i].value : [];
+      const lastWorkout = workouts[0];
+      return {
+        ...a,
+        lastSessionDate: lastWorkout?.executed_at
+          ? new Date(lastWorkout.executed_at).toLocaleDateString('es-CO', { day: '2-digit', month: 'short' })
+          : null,
+        sessionCount: workouts.length,
+      };
+    });
+
+    renderAthletes(enriched);
   } catch (error) {
     console.error('Error al cargar atletas:', error);
     tbody.innerHTML = `

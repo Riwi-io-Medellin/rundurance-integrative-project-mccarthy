@@ -41,4 +41,14 @@ async function markPaid(req, res) {
   }
 }
 
-module.exports = { getAll, create, markPaid };
+async function getMonthlySummary(req, res) {
+  try {
+    const rows = await financeModel.getMonthlyRevenueSummary(req.trainer.trainer_id);
+    res.json(rows);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Error al obtener resumen mensual' });
+  }
+}
+
+module.exports = { getAll, create, markPaid, getMonthlySummary };

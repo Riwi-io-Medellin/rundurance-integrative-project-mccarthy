@@ -16,4 +16,7 @@ router.post('/:id/feedback', controller.saveFeedback);
 // GET /api/workouts/athlete/:athleteId — list completed workouts for an athlete
 router.get('/athlete/:athleteId', auth, controller.getByAthlete);
 
+// GET /api/workouts/:id — single workout with laps and feedback
+router.get('/:id', auth, controller.getById);
+
 module.exports = router;

@@ -123,16 +123,31 @@ async function getByAthlete(req, res) {
   }
 }
 
+/**
+ * GET /api/workouts/:id
+ * Returns a single completed workout with its laps and feedback.
+ */
+async function getById(req, res) {
+  try {
+    const workout = await workoutModel.getWorkoutById(parseInt(req.params.id, 10));
+    if (!workout) return res.status(404).json({ error: 'Sesión no encontrada' });
+    return res.json(workout);
+  } catch (err) {
+    console.error('Error en getById:', err);
+    return res.status(500).json({ error: 'Error al obtener sesión' });
+  }
+}
+
 // Fetches basic athlete context for the n8n payload
 async function getAthleteContext(athleteId) {
   const { rows } = await db.query(
-    `SELECT first_name, last_name FROM athlete WHERE athlete_id = $1`,
+    `SELECT first_name, last_name, birth_date FROM athlete WHERE athlete_id = $1`,
     [athleteId]
   );
   const a = rows[0];
   return a
-    ? { name: `${a.first_name} ${a.last_name}`, weight_kg: null, height_cm: null }
-    : { name: 'Atleta', weight_kg: null, height_cm: null };
+    ? { name: `${a.first_name} ${a.last_name}`, weight_kg: null, height_cm: null, birth_date: a.birth_date ?? null }
+    : { name: 'Atleta', weight_kg: null, height_cm: null, birth_date: null };
 }
 
-module.exports = { upload, saveFeedback, getByAthlete };
+module.exports = { upload, saveFeedback, getByAthlete, getById };
