@@ -1,4 +1,4 @@
-import { apiGet, apiPost, apiPut, checkAuth, loadSidebar } from './api.js';
+import { apiGet, apiPost, apiPatch, checkAuth, loadSidebar } from './api.js';
 
 checkAuth();
 loadSidebar();
@@ -82,7 +82,7 @@ async function loadPayments() {
 
 async function markPaymentPaid(paymentId) {
   try {
-    await apiPut(`/finances/${paymentId}/pay`);
+    await apiPatch(`/finances/${paymentId}/pay`);
     await loadPayments();
   } catch (err) {
     alert(err.message || 'Error al marcar pago');

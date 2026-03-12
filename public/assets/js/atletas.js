@@ -1,4 +1,4 @@
-import { apiGet, apiPost, apiPut, apiDelete, checkAuth, loadSidebar } from './api.js';
+import { apiGet, apiPost, apiPatch, apiDelete, checkAuth, loadSidebar } from './api.js';
 
 checkAuth();
 loadSidebar();
@@ -158,7 +158,7 @@ async function submitAthleteForm(e) {
   };
   try {
     if (currentEditId) {
-      await apiPut(`/athletes/${currentEditId}`, body);
+      await apiPatch(`/athletes/${currentEditId}`, body);
     } else {
       await apiPost('/athletes', body);
     }

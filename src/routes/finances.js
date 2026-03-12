@@ -20,7 +20,7 @@ router.get('/', auth, controller.getAll);
 // POST /api/finances — Create a new payment record
 router.post('/', auth, controller.create);
 
-// PUT /api/finances/:id/pay — Mark a payment as paid
-router.put('/:id/pay', auth, controller.markPaid);
+// PATCH /api/finances/:id/pay — Mark a payment as paid
+router.patch('/:id/pay', auth, controller.markPaid);
 
 module.exports = router;

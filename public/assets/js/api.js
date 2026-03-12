@@ -29,6 +29,7 @@ async function request(path, options = {}) {
 function apiGet(path) { return request(path, { method: 'GET' }); }
 function apiPost(path, body) { return request(path, { method: 'POST', body: JSON.stringify(body) }); }
 function apiPut(path, body) { return request(path, { method: 'PUT', body: JSON.stringify(body) }); }
+function apiPatch(path, body) { return request(path, { method: 'PATCH', body: JSON.stringify(body) }); }
 function apiDelete(path) { return request(path, { method: 'DELETE' }); }
 
 function checkAuth() {
@@ -55,6 +56,7 @@ export {
   apiGet,
   apiPost,
   apiPut,
+  apiPatch,
   apiDelete,
   checkAuth,
   loadSidebar,
