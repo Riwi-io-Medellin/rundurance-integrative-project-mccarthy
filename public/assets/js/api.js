@@ -1,12 +1,14 @@
 const API_BASE = '/api';
 
 async function request(path, options = {}) {
+  // TODO: re-enable JWT token after testing
+  // const token = sessionStorage.getItem('token');
   const res = await fetch(`${API_BASE}${path}`, {
     headers: {
       'Content-Type': 'application/json',
+      // ...(token && { Authorization: `Bearer ${token}` }),
       ...(options.headers || {}),
     },
-    credentials: 'include',
     ...options,
   });
 
