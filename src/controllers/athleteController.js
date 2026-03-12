@@ -3,6 +3,7 @@ const {
   findById,
   createAthlete,
   updateAthlete,
+  deactivateAthlete
 } = require("../models/athleteModel");
 const { createTrainer } = require("../models/userModel");
 
@@ -107,48 +108,6 @@ async function create(req, res) {
 
 // TODO 4: Create function update(req, res)
 
-async function create(req, res) {
-  try {
-    const { first_name, last_name, document, email, birth_date } = req.body;
-
-    // Validate required fields
-    if (!first_name || !last_name || !document || !email) {
-      return res.status(400).json({ error: "Faltan campos requeridos" });
-    }
-
-    const trainer_id = req.trainer.trainer_id;
-
-    const newAthlete = await createAthlete({
-      trainer_id,
-      first_name,
-      last_name,
-      document,
-      email,
-      birth_date,
-    });
-
-    res.status(201).json(newAthlete);
-  } catch (error) {
-    console.error(error);
-
-    if (error.code === "23505") {
-      return res.status(409).json({ error: "Documento o email ya existe" });
-    }
-
-    res.status(500).json({
-      error: "Error al crear atleta",
-      details: error.message,
-    });
-  }
-}
-
-// TODO 4: Create function update(req, res)
-// - Endpoint: PUT /api/athletes/:id
-// - Get athleteId from req.params.id
-// - Extract updated fields from req.body
-// - Call athleteModel.update(athleteId, data)
-// - Return res.json(updated)
-
 async function update(req, res) {
   try {
     const athleteId = parseInt(req.params.id, 10);
@@ -191,10 +150,6 @@ async function update(req, res) {
 }
 
 // TODO 5: Create function deactivate(req, res)
-// - Endpoint: DELETE /api/athletes/:id
-// - Get athleteId from req.params.id
-// - Call athleteModel.deactivate(athleteId)
-// - Return res.json({ message: 'Atleta desactivado' })
 
 async function deactivate (req, res) {
   
@@ -225,10 +180,9 @@ async function deactivate (req, res) {
 
 
 module.exports = {
-  // Export your functions here as you create them:
   getAll,
   getOne,
   create,
   update,
-  // deactivate,
+  deactivate,
 };
