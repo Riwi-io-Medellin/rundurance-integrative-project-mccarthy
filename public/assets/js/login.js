@@ -11,6 +11,10 @@ document.getElementById("loginForm").addEventListener("submit", async (e) => {
     sessionStorage.setItem("trainer", JSON.stringify(data.trainer));
     window.location.href = "dashboard.html";
   } catch (err) {
-    alert(err.message);
+    const errEl = document.getElementById('login-error');
+    if (errEl) {
+      errEl.textContent = err.message || 'Error al iniciar sesión';
+      errEl.classList.remove('hidden');
+    }
   }
 });
