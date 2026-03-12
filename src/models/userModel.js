@@ -25,13 +25,13 @@ async function findById(id) {
   return rows[0] ?? null;
 }
 
-async function updateTrainer(id, { first_name, last_name, email }) {
+async function updateTrainer(id, { first_name, last_name, email, phone }) {
   const { rows } = await db.query(
     `UPDATE trainer
-        SET first_name = $1, last_name = $2, email = $3, updated_at = NOW()
-      WHERE trainer_id = $4 AND is_active = TRUE
+        SET first_name = $1, last_name = $2, email = $3, phone = $4, updated_at = NOW()
+      WHERE trainer_id = $5 AND is_active = TRUE
       RETURNING *`,
-    [first_name, last_name, email, id]
+    [first_name, last_name, email, phone ?? null, id]
   );
   return rows[0] ?? null;
 }

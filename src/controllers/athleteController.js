@@ -5,27 +5,6 @@ const {
   updateAthlete,
   deactivateAthlete
 } = require("../models/athleteModel");
-const { createTrainer } = require("../models/userModel");
-
-// =============================================================================
-// ATHLETE CONTROLLER — TODO LIST
-// =============================================================================
-// This file handles HTTP requests and responses for athlete operations.
-// Look at authController.js for the pattern to follow.
-//
-// HOW CONTROLLERS WORK (MVC pattern):
-//   1. Extract data from req (req.body, req.params, req.query, req.trainer)
-//   2. Validate the input (return 400 if something is missing)
-//   3. Call the model function to talk to the database
-//   4. Return the result as JSON with the right status code
-//   5. Wrap everything in try/catch (return 500 if something breaks)
-//
-// IMPORTANT: req.trainer is set by the auth middleware. It has:
-//   { trainer_id, email, role }
-//   This tells you WHICH coach is making the request.
-// =============================================================================
-
-// TODO 1: Create function getAll(req, res)
 
 async function getAll(req, res) {
   try {
@@ -43,8 +22,6 @@ async function getAll(req, res) {
     });
   }
 }
-
-// TODO 2: Create function getOne(req, res)
 
 async function getOne(req, res) {
   try {
@@ -70,10 +47,9 @@ async function getOne(req, res) {
   }
 }
 
-// TODO 3: Create function create(req, res)
 async function create(req, res) {
   try {
-    const { first_name, last_name, document, email, birth_date } = req.body;
+    const { first_name, last_name, document, email, birth_date, phone } = req.body;
 
     if (!first_name || !last_name || !document || !email) {
       return res.status(400).json({
@@ -90,6 +66,7 @@ async function create(req, res) {
       document,
       email,
       birth_date: birth_date || null,
+      phone: phone || null,
     };
 
     const athlete = await createAthlete(athleteData);
@@ -106,8 +83,6 @@ async function create(req, res) {
   }
 }
 
-// TODO 4: Create function update(req, res)
-
 async function update(req, res) {
   try {
     const athleteId = parseInt(req.params.id, 10);
@@ -116,7 +91,7 @@ async function update(req, res) {
       return res.status(400).json({ error: "ID de atleta inválido" });
     }
 
-    const { first_name, last_name, document, email, birth_date } = req.body;
+    const { first_name, last_name, document, email, birth_date, phone } = req.body;
 
     if (!first_name || !last_name || !document || !email) {
       return res.status(400).json({ error: "Faltan campos requeridos" });
@@ -127,6 +102,7 @@ async function update(req, res) {
       document,
       email,
       birth_date,
+      phone: phone || null,
     });
 
     if (!updatedAthlete) {
@@ -149,9 +125,7 @@ async function update(req, res) {
   }
 }
 
-// TODO 5: Create function deactivate(req, res)
-
-async function deactivate (req, res) {
+async function deactivate(req, res) {
   
   try {
     

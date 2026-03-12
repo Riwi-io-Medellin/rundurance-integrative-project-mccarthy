@@ -66,20 +66,8 @@
             <i class="bi bi-person-circle text-slate-400"></i>
             <h3 class="font-semibold">Perfil del entrenador</h3>
           </div>
-          <div class="p-6 flex flex-col sm:flex-row gap-6 items-start">
-            <!-- Avatar -->
-            <div class="flex flex-col items-center gap-3 shrink-0">
-              <img
-                src="https://st2.depositphotos.com/4196725/6217/i/450/depositphotos_62170405-stock-photo-young-cool-black-man-proud.jpg"
-                alt="Trainer"
-                class="w-20 h-20 rounded-full border-2 border-slate-200 object-cover"
-              />
-              <button class="text-xs text-sky-500 hover:text-sky-700 font-medium transition-colors">
-                Cambiar foto
-              </button>
-            </div>
-            <!-- Fields -->
-            <div class="flex-1 grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div class="p-6">
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
               <div>
                 <label class="block text-sm text-slate-500 mb-1">Nombre completo</label>
                 <input id="cfg-name" type="text" placeholder="Tu nombre"
@@ -92,12 +80,7 @@
               </div>
               <div>
                 <label class="block text-sm text-slate-500 mb-1">Teléfono</label>
-                <input type="tel" placeholder="+57 300 000 0000"
-                  class="w-full bg-white border border-slate-200 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-sky-400 transition-all" />
-              </div>
-              <div>
-                <label class="block text-sm text-slate-500 mb-1">Ciudad</label>
-                <input type="text" placeholder="Medellín, Colombia"
+                <input id="cfg-phone" type="tel" placeholder="+57 300 000 0000"
                   class="w-full bg-white border border-slate-200 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-sky-400 transition-all" />
               </div>
             </div>

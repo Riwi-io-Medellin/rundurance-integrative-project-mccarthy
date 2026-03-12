@@ -56,6 +56,7 @@ function renderAthletes(athletes) {
                 data-document="${athlete.document || ''}"
                 data-email="${athlete.email || ''}"
                 data-birth-date="${birthDate}"
+                data-phone="${athlete.phone || ''}"
                 title="Editar">
                 <i class="bi bi-pencil"></i>
               </button>
@@ -108,6 +109,10 @@ function renderDetail(athlete) {
           <span class="font-medium">${birthDate}</span>
         </div>
         <div class="flex justify-between border-b border-slate-100 pb-2">
+          <span class="text-slate-400">Teléfono</span>
+          <span class="font-medium">${athlete.phone || '—'}</span>
+        </div>
+        <div class="flex justify-between border-b border-slate-100 pb-2">
           <span class="text-slate-400">Miembro desde</span>
           <span class="font-medium">${memberSince}</span>
         </div>
@@ -144,6 +149,7 @@ function openModal(athlete = null) {
   document.getElementById('ath-document').value   = athlete ? athlete.document  : '';
   document.getElementById('ath-email').value      = athlete ? athlete.email     : '';
   document.getElementById('ath-birth-date').value = athlete ? athlete.birthDate : '';
+  document.getElementById('ath-phone').value      = athlete ? athlete.phone     : '';
   document.getElementById('modal-athlete').classList.remove('hidden');
 }
 
@@ -161,6 +167,7 @@ async function submitAthleteForm(e) {
     document:   document.getElementById('ath-document').value.trim(),
     email:      document.getElementById('ath-email').value.trim(),
     birth_date: document.getElementById('ath-birth-date').value || null,
+    phone:      document.getElementById('ath-phone').value.trim() || null,
   };
   try {
     if (currentEditId) {
@@ -256,6 +263,7 @@ document.addEventListener('DOMContentLoaded', () => {
         document:  d.document,
         email:     d.email,
         birthDate: d.birthDate,
+        phone:     d.phone,
       });
       return;
     }

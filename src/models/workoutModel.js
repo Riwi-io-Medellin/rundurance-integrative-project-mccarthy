@@ -181,29 +181,6 @@ async function getWorkoutById(completedWorkoutId) {
   return { ...rows[0], laps };
 }
 
-/**
- * Calculates compliance % for an athlete: completed / planned sessions up to today.
- * Returns null if no planned workouts exist.
- * @param {number} athleteId
- * @returns {Promise<number|null>}
- */
-async function getComplianceByAthlete(athleteId) {
-  const { rows } = await db.query(
-    `SELECT
-       COUNT(pw.planned_workout_id)                         AS planned_count,
-       COUNT(cw.planned_workout_id)                         AS completed_count
-     FROM planned_workout pw
-     JOIN workout_plan wp ON wp.workout_plan_id = pw.workout_plan_id
-     LEFT JOIN completed_workout cw ON cw.planned_workout_id = pw.planned_workout_id
-     WHERE wp.athlete_id = $1
-       AND pw.scheduled_date <= CURRENT_DATE`,
-    [athleteId]
-  );
-  const planned  = parseInt(rows[0].planned_count,  10);
-  const completed = parseInt(rows[0].completed_count, 10);
-  return planned > 0 ? Math.round((completed / planned) * 100) : null;
-}
-
 module.exports = {
   insertCompletedWorkout,
   insertLaps,
@@ -211,5 +188,4 @@ module.exports = {
   findPlannedWorkoutByDate,
   getCompletedWorkoutsByAthlete,
   getWorkoutById,
-  getComplianceByAthlete,
 };

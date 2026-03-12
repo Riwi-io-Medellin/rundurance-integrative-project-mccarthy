@@ -81,12 +81,12 @@ async function getProfile(req, res) {
  */
 async function updateProfile(req, res) {
   try {
-    const { first_name, last_name, email } = req.body;
+    const { first_name, last_name, email, phone } = req.body;
     if (!first_name || !last_name || !email) {
       return res.status(400).json({ error: 'Nombre y correo son requeridos' });
     }
 
-    const updated = await userModel.updateTrainer(req.trainer.trainer_id, { first_name, last_name, email });
+    const updated = await userModel.updateTrainer(req.trainer.trainer_id, { first_name, last_name, email, phone: phone || null });
     if (!updated) return res.status(404).json({ error: 'Entrenador no encontrado' });
 
     return res.json(safeTrainer(updated));

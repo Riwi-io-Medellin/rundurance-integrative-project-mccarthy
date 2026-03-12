@@ -14,7 +14,7 @@ CREATE TABLE trainer (
   email         VARCHAR(150) NOT NULL UNIQUE,
   password_hash VARCHAR(255) NOT NULL,
   role          VARCHAR(50)  NOT NULL DEFAULT 'coach', -- 'coach', 'admin'
-  photo_s3_key  VARCHAR(500),
+  phone         VARCHAR(30),
   is_active     BOOLEAN      NOT NULL DEFAULT TRUE,
   created_at    TIMESTAMPTZ  NOT NULL DEFAULT NOW(),
   updated_at    TIMESTAMPTZ  NOT NULL DEFAULT NOW()
@@ -34,22 +34,10 @@ CREATE TABLE athlete (
   email         VARCHAR(150) NOT NULL UNIQUE,
   password_hash VARCHAR(255),           -- nullable: athlete may not log in
   birth_date    DATE,
-  photo_s3_key  VARCHAR(500),
+  phone         VARCHAR(30),
   is_active     BOOLEAN      NOT NULL DEFAULT TRUE,
   created_at    TIMESTAMPTZ  NOT NULL DEFAULT NOW(),
   updated_at    TIMESTAMPTZ  NOT NULL DEFAULT NOW()
-);
-
-
--- -----------------------------------------------------
--- workout_category
--- e.g. Resistencia, Velocidad, Fuerza, Recuperación
--- -----------------------------------------------------
-CREATE TABLE workout_category (
-  workout_category_id SERIAL PRIMARY KEY,
-  name                VARCHAR(100) NOT NULL UNIQUE,
-  created_at          TIMESTAMPTZ  NOT NULL DEFAULT NOW(),
-  updated_at          TIMESTAMPTZ  NOT NULL DEFAULT NOW()
 );
 
 
@@ -61,7 +49,6 @@ CREATE TABLE workout_plan (
   workout_plan_id     SERIAL PRIMARY KEY,
   athlete_id          INT          NOT NULL REFERENCES athlete(athlete_id),
   trainer_id          INT          NOT NULL REFERENCES trainer(trainer_id),
-  workout_category_id INT          NOT NULL REFERENCES workout_category(workout_category_id),
   name                VARCHAR(200) NOT NULL,
   description         TEXT,
   start_date          DATE         NOT NULL,
@@ -171,23 +158,6 @@ CREATE TABLE workout_feedback (
   feedback             TEXT        NOT NULL,
   created_at           TIMESTAMPTZ NOT NULL DEFAULT NOW(),
   updated_at           TIMESTAMPTZ NOT NULL DEFAULT NOW()
-);
-
-
--- -----------------------------------------------------
--- athlete_alert
--- Active alerts for the coach dashboard.
--- e.g. overtraining, missed sessions, payment overdue
--- -----------------------------------------------------
-CREATE TABLE athlete_alert (
-  alert_id    SERIAL PRIMARY KEY,
-  athlete_id  INT          NOT NULL REFERENCES athlete(athlete_id),
-  trainer_id  INT          NOT NULL REFERENCES trainer(trainer_id),
-  type        VARCHAR(50)  NOT NULL, -- 'sobrentrenamiento', 'sesion_perdida', 'pago_vencido'
-  message     TEXT         NOT NULL,
-  is_resolved BOOLEAN      NOT NULL DEFAULT FALSE,
-  created_at  TIMESTAMPTZ  NOT NULL DEFAULT NOW(),
-  updated_at  TIMESTAMPTZ  NOT NULL DEFAULT NOW()
 );
 
 

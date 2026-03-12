@@ -26,8 +26,10 @@ function loadProfile() {
     const trainer = JSON.parse(raw);
     const nameEl  = document.getElementById('cfg-name');
     const emailEl = document.getElementById('cfg-email');
+    const phoneEl = document.getElementById('cfg-phone');
     if (nameEl)  nameEl.value  = `${trainer.first_name} ${trainer.last_name || ''}`.trim();
     if (emailEl) emailEl.value = trainer.email || '';
+    if (phoneEl) phoneEl.value = trainer.phone || '';
   } catch {
     // ignore
   }
@@ -37,6 +39,7 @@ function loadProfile() {
 async function saveProfile() {
   const fullName = document.getElementById('cfg-name').value.trim();
   const email    = document.getElementById('cfg-email').value.trim();
+  const phone    = document.getElementById('cfg-phone').value.trim() || null;
 
   if (!fullName || !email) {
     showToast('Nombre y correo son requeridos', 'error');
@@ -52,7 +55,7 @@ async function saveProfile() {
   btn.textContent = 'Guardando...';
 
   try {
-    const updated = await apiPatch('/auth/me', { first_name, last_name, email });
+    const updated = await apiPatch('/auth/me', { first_name, last_name, email, phone });
 
     // Persist updated trainer in session so sidebar/other pages reflect change
     const raw = sessionStorage.getItem('trainer');

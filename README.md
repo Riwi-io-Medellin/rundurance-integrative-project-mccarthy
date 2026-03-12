@@ -22,16 +22,16 @@
 
 ## Description
 
-**Rundurance** is a web platform for running coaches. It allows create personalize feedbacks, monitoring athlete performance metrics, and tracking his finances.
+**Rundurance** is a web platform for running coaches. It enables athlete management, training plan uploads, workout analysis via `.FIT` file parsing, and financial tracking. The project is architected for simplicity and maintainability.
 
 ### Key Features
 
 - **Athlete management** - registration, profiles, and individual tracking
-- **Training plans** - upload and link `.ZWO` (Zwift) and `.FIT` (Garmin) files
+- **Coach profiles** - registration, profile management, password change
+- **Training plans** - upload and link `.ZWO` (Zwift) and `.FIT` (Garmin) files to athletes
 - **Workout analysis** - parse binary `.FIT` files into JSON with heart rate, cadence, laps, and training load metrics
-- **Automated pipeline** - `.FIT` uploaded -> S3 -> n8n -> AI feedback -> coach alert
-- **Finances** - athlete payment tracking
-- **Coach dashboard** - compliance %, last session, alert status, fatigue/form
+- **Automated pipeline** - `.FIT` uploaded → S3 → n8n → AI feedback → coach alert
+- **Financial tracking** - athlete payment records and due date alerts
 
 ---
 
@@ -55,14 +55,28 @@
 ```
 rundurance/
 ├── server.js                    # Express entry point (port 3000)
-├── public/                      # Static files
-│   ├── index.html               # Public landing page
-│   ├── login.html               # Authentication
-│   ├── athlete.html             # Coach dashboard: athletes
-│   ├── finance.html             # Coach dashboard: finances
+├── docs/
+│   └── database/
+│       ├── schema.sql           # PostgreSQL 16 schema
+│       └── migration_001_simplify.sql  # Simplification migration
+├── public/                      # Static frontend files
+│   ├── pages/
+│   │   ├── login.html
+│   │   ├── dashboard.html       # Coach overview
+│   │   ├── atletas.html         # Athlete management
+│   │   ├── finanzas.html        # Financial tracking
+│   │   ├── configuracion.html   # Profile settings
+│   │   └── progreso.html        # Progress tracking
 │   └── assets/
-│       ├── images/              # Logo, favicon, athlete photos
+│       ├── images/              # Logo, icons
 │       ├── js/                  # Per-page vanilla JS (fetch API)
+│       │   ├── api.js           # Auth & HTTP utilities
+│       │   ├── login.js
+│       │   ├── dashboard.js
+│       │   ├── atletas.js
+│       │   ├── finanzas.js
+│       │   ├── configuracion.js
+│       │   └── progreso.js
 │       └── css/                 # Custom styles
 └── src/
     ├── controllers/             # Route handlers (delegate to models)
@@ -71,24 +85,46 @@ rundurance/
     │   ├── financeController.js
     │   └── workoutController.js
     ├── models/                  # SQL queries via pg pool
-    │   ├── userModel.js
-    │   ├── athleteModel.js
-    │   ├── financeModel.js
-    │   └── workoutModel.js
-    ├── routes/                  # Express routers
+    │   ├── userModel.js         # Trainer CRUD
+    │   ├── athleteModel.js      # Athlete CRUD
+    │   ├── financeModel.js      # Payment tracking
+    │   └── workoutModel.js      # Workout upload & analysis
+    ├── routes/                  # Express routers (all protected by JWT)
     │   ├── auth.js              # /api/auth
     │   ├── athletes.js          # /api/athletes
     │   ├── finances.js          # /api/finances
     │   └── workouts.js          # /api/workouts
     ├── services/
-    │   ├── fitParser.js         # .FIT binary -> JSON
-    │   ├── s3.js                # Upload/retrieve S3 files
-    │   └── n8n.js               # Trigger n8n webhook
+    │   ├── fitParser.js         # .FIT binary → JSON parsing
+    │   ├── s3.js                # S3 upload/retrieval
+    │   └── n8n.js               # n8n webhook triggers
     ├── middleware/
     │   └── auth.js              # JWT verification
     └── db/
         └── connection.js        # pg Pool singleton
 ```
+
+---
+
+## Database Schema
+
+### Core Tables
+
+| Table                   | Purpose                                                    |
+| ----------------------- | ---------------------------------------------------------- |
+| `trainer`               | Coaches (role: 'coach' or 'admin'); has `phone`, `email`   |
+| `athlete`               | Athletes managed by trainer; soft-deleted via `is_active`  |
+| `workout_plan`          | Training blocks assigned to an athlete                     |
+| `planned_workout`       | Individual sessions within a plan (links to `.ZWO` files)  |
+| `completed_workout`     | Executed sessions from `.FIT` uploads (aggregated metrics) |
+| `completed_workout_lap` | Per-lap breakdown from completed workouts                  |
+| `workout_feedback`      | AI or coach feedback on completed sessions                 |
+| `payment`               | Monthly fee tracking; statuses: 'pendiente', 'pagado'      |
+
+### Design Notes
+
+- **Soft deletes**: `trainer.is_active` and `athlete.is_active` default to `TRUE`; set to `FALSE` to deactivate instead of deleting records
+- **Parameterized queries**: All SQL uses `$1, $2, ...` placeholders to prevent SQL injection
 
 ---
 
@@ -142,18 +178,24 @@ npm start      # Production
 
 ---
 
-## API Endpoints
+## Development Notes
 
-| Method | Route                        | Description                         | Auth |
-| ------ | ---------------------------- | ----------------------------------- | ---- |
-| POST   | `/api/auth/register`         | Register a coach                    | No   |
-| POST   | `/api/auth/login`            | Login -> JWT                        | No   |
-| GET    | `/api/athletes`              | List coach's athletes               | JWT  |
-| POST   | `/api/athletes`              | Create athlete                      | JWT  |
-| GET    | `/api/athletes/:id`          | Athlete profile                     | JWT  |
-| GET    | `/api/workouts/athlete/:id`  | Workouts for an athlete             | JWT  |
-| POST   | `/api/workouts/upload`       | Upload `.FIT` file -> S3 + DB + n8n | JWT  |
-| POST   | `/api/workouts/:id/feedback` | Save n8n feedback                   | JWT  |
+### Architecture & Simplicity
+
+This project is architected for clarity and maintainability. Key decisions:
+
+- **Vanilla JavaScript frontend** - No build step, no framework overhead. ES6 modules via `<script type="module">`.
+- **Tailwind CSS + Bootstrap Icons** - Loaded via CDN. No CSS preprocessing.
+- **MVC pattern** - Routes → Controllers → Models → SQL. Clear separation of concerns.
+- **Minimal dependencies** - Core libraries only: `pg`, `bcryptjs`, `jsonwebtoken`, `multer`, `@aws-sdk/client-s3`, `fit-file-parser`.
+
+### Commands
+
+```bash
+npm install        # Install dependencies
+npm run dev        # Start with nodemon (hot reload) — development
+npm start          # Start with node — production
+```
 
 ---
 
