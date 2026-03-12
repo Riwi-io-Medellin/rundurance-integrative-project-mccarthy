@@ -8,6 +8,7 @@ document.getElementById("loginForm").addEventListener("submit", async (e) => {
   try {
     const data = await apiPost("/auth/login", { email, password });
     sessionStorage.setItem("token", data.token);
+    sessionStorage.setItem("trainer", JSON.stringify(data.trainer));
     window.location.href = "dashboard.html";
   } catch (err) {
     alert(err.message);

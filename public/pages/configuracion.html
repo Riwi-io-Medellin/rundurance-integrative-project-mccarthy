@@ -34,13 +34,16 @@
         </a>
       </nav>
       <div class="p-4 border-t border-slate-200">
-        <div class="flex items-center gap-3 p-2 rounded-lg hover:bg-slate-100 transition-colors cursor-pointer">
+        <div class="flex items-center gap-3 p-2 rounded-lg">
           <img src="https://st2.depositphotos.com/4196725/6217/i/450/depositphotos_62170405-stock-photo-young-cool-black-man-proud.jpg" alt="Trainer" class="w-10 h-10 rounded-full border border-slate-300" />
           <div>
-            <p class="text-sm font-semibold">Carlos Méndez</p>
-            <p class="text-xs text-slate-400 uppercase tracking-wider">Trainer</p>
+            <p id="sidebar-name" class="text-sm font-semibold">Trainer</p>
+            <p class="text-xs text-slate-400 uppercase tracking-wider">Coach</p>
           </div>
         </div>
+        <button onclick="sessionStorage.clear(); window.location.href='login.html'" class="mt-2 w-full flex items-center gap-2 px-3 py-2 text-sm text-slate-500 hover:text-red-500 hover:bg-red-50 rounded-md transition-colors">
+          <i class="bi bi-box-arrow-right"></i> Cerrar sesion
+        </button>
       </div>
     </aside>
 
@@ -76,12 +79,12 @@
             <div class="flex-1 grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
                 <label class="block text-sm text-slate-500 mb-1">Nombre completo</label>
-                <input type="text" value="Carlos Méndez"
+                <input id="cfg-name" type="text" placeholder="Tu nombre"
                   class="w-full bg-white border border-slate-200 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-sky-400 transition-all" />
               </div>
               <div>
                 <label class="block text-sm text-slate-500 mb-1">Correo electrónico</label>
-                <input type="email" value="carlos@rundurance.com"
+                <input id="cfg-email" type="email" placeholder="tu@email.com"
                   class="w-full bg-white border border-slate-200 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-sky-400 transition-all" />
               </div>
               <div>
@@ -217,6 +220,9 @@
             <button class="px-4 py-2 border border-slate-300 rounded-md text-sm font-medium hover:bg-slate-50 transition-colors inline-flex items-center gap-2">
               <i class="bi bi-key"></i> Cambiar contraseña
             </button>
+            <button id="btn-logout" class="px-4 py-2 border border-amber-300 text-amber-600 rounded-md text-sm font-medium hover:bg-amber-50 transition-colors inline-flex items-center gap-2">
+              <i class="bi bi-box-arrow-right"></i> Cerrar sesion
+            </button>
             <button class="px-4 py-2 border border-red-200 text-red-500 rounded-md text-sm font-medium hover:bg-red-50 transition-colors inline-flex items-center gap-2">
               <i class="bi bi-trash3"></i> Eliminar cuenta
             </button>
@@ -225,5 +231,6 @@
 
       </div>
     </main>
+    <script type="module" src="../assets/js/configuracion.js"></script>
   </body>
 </html>

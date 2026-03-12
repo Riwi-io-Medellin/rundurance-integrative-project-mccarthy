@@ -17,10 +17,10 @@ router.get('/', auth, controller.getAll);
 // TODO 2: GET /api/finances/athlete/:athleteId — Payments for one athlete
 // router.get('/athlete/:athleteId', auth, controller.getByAthlete);
 
-// TODO 3: POST /api/finances — Create a new payment record
-// router.post('/', auth, controller.create);
+// POST /api/finances — Create a new payment record
+router.post('/', auth, controller.create);
 
-// TODO 4: PUT /api/finances/:id/pay — Mark a payment as paid
-// router.put('/:id/pay', auth, controller.markPaid);
+// PUT /api/finances/:id/pay — Mark a payment as paid
+router.put('/:id/pay', auth, controller.markPaid);
 
 module.exports = router;

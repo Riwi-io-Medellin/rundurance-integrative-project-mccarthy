@@ -1,16 +1,21 @@
 const API_BASE = '/api';
 
 async function request(path, options = {}) {
-  // TODO: re-enable JWT token after testing
-  // const token = sessionStorage.getItem('token');
+  const token = sessionStorage.getItem('token');
   const res = await fetch(`${API_BASE}${path}`, {
     headers: {
       'Content-Type': 'application/json',
-      // ...(token && { Authorization: `Bearer ${token}` }),
+      ...(token && { Authorization: `Bearer ${token}` }),
       ...(options.headers || {}),
     },
     ...options,
   });
+
+  if (res.status === 401 && !path.startsWith('/auth/')) {
+    sessionStorage.removeItem('token');
+    window.location.href = 'login.html';
+    return;
+  }
 
   if (!res.ok) {
     const errorBody = await res.json().catch(() => null);
@@ -23,12 +28,34 @@ async function request(path, options = {}) {
 
 function apiGet(path) { return request(path, { method: 'GET' }); }
 function apiPost(path, body) { return request(path, { method: 'POST', body: JSON.stringify(body) }); }
-function apiPut(path, body) { return request(path, { method: 'PATCH', body: JSON.stringify(body) }); }
+function apiPut(path, body) { return request(path, { method: 'PUT', body: JSON.stringify(body) }); }
 function apiDelete(path) { return request(path, { method: 'DELETE' }); }
+
+function checkAuth() {
+  if (!sessionStorage.getItem('token')) {
+    window.location.href = 'login.html';
+  }
+}
+
+function loadSidebar() {
+  const raw = sessionStorage.getItem('trainer');
+  if (!raw) return;
+  try {
+    const trainer = JSON.parse(raw);
+    const el = document.getElementById('sidebar-name');
+    if (el && trainer.first_name) {
+      el.textContent = `${trainer.first_name} ${trainer.last_name || ''}`.trim();
+    }
+  } catch {
+    // ignore
+  }
+}
 
 export {
   apiGet,
   apiPost,
   apiPut,
   apiDelete,
+  checkAuth,
+  loadSidebar,
 };

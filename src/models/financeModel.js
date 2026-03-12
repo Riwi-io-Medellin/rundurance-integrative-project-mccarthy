@@ -23,7 +23,30 @@ async function updateOverduePayments() {
   return rowCount;
 }
 
+async function createPayment({ athlete_id, trainer_id, amount, due_date }) {
+  const { rows } = await db.query(
+    `INSERT INTO payment (athlete_id, trainer_id, amount, due_date, status)
+     VALUES ($1, $2, $3, $4, 'pendiente')
+     RETURNING *`,
+    [athlete_id, trainer_id, amount, due_date]
+  );
+  return rows[0];
+}
+
+async function markPaid(paymentId, trainerId) {
+  const { rows } = await db.query(
+    `UPDATE payment
+     SET status = 'pagado', paid_at = NOW(), updated_at = NOW()
+     WHERE payment_id = $1 AND trainer_id = $2
+     RETURNING *`,
+    [paymentId, trainerId]
+  );
+  return rows[0];
+}
+
 module.exports = {
   findAllByTrainer,
   updateOverduePayments,
+  createPayment,
+  markPaid,
 };
