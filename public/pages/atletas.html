@@ -55,11 +55,8 @@
           <p class="text-slate-500 mt-1">Gestiona y monitorea a todos tus atletas</p>
         </div>
         <div class="flex gap-3">
-          <button class="px-4 py-2 border border-slate-300 rounded-md text-sm font-medium hover:bg-slate-200 transition-colors inline-flex items-center gap-2">
-            <i class="bi bi-box-arrow-down"></i> EXPORTAR .CSV
-          </button>
-          <button class="px-4 py-2 bg-sky-400 hover:bg-sky-500 text-white rounded-md text-sm font-medium transition-colors inline-flex items-center gap-2">
-            <i class="bi bi-box-arrow-up"></i> IMPORTAR .FIT
+          <button id="btn-new-athlete" class="px-4 py-2 bg-sky-400 hover:bg-sky-500 text-white rounded-md text-sm font-medium transition-colors inline-flex items-center gap-2">
+            <i class="bi bi-plus-lg"></i> Nuevo atleta
           </button>
         </div>
       </header>
@@ -131,6 +128,50 @@
         </div>
       </section>
     </main>
+
+    <!-- Modal: Nuevo / Editar atleta -->
+    <div id="modal-athlete" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black/40">
+      <div class="bg-white rounded-xl shadow-xl w-full max-w-md mx-4">
+        <div class="p-6 border-b border-slate-200 flex items-center justify-between">
+          <h3 id="modal-athlete-title" class="text-lg font-semibold">Nuevo atleta</h3>
+          <button id="modal-athlete-close" class="text-slate-400 hover:text-slate-600 text-xl"><i class="bi bi-x-lg"></i></button>
+        </div>
+        <form id="form-athlete" class="p-6 flex flex-col gap-4">
+          <div class="grid grid-cols-2 gap-4">
+            <div>
+              <label class="block text-sm text-slate-500 mb-1">Nombre *</label>
+              <input id="ath-first-name" type="text" required placeholder="Juan"
+                class="w-full border border-slate-200 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-sky-400" />
+            </div>
+            <div>
+              <label class="block text-sm text-slate-500 mb-1">Apellido *</label>
+              <input id="ath-last-name" type="text" required placeholder="García"
+                class="w-full border border-slate-200 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-sky-400" />
+            </div>
+          </div>
+          <div>
+            <label class="block text-sm text-slate-500 mb-1">Documento *</label>
+            <input id="ath-document" type="text" required placeholder="1234567890"
+              class="w-full border border-slate-200 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-sky-400" />
+          </div>
+          <div>
+            <label class="block text-sm text-slate-500 mb-1">Email *</label>
+            <input id="ath-email" type="email" required placeholder="juan@email.com"
+              class="w-full border border-slate-200 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-sky-400" />
+          </div>
+          <div>
+            <label class="block text-sm text-slate-500 mb-1">Fecha de nacimiento</label>
+            <input id="ath-birth-date" type="date"
+              class="w-full border border-slate-200 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-sky-400" />
+          </div>
+          <div class="flex justify-end gap-3 pt-2">
+            <button type="button" id="modal-athlete-cancel" class="px-4 py-2 border border-slate-300 rounded-md text-sm font-medium hover:bg-slate-50 transition-colors">Cancelar</button>
+            <button type="submit" class="px-4 py-2 bg-sky-400 hover:bg-sky-500 text-white rounded-md text-sm font-medium transition-colors">Guardar</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
   </body>
     <script type="module" src="../assets/js/atletas.js"></script>
 </html>

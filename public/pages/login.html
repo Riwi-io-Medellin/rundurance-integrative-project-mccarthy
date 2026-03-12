@@ -35,7 +35,7 @@
       </div>
 
       <!-- Form -->
-      <form id="loginForm" class="space-y-6">
+      <form id="loginForm" method="post" class="space-y-6">
         <!-- Email -->
         <div>
           <label class="block text-sm text-slate-500 mb-2">
@@ -80,6 +80,9 @@
             ¿Olvidaste tu contraseña?
           </a>
         </div>
+
+        <!-- Error message -->
+        <p id="login-error" class="hidden text-sm text-red-500 bg-red-50 border border-red-200 rounded-md px-3 py-2"></p>
 
         <!-- Button -->
         <button

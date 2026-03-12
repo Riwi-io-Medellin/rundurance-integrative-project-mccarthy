@@ -1,9 +1,13 @@
-import { apiGet, checkAuth, loadSidebar } from './api.js';
+import { apiGet, apiPost, apiPut, apiDelete, checkAuth, loadSidebar } from './api.js';
 
 checkAuth();
 loadSidebar();
 
-async function renderAthletes(athletes) {
+let currentEditId = null;
+
+// ── Render table ──────────────────────────────────────────────────────────────
+
+function renderAthletes(athletes) {
   const tbody = document.getElementById('athletes-tbody');
   const countEl = document.getElementById('athletes-count');
   const summaryEl = document.getElementById('athletes-summary');
@@ -25,6 +29,7 @@ async function renderAthletes(athletes) {
   tbody.innerHTML = athletes
     .map((athlete) => {
       const fullName = `${athlete.first_name || ''} ${athlete.last_name || ''}`.trim() || 'Sin nombre';
+      const birthDate = athlete.birth_date ? athlete.birth_date.substring(0, 10) : '';
       return `
         <tr class="hover:bg-slate-50 transition-colors">
           <td class="px-6 py-4 font-medium">${fullName}</td>
@@ -33,15 +38,36 @@ async function renderAthletes(athletes) {
           <td class="px-6 py-4"><span class="text-xs px-2 py-1 rounded-full bg-slate-100 text-slate-500 font-medium">—</span></td>
           <td class="px-6 py-4 text-sm text-slate-400">—</td>
           <td class="px-6 py-4 text-right">
-            <button class="text-sky-500 hover:text-sky-700 text-sm font-medium inline-flex items-center gap-1 btn-detail" data-athlete-id="${athlete.athlete_id}">
-              <i class="bi bi-eye"></i> Detalle
-            </button>
+            <div class="inline-flex items-center gap-3">
+              <button class="text-sky-500 hover:text-sky-700 text-sm font-medium inline-flex items-center gap-1 btn-detail"
+                data-athlete-id="${athlete.athlete_id}">
+                <i class="bi bi-eye"></i> Detalle
+              </button>
+              <button class="text-slate-400 hover:text-slate-700 text-sm inline-flex items-center btn-edit"
+                data-athlete-id="${athlete.athlete_id}"
+                data-first-name="${athlete.first_name || ''}"
+                data-last-name="${athlete.last_name || ''}"
+                data-document="${athlete.document || ''}"
+                data-email="${athlete.email || ''}"
+                data-birth-date="${birthDate}"
+                title="Editar">
+                <i class="bi bi-pencil"></i>
+              </button>
+              <button class="text-red-400 hover:text-red-600 text-sm inline-flex items-center btn-delete"
+                data-athlete-id="${athlete.athlete_id}"
+                data-name="${fullName}"
+                title="Eliminar">
+                <i class="bi bi-trash3"></i>
+              </button>
+            </div>
           </td>
         </tr>
       `;
     })
     .join('');
 }
+
+// ── Detail panel ──────────────────────────────────────────────────────────────
 
 function renderDetail(athlete) {
   const panel = document.getElementById('detail-panel');
@@ -92,9 +118,7 @@ async function openDetail(athleteId) {
   const panel = document.getElementById('detail-panel');
   if (!panel) return;
 
-  panel.innerHTML = `
-    <p class="text-slate-400 text-sm">Cargando...</p>
-  `;
+  panel.innerHTML = `<p class="text-slate-400 text-sm">Cargando...</p>`;
 
   try {
     const athlete = await apiGet(`/athletes/${athleteId}`);
@@ -103,6 +127,68 @@ async function openDetail(athleteId) {
     panel.innerHTML = `<p class="text-red-400 text-sm">Error al cargar atleta.</p>`;
   }
 }
+
+// ── Modal (create / edit) ─────────────────────────────────────────────────────
+
+function openModal(athlete = null) {
+  currentEditId = athlete ? athlete.athleteId : null;
+  document.getElementById('modal-athlete-title').textContent = athlete ? 'Editar atleta' : 'Nuevo atleta';
+  document.getElementById('ath-first-name').value = athlete ? athlete.firstName : '';
+  document.getElementById('ath-last-name').value  = athlete ? athlete.lastName  : '';
+  document.getElementById('ath-document').value   = athlete ? athlete.document  : '';
+  document.getElementById('ath-email').value      = athlete ? athlete.email     : '';
+  document.getElementById('ath-birth-date').value = athlete ? athlete.birthDate : '';
+  document.getElementById('modal-athlete').classList.remove('hidden');
+}
+
+function closeModal() {
+  document.getElementById('modal-athlete').classList.add('hidden');
+  document.getElementById('form-athlete').reset();
+  currentEditId = null;
+}
+
+async function submitAthleteForm(e) {
+  e.preventDefault();
+  const body = {
+    first_name: document.getElementById('ath-first-name').value.trim(),
+    last_name:  document.getElementById('ath-last-name').value.trim(),
+    document:   document.getElementById('ath-document').value.trim(),
+    email:      document.getElementById('ath-email').value.trim(),
+    birth_date: document.getElementById('ath-birth-date').value || null,
+  };
+  try {
+    if (currentEditId) {
+      await apiPut(`/athletes/${currentEditId}`, body);
+    } else {
+      await apiPost('/athletes', body);
+    }
+    closeModal();
+    await cargarAtletas();
+  } catch (err) {
+    alert(err.message || 'Error al guardar atleta');
+  }
+}
+
+// ── Delete ────────────────────────────────────────────────────────────────────
+
+async function deleteAthlete(athleteId, name) {
+  if (!confirm(`¿Eliminar a ${name}? Esta acción no se puede deshacer.`)) return;
+  try {
+    await apiDelete(`/athletes/${athleteId}`);
+    await cargarAtletas();
+    const panel = document.getElementById('detail-panel');
+    if (panel) panel.innerHTML = `
+      <div class="w-12 h-12 rounded-full bg-slate-100 flex items-center justify-center text-slate-300 text-xl mb-2">
+        <i class="bi bi-person"></i>
+      </div>
+      <p class="text-slate-400 text-sm">Selecciona un atleta<br/>para ver sus detalles</p>
+    `;
+  } catch (err) {
+    alert(err.message || 'Error al eliminar atleta');
+  }
+}
+
+// ── Load ──────────────────────────────────────────────────────────────────────
 
 async function cargarAtletas() {
   const tbody = document.getElementById('athletes-tbody');
@@ -116,12 +202,7 @@ async function cargarAtletas() {
 
   try {
     const atletas = await apiGet('/athletes');
-    await renderAthletes(atletas);
-
-    tbody.addEventListener('click', (e) => {
-      const btn = e.target.closest('.btn-detail');
-      if (btn) openDetail(btn.dataset.athleteId);
-    });
+    renderAthletes(atletas);
   } catch (error) {
     console.error('Error al cargar atletas:', error);
     tbody.innerHTML = `
@@ -132,4 +213,35 @@ async function cargarAtletas() {
   }
 }
 
-window.addEventListener('DOMContentLoaded', cargarAtletas);
+// ── Events ────────────────────────────────────────────────────────────────────
+
+document.addEventListener('DOMContentLoaded', () => {
+  cargarAtletas();
+
+  document.getElementById('athletes-tbody').addEventListener('click', (e) => {
+    const detailBtn = e.target.closest('.btn-detail');
+    if (detailBtn) { openDetail(detailBtn.dataset.athleteId); return; }
+
+    const editBtn = e.target.closest('.btn-edit');
+    if (editBtn) {
+      const d = editBtn.dataset;
+      openModal({
+        athleteId: d.athleteId,
+        firstName: d.firstName,
+        lastName:  d.lastName,
+        document:  d.document,
+        email:     d.email,
+        birthDate: d.birthDate,
+      });
+      return;
+    }
+
+    const deleteBtn = e.target.closest('.btn-delete');
+    if (deleteBtn) deleteAthlete(deleteBtn.dataset.athleteId, deleteBtn.dataset.name);
+  });
+
+  document.getElementById('btn-new-athlete').addEventListener('click', () => openModal());
+  document.getElementById('modal-athlete-close').addEventListener('click', closeModal);
+  document.getElementById('modal-athlete-cancel').addEventListener('click', closeModal);
+  document.getElementById('form-athlete').addEventListener('submit', submitAthleteForm);
+});
