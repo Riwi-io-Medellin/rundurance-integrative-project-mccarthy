@@ -1,7 +1,9 @@
-import { checkAuth, loadSidebar, apiGet, apiPatch } from './api.js';
+import { checkAuth, loadSidebar, apiGet, apiPatch, apiDelete } from './api.js';
 
 checkAuth();
 loadSidebar();
+
+const SETTINGS_KEY = 'rundurance_settings';
 
 // ── Toast ────────────────────────────────────────────────────────────────────
 function showToast(msg, type = 'success') {
@@ -16,6 +18,37 @@ function showToast(msg, type = 'success') {
   text.textContent = msg;
 
   setTimeout(() => toast.classList.add('hidden'), 3500);
+}
+
+// ── Settings persistence (localStorage) ─────────────────────────────────────
+function loadSettings() {
+  try {
+    return JSON.parse(localStorage.getItem(SETTINGS_KEY)) || {};
+  } catch {
+    return {};
+  }
+}
+
+function saveSettings(partial) {
+  const current = loadSettings();
+  localStorage.setItem(SETTINGS_KEY, JSON.stringify({ ...current, ...partial }));
+}
+
+function applySettingsToUI() {
+  const s = loadSettings();
+
+  const setChecked = (id, defaultVal) => {
+    const el = document.getElementById(id);
+    if (el) el.checked = s[id] !== undefined ? s[id] : defaultVal;
+  };
+
+  setChecked('cfg-notify-athletes', true);
+  setChecked('cfg-notify-payments', true);
+  setChecked('cfg-notify-weekly', false);
+  setChecked('cfg-garmin-toggle', false);
+
+  const n8nInput = document.getElementById('cfg-n8n-url');
+  if (n8nInput && s['cfg-n8n-url']) n8nInput.value = s['cfg-n8n-url'];
 }
 
 // ── Load profile into form ───────────────────────────────────────────────────
@@ -147,6 +180,7 @@ function setupLogout() {
 // ── Init ─────────────────────────────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', () => {
   loadProfile();
+  applySettingsToUI();
   setupLogout();
 
   document.getElementById('btn-save-profile')
@@ -169,4 +203,37 @@ document.addEventListener('DOMContentLoaded', () => {
     .addEventListener('click', (e) => {
       if (e.target === e.currentTarget) closePasswordModal();
     });
+
+  // Notification toggles — persist on change
+  ['cfg-notify-athletes', 'cfg-notify-payments', 'cfg-notify-weekly'].forEach(id => {
+    document.getElementById(id)?.addEventListener('change', (e) => {
+      saveSettings({ [id]: e.target.checked });
+      showToast('Preferencia de notificación guardada');
+    });
+  });
+
+  // Garmin toggle
+  document.getElementById('cfg-garmin-toggle')?.addEventListener('change', (e) => {
+    saveSettings({ 'cfg-garmin-toggle': e.target.checked });
+    showToast(e.target.checked ? 'Garmin Connect activado' : 'Garmin Connect desactivado');
+  });
+
+  // Save integrations (n8n URL)
+  document.getElementById('btn-save-integrations')?.addEventListener('click', () => {
+    const url = document.getElementById('cfg-n8n-url')?.value.trim() || '';
+    saveSettings({ 'cfg-n8n-url': url });
+    showToast(url ? 'Integraciones guardadas' : 'URL de webhook eliminada');
+  });
+
+  // Delete account
+  document.getElementById('btn-delete-account')?.addEventListener('click', async () => {
+    if (!confirm('¿Estás seguro de que quieres eliminar tu cuenta? Esta acción no se puede deshacer.')) return;
+    try {
+      await apiDelete('/auth/me');
+      sessionStorage.clear();
+      window.location.href = 'login.html';
+    } catch (err) {
+      showToast(err.message || 'Error al eliminar cuenta', 'error');
+    }
+  });
 });

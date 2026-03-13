@@ -3,6 +3,8 @@ import { apiGet, apiPost, apiPatch, checkAuth, loadSidebar } from './api.js';
 checkAuth();
 loadSidebar();
 
+let allPayments = [];
+
 const STATUS_STYLES = {
   pagado:    'bg-emerald-500/10 text-emerald-500',
   pendiente: 'bg-yellow-500/10 text-yellow-500',
@@ -35,7 +37,7 @@ function renderRow(p) {
     : `<span class="text-slate-300 text-sm">—</span>`;
 
   return `
-    <tr class="hover:bg-slate-50 transition-colors">
+    <tr class="hover:bg-slate-50 transition-colors" data-status="${p.status}">
       <td class="px-6 py-4 font-medium">${p.first_name} ${p.last_name}</td>
       <td class="px-6 py-4">${formatAmount(p.amount)}</td>
       <td class="px-6 py-4 text-sm text-slate-600">${formatDate(p.due_date)}</td>
@@ -67,17 +69,55 @@ function updateStats(payments) {
 async function loadPayments() {
   const tbody = document.getElementById('payments-tbody');
   try {
-    const payments = await apiGet('/finances');
-    updateStats(payments);
-    if (payments.length === 0) {
+    allPayments = await apiGet('/finances');
+    updateStats(allPayments);
+    if (allPayments.length === 0) {
       tbody.innerHTML = `<tr><td colspan="6" class="px-6 py-8 text-center text-slate-400">No hay pagos registrados.</td></tr>`;
       return;
     }
-    tbody.innerHTML = payments.map(renderRow).join('');
+    tbody.innerHTML = allPayments.map(renderRow).join('');
   } catch (err) {
     tbody.innerHTML = `<tr><td colspan="6" class="px-6 py-8 text-center text-red-400">Error al cargar pagos.</td></tr>`;
     console.error(err);
   }
+}
+
+function applyFilters() {
+  const searchTerm = (document.getElementById('search-payments')?.value || '').toLowerCase();
+  const statusFilter = document.getElementById('filter-status')?.value || '';
+  const rows = document.querySelectorAll('#payments-tbody tr');
+
+  rows.forEach(row => {
+    const name = row.cells?.[0]?.textContent.toLowerCase() ?? '';
+    const status = row.dataset.status || '';
+    const matchesSearch = !searchTerm || name.includes(searchTerm);
+    const matchesStatus = !statusFilter || status === statusFilter;
+    row.classList.toggle('hidden', !(matchesSearch && matchesStatus));
+  });
+}
+
+function exportCsv() {
+  if (allPayments.length === 0) { alert('No hay datos para exportar'); return; }
+
+  const headers = ['Atleta', 'Monto', 'Fecha límite', 'Estado', 'Último pago'];
+  const csvRows = [headers.join(',')];
+
+  allPayments.forEach(p => {
+    const name = `"${p.first_name} ${p.last_name}"`;
+    const amount = p.amount;
+    const due = p.due_date ? p.due_date.substring(0, 10) : '';
+    const status = STATUS_LABELS[p.status] || p.status;
+    const paid = p.paid_at ? p.paid_at.substring(0, 10) : '';
+    csvRows.push([name, amount, due, status, paid].join(','));
+  });
+
+  const blob = new Blob([csvRows.join('\n')], { type: 'text/csv;charset=utf-8;' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `rundurance_finanzas_${new Date().toISOString().slice(0, 10)}.csv`;
+  a.click();
+  URL.revokeObjectURL(url);
 }
 
 async function markPaymentPaid(paymentId) {
@@ -133,6 +173,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const btn = e.target.closest('.btn-pay');
     if (btn) markPaymentPaid(btn.dataset.paymentId);
   });
+
+  document.getElementById('search-payments')?.addEventListener('input', applyFilters);
+  document.getElementById('filter-status')?.addEventListener('change', applyFilters);
+  document.getElementById('btn-export-csv')?.addEventListener('click', exportCsv);
 
   document.getElementById('btn-new-payment').addEventListener('click', () => {
     openModal();

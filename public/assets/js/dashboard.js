@@ -1,7 +1,9 @@
-import { apiGet, checkAuth, loadSidebar } from './api.js';
+import { apiGet, apiPost, checkAuth, loadSidebar } from './api.js';
 
 checkAuth();
 loadSidebar();
+
+let dashboardPayments = [];
 
 function formatAmount(amount) {
   return new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP', maximumFractionDigits: 0 }).format(amount);
@@ -20,6 +22,8 @@ async function loadDashboard() {
       apiGet('/finances'),
       apiGet('/finances/summary/monthly').catch(() => []),
     ]);
+
+    dashboardPayments = payments;
 
     const el = (id) => document.getElementById(id);
 
@@ -83,4 +87,96 @@ function renderRevenueChart(data) {
     </div>`;
 }
 
-document.addEventListener('DOMContentLoaded', loadDashboard);
+function exportCsv() {
+  if (dashboardPayments.length === 0) { alert('No hay datos para exportar'); return; }
+
+  const headers = ['Atleta', 'Monto', 'Fecha límite', 'Estado', 'Último pago'];
+  const csvRows = [headers.join(',')];
+
+  dashboardPayments.forEach(p => {
+    csvRows.push([
+      `"${p.first_name} ${p.last_name}"`,
+      p.amount,
+      p.due_date ? p.due_date.substring(0, 10) : '',
+      p.status,
+      p.paid_at ? p.paid_at.substring(0, 10) : '',
+    ].join(','));
+  });
+
+  const blob = new Blob([csvRows.join('\n')], { type: 'text/csv;charset=utf-8;' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `rundurance_dashboard_${new Date().toISOString().slice(0, 10)}.csv`;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  loadDashboard();
+
+  document.getElementById('btn-export-csv')?.addEventListener('click', exportCsv);
+  document.getElementById('btn-import-csv')?.addEventListener('click', () => {
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = '.csv';
+    input.onchange = async (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+
+      const text = await file.text();
+      const lines = text.split('\n').filter(l => l.trim());
+      if (lines.length < 2) { alert('El archivo CSV está vacío o no tiene datos.'); return; }
+
+      // Parse header row
+      const headers = lines[0].split(',').map(h => h.trim().toLowerCase().replace(/['"]/g, ''));
+      const requiredFields = ['first_name', 'last_name', 'document', 'email'];
+      const allFields = ['first_name', 'last_name', 'document', 'email', 'birth_date', 'phone'];
+
+      // Map header indices
+      const colMap = {};
+      allFields.forEach(f => {
+        const idx = headers.indexOf(f);
+        if (idx !== -1) colMap[f] = idx;
+      });
+
+      const missingRequired = requiredFields.filter(f => colMap[f] === undefined);
+      if (missingRequired.length > 0) {
+        alert(`Columnas requeridas faltantes: ${missingRequired.join(', ')}\n\nEl CSV debe tener: first_name, last_name, document, email`);
+        return;
+      }
+
+      let success = 0;
+      const errors = [];
+
+      for (let i = 1; i < lines.length; i++) {
+        const values = lines[i].split(',').map(v => v.trim().replace(/^"|"$/g, ''));
+        const body = {};
+        allFields.forEach(f => {
+          if (colMap[f] !== undefined) {
+            body[f] = values[colMap[f]]?.trim() || null;
+          }
+        });
+
+        if (!body.first_name || !body.last_name || !body.document || !body.email) {
+          errors.push(`Fila ${i + 1}: campos requeridos vacíos`);
+          continue;
+        }
+
+        try {
+          await apiPost('/athletes', body);
+          success++;
+        } catch (err) {
+          errors.push(`Fila ${i + 1}: ${err.message}`);
+        }
+      }
+
+      let msg = `Importados: ${success} atleta${success !== 1 ? 's' : ''}.`;
+      if (errors.length > 0) msg += `\nErrores: ${errors.length}\n\n${errors.slice(0, 5).join('\n')}${errors.length > 5 ? '\n...' : ''}`;
+      alert(msg);
+
+      if (success > 0) location.reload();
+    };
+    input.click();
+  });
+});

@@ -13,7 +13,11 @@
       rel="stylesheet"
       href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css"
     />
-    <link rel="icon" href="../assets/images/favicon_rundurance.png" type="image/png" />
+    <link
+      rel="icon"
+      href="../assets/images/favicon_rundurance.png"
+      type="image/png"
+    />
   </head>
 
   <body
@@ -47,7 +51,9 @@
             ></i>
             <input
               id="email"
+              name="email"
               type="email"
+              autocomplete="username"
               placeholder="ejemplo@correo.com"
               class="w-full bg-white border border-slate-200 rounded-md pl-10 pr-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-sky-400 transition-all"
             />
@@ -63,7 +69,9 @@
             ></i>
             <input
               id="password"
+              name="password"
               type="password"
+              autocomplete="current-password"
               placeholder="••••••••"
               class="w-full bg-white border border-slate-200 rounded-md pl-10 pr-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-sky-400 transition-all"
             />
@@ -76,13 +84,19 @@
             <input type="checkbox" class="accent-sky-400" />
             Recordarme
           </label>
-          <a href="#" class="text-sky-500 hover:text-sky-700 transition-colors">
+          <a href="#" id="forgot-password" class="text-sky-500 hover:text-sky-700 transition-colors">
             ¿Olvidaste tu contraseña?
           </a>
         </div>
 
+        <!-- Forgot password message -->
+        <p id="forgot-msg" class="hidden text-sm text-sky-600 bg-sky-50 border border-sky-200 rounded-md px-3 py-2"></p>
+
         <!-- Error message -->
-        <p id="login-error" class="hidden text-sm text-red-500 bg-red-50 border border-red-200 rounded-md px-3 py-2"></p>
+        <p
+          id="login-error"
+          class="hidden text-sm text-red-500 bg-red-50 border border-red-200 rounded-md px-3 py-2"
+        ></p>
 
         <!-- Button -->
         <button
@@ -95,7 +109,9 @@
 
       <!-- Back link -->
       <p class="text-center text-xs text-slate-400 mt-6">
-        <a href="index.html" class="hover:text-sky-500 transition-colors">← Volver al inicio</a>
+        <a href="dashboard.html" class="hover:text-sky-500 transition-colors"
+          >← Volver al inicio</a
+        >
       </p>
 
       <!-- Footer -->

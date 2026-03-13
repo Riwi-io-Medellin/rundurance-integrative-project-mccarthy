@@ -44,4 +44,11 @@ async function updatePassword(id, password_hash) {
   );
 }
 
-module.exports = { findByEmail, createTrainer, findById, updateTrainer, updatePassword };
+async function deactivateTrainer(id) {
+  await db.query(
+    `UPDATE trainer SET is_active = FALSE, updated_at = NOW() WHERE trainer_id = $1`,
+    [id]
+  );
+}
+
+module.exports = { findByEmail, createTrainer, findById, updateTrainer, updatePassword, deactivateTrainer };

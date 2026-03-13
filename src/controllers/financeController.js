@@ -7,7 +7,7 @@ async function getAll(req, res) {
     res.json(payments);
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: 'Error al obtener pagos', details: error.message });
+    res.status(500).json({ error: 'Error al obtener pagos' });
   }
 }
 

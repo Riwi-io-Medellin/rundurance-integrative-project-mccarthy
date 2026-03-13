@@ -2,14 +2,26 @@ const API_BASE = '/api';
 
 async function request(path, options = {}) {
   const token = sessionStorage.getItem('token');
-  const res = await fetch(`${API_BASE}${path}`, {
-    headers: {
-      'Content-Type': 'application/json',
-      ...(token && { Authorization: `Bearer ${token}` }),
-      ...(options.headers || {}),
-    },
-    ...options,
-  });
+  const abort = new AbortController();
+  const timeoutId = setTimeout(() => abort.abort(), 15000);
+
+  let res;
+  try {
+    res = await fetch(`${API_BASE}${path}`, {
+      signal: abort.signal,
+      headers: {
+        'Content-Type': 'application/json',
+        ...(token && { Authorization: `Bearer ${token}` }),
+        ...(options.headers || {}),
+      },
+      ...options,
+    });
+  } catch (err) {
+    clearTimeout(timeoutId);
+    if (err.name === 'AbortError') throw new Error('La solicitud tardó demasiado. Intenta de nuevo.');
+    throw new Error('Error de conexión. Revisa tu red.');
+  }
+  clearTimeout(timeoutId);
 
   if (res.status === 401 && !path.startsWith('/auth/')) {
     sessionStorage.removeItem('token');
