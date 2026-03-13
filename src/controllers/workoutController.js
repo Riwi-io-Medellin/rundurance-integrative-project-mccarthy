@@ -63,7 +63,8 @@ async function upload(req, res) {
 
     // 6. Fire-and-forget n8n feedback
     const athlete = await getAthleteContext(athleteId);
-    triggerFeedback(athlete, summary, laps, fitS3Key, completed.completed_workout_id, plannedWorkout);
+    const trainerId = parseInt(req.body.trainer_id, 10) || 1; 
+    triggerFeedback(athlete, summary, laps, fitS3Key, completed.completed_workout_id, trainerId, plannedWorkout);
 
     // 7. Respond
     return res.status(201).json({
