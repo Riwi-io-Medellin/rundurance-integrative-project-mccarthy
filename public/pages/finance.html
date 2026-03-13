@@ -105,6 +105,7 @@
         </div>
         <div class="flex gap-3">
           <button
+            id="btn-export-csv"
             class="px-4 py-2 border border-slate-300 rounded-md text-sm font-medium hover:bg-slate-200 transition-colors inline-flex items-center gap-2"
           >
             <i class="bi bi-box-arrow-down"></i>
@@ -201,18 +202,20 @@
                   class="bi bi-search absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"
                 ></i>
                 <input
+                  id="search-payments"
                   type="text"
                   placeholder="Buscar ..."
                   class="bg-white border border-slate-200 rounded-md pl-10 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-slate-300 transition-all w-full sm:w-64"
                 />
               </div>
               <select
+                id="filter-status"
                 class="bg-white border border-slate-200 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-slate-300 transition-all"
               >
-                <option>Todos</option>
-                <option>Pendientes</option>
-                <option>Pagados</option>
-                <option>Vencidos</option>
+                <option value="">Todos</option>
+                <option value="pendiente">Pendientes</option>
+                <option value="pagado">Pagados</option>
+                <option value="vencido">Vencidos</option>
               </select>
             </div>
           </div>
@@ -255,7 +258,7 @@
           </div>
           <div>
             <label class="block text-sm text-slate-500 mb-1">Monto (COP)</label>
-            <input id="pay-amount" type="number" min="1" required placeholder="150000"
+            <input id="pay-amount" type="number" min="1000" max="99999999" required placeholder="150000"
               class="w-full border border-slate-200 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-sky-400" />
           </div>
           <div>

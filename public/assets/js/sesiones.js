@@ -254,6 +254,8 @@ function bindUploadModal() {
       const fd = new FormData();
       fd.append('fit', file);
       fd.append('athlete_id', athleteId);
+      const zwoFile = document.getElementById('upload-zwo').files[0];
+      if (zwoFile) fd.append('zwo', zwoFile);
 
       const token = sessionStorage.getItem('token');
       const res = await fetch('/api/workouts/upload', {

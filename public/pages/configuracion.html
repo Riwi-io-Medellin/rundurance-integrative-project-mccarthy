@@ -105,7 +105,7 @@
                 <p class="text-xs text-slate-400 mt-0.5">Recibe alertas cuando un atleta tenga incumplimiento o sobreentrenamiento</p>
               </div>
               <label class="relative inline-flex items-center cursor-pointer">
-                <input type="checkbox" class="sr-only peer" checked />
+                <input id="cfg-notify-athletes" type="checkbox" class="sr-only peer" checked />
                 <div class="w-10 h-6 bg-slate-200 peer-checked:bg-sky-400 rounded-full transition-colors after:content-[''] after:absolute after:top-0.5 after:left-0.5 after:w-5 after:h-5 after:bg-white after:rounded-full after:transition-all peer-checked:after:translate-x-4"></div>
               </label>
             </div>
@@ -115,7 +115,7 @@
                 <p class="text-xs text-slate-400 mt-0.5">Notificación cuando un atleta tiene cuota vencida o próxima a vencer</p>
               </div>
               <label class="relative inline-flex items-center cursor-pointer">
-                <input type="checkbox" class="sr-only peer" checked />
+                <input id="cfg-notify-payments" type="checkbox" class="sr-only peer" checked />
                 <div class="w-10 h-6 bg-slate-200 peer-checked:bg-sky-400 rounded-full transition-colors after:content-[''] after:absolute after:top-0.5 after:left-0.5 after:w-5 after:h-5 after:bg-white after:rounded-full after:transition-all peer-checked:after:translate-x-4"></div>
               </label>
             </div>
@@ -125,7 +125,7 @@
                 <p class="text-xs text-slate-400 mt-0.5">Recibe cada lunes un resumen del desempeño del grupo</p>
               </div>
               <label class="relative inline-flex items-center cursor-pointer">
-                <input type="checkbox" class="sr-only peer" />
+                <input id="cfg-notify-weekly" type="checkbox" class="sr-only peer" />
                 <div class="w-10 h-6 bg-slate-200 peer-checked:bg-sky-400 rounded-full transition-colors after:content-[''] after:absolute after:top-0.5 after:left-0.5 after:w-5 after:h-5 after:bg-white after:rounded-full after:transition-all peer-checked:after:translate-x-4"></div>
               </label>
             </div>
@@ -155,7 +155,7 @@
               </div>
               <div>
                 <label class="block text-xs text-slate-400 mb-1">URL del webhook</label>
-                <input type="url" placeholder="https://tu-instancia.n8n.io/webhook/rundurance"
+                <input id="cfg-n8n-url" type="url" placeholder="https://tu-instancia.n8n.io/webhook/rundurance"
                   class="w-full bg-white border border-slate-200 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-sky-400 transition-all" />
               </div>
             </div>
@@ -171,7 +171,7 @@
                 </div>
               </div>
               <label class="relative inline-flex items-center cursor-pointer">
-                <input type="checkbox" class="sr-only peer" />
+                <input id="cfg-garmin-toggle" type="checkbox" class="sr-only peer" />
                 <div class="w-10 h-6 bg-slate-200 peer-checked:bg-sky-400 rounded-full transition-colors after:content-[''] after:absolute after:top-0.5 after:left-0.5 after:w-5 after:h-5 after:bg-white after:rounded-full after:transition-all peer-checked:after:translate-x-4"></div>
               </label>
             </div>
@@ -190,7 +190,7 @@
             </div>
           </div>
           <div class="px-6 py-4 border-t border-slate-100 flex justify-end">
-            <button class="px-4 py-2 bg-sky-400 hover:bg-sky-500 text-white rounded-md text-sm font-medium transition-colors">
+            <button id="btn-save-integrations" class="px-4 py-2 bg-sky-400 hover:bg-sky-500 text-white rounded-md text-sm font-medium transition-colors">
               Guardar integraciones
             </button>
           </div>
@@ -209,7 +209,7 @@
             <button id="btn-logout" class="px-4 py-2 border border-amber-300 text-amber-600 rounded-md text-sm font-medium hover:bg-amber-50 transition-colors inline-flex items-center gap-2">
               <i class="bi bi-box-arrow-right"></i> Cerrar sesion
             </button>
-            <button class="px-4 py-2 border border-red-200 text-red-500 rounded-md text-sm font-medium hover:bg-red-50 transition-colors inline-flex items-center gap-2">
+            <button id="btn-delete-account" class="px-4 py-2 border border-red-200 text-red-500 rounded-md text-sm font-medium hover:bg-red-50 transition-colors inline-flex items-center gap-2">
               <i class="bi bi-trash3"></i> Eliminar cuenta
             </button>
           </div>

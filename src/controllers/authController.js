@@ -142,4 +142,18 @@ function safeTrainer(trainer) {
   return rest;
 }
 
-module.exports = { register, login, getProfile, updateProfile, changePassword };
+/**
+ * DELETE /api/auth/me
+ * Soft-deletes the trainer account.
+ */
+async function deleteAccount(req, res) {
+  try {
+    await userModel.deactivateTrainer(req.trainer.trainer_id);
+    return res.json({ message: 'Cuenta eliminada' });
+  } catch (err) {
+    console.error('Error en deleteAccount:', err);
+    return res.status(500).json({ error: 'Error al eliminar cuenta' });
+  }
+}
+
+module.exports = { register, login, getProfile, updateProfile, changePassword, deleteAccount };

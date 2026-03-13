@@ -18,7 +18,6 @@ async function getAll(req, res) {
     // Log the error for debugging
     res.status(500).json({
       error: "Error al obtener atletas",
-      details: error.message,
     });
   }
 }
@@ -37,12 +36,15 @@ async function getOne(req, res) {
       return res.status(404).json({ error: "Atleta no encontrado" });
     }
 
+    if (athlete.trainer_id !== req.trainer.trainer_id) {
+      return res.status(403).json({ error: "No autorizado" });
+    }
+
     res.json(athlete);
   } catch (error) {
     console.error(error);
     res.status(500).json({
       error: "Error al obtener atleta",
-      details: error.message,
     });
   }
 }
@@ -78,7 +80,6 @@ async function create(req, res) {
     }
     res.status(500).json({
       error: "Error al crear atleta",
-      details: error.message,
     });
   }
 }
@@ -96,6 +97,13 @@ async function update(req, res) {
     if (!first_name || !last_name || !document || !email) {
       return res.status(400).json({ error: "Faltan campos requeridos" });
     }
+
+    const existing = await findById(athleteId);
+    if (!existing) return res.status(404).json({ error: "Atleta no encontrado" });
+    if (existing.trainer_id !== req.trainer.trainer_id) {
+      return res.status(403).json({ error: "No autorizado" });
+    }
+
     const updatedAthlete = await updateAthlete(athleteId, {
       first_name,
       last_name,
@@ -120,7 +128,6 @@ async function update(req, res) {
 
     res.status(500).json({
       error: "Error al actualizar atleta",
-      details: error.message,
     });
   }
 }
@@ -135,18 +142,19 @@ async function deactivate(req, res) {
       return res.status(400).json({ error: 'ID de atleta inválido' });
     }
 
-    const deactivatedAthlete = await deactivateAthlete(athleteId);
-
-    if (!deactivatedAthlete) {
-      return res.status(404).json({ error: 'Atleta no encontrado' });
+    const existing = await findById(athleteId);
+    if (!existing) return res.status(404).json({ error: 'Atleta no encontrado' });
+    if (existing.trainer_id !== req.trainer.trainer_id) {
+      return res.status(403).json({ error: 'No autorizado' });
     }
+
+    const deactivatedAthlete = await deactivateAthlete(athleteId);
 
     res.json({ message: 'Atleta desactivado' });
   } catch (error) {
     console.error(error);
     res.status(500).json({
       error: 'Error al desactivar atleta',
-      details: error.message,
     }); 
   }
 

@@ -72,15 +72,15 @@
         </div>
         <div class="p-6 bg-white border border-slate-200 rounded-xl flex items-center gap-4">
           <div class="w-12 h-12 rounded-lg bg-emerald-500/10 flex items-center justify-center text-emerald-500"><i class="bi bi-check-circle"></i></div>
-          <div><p class="text-2xl font-bold">—</p><p class="text-sm text-slate-500">Cumplimiento prom.</p></div>
+          <div><p id="stat-compliance" class="text-2xl font-bold">—</p><p class="text-sm text-slate-500">Cumplimiento prom.</p></div>
         </div>
         <div class="p-6 bg-white border border-slate-200 rounded-xl flex items-center gap-4">
           <div class="w-12 h-12 rounded-lg bg-amber-500/10 flex items-center justify-center text-amber-500"><i class="bi bi-exclamation-circle"></i></div>
-          <div><p class="text-2xl font-bold">—</p><p class="text-sm text-slate-500">Alertas activas</p></div>
+          <div><p id="stat-alerts" class="text-2xl font-bold">—</p><p class="text-sm text-slate-500">Alertas activas</p></div>
         </div>
         <div class="p-6 bg-white border border-slate-200 rounded-xl flex items-center gap-4">
           <div class="w-12 h-12 rounded-lg bg-blue-500/10 flex items-center justify-center text-blue-500"><i class="bi bi-activity"></i></div>
-          <div><p class="text-2xl font-bold">—</p><p class="text-sm text-slate-500">Sesiones hoy</p></div>
+          <div><p id="stat-sessions-today" class="text-2xl font-bold">—</p><p class="text-sm text-slate-500">Sesiones hoy</p></div>
         </div>
       </section>
 
@@ -92,7 +92,7 @@
             <div class="flex items-center gap-3">
               <div class="relative">
                 <i class="bi bi-search absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"></i>
-                <input type="text" placeholder="Buscar ..." class="bg-white border border-slate-200 rounded-md pl-10 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-slate-300 transition-all w-full sm:w-56" />
+                <input id="search-athletes" type="text" placeholder="Buscar ..." class="bg-white border border-slate-200 rounded-md pl-10 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-slate-300 transition-all w-full sm:w-56" />
               </div>
             </div>
           </div>
@@ -176,6 +176,89 @@
           </div>
           <div class="flex justify-end gap-3 pt-2">
             <button type="button" id="modal-athlete-cancel" class="px-4 py-2 border border-slate-300 rounded-md text-sm font-medium hover:bg-slate-50 transition-colors">Cancelar</button>
+            <button type="submit" class="px-4 py-2 bg-sky-400 hover:bg-sky-500 text-white rounded-md text-sm font-medium transition-colors">Guardar</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Modal: Nuevo / Editar plan -->
+    <div id="modal-plan" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black/40">
+      <div class="bg-white rounded-xl shadow-xl w-full max-w-md mx-4">
+        <div class="p-6 border-b border-slate-200 flex items-center justify-between">
+          <h3 id="modal-plan-title" class="text-lg font-semibold">Nuevo plan</h3>
+          <button id="modal-plan-close" class="text-slate-400 hover:text-slate-600 text-xl"><i class="bi bi-x-lg"></i></button>
+        </div>
+        <form id="form-plan" class="p-6 flex flex-col gap-4">
+          <input id="plan-athlete-id" type="hidden" />
+          <div>
+            <label class="block text-sm text-slate-500 mb-1">Nombre del plan *</label>
+            <input id="plan-name" type="text" required placeholder="Ej: Preparación 10K"
+              class="w-full border border-slate-200 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-sky-400" />
+          </div>
+          <div>
+            <label class="block text-sm text-slate-500 mb-1">Descripción</label>
+            <textarea id="plan-description" rows="2" placeholder="Objetivo del plan..."
+              class="w-full border border-slate-200 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-sky-400"></textarea>
+          </div>
+          <div class="grid grid-cols-2 gap-4">
+            <div>
+              <label class="block text-sm text-slate-500 mb-1">Fecha inicio *</label>
+              <input id="plan-start-date" type="date" required
+                class="w-full border border-slate-200 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-sky-400" />
+            </div>
+            <div>
+              <label class="block text-sm text-slate-500 mb-1">Fecha fin</label>
+              <input id="plan-end-date" type="date"
+                class="w-full border border-slate-200 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-sky-400" />
+            </div>
+          </div>
+          <div class="flex justify-end gap-3 pt-2">
+            <button type="button" id="modal-plan-cancel" class="px-4 py-2 border border-slate-300 rounded-md text-sm font-medium hover:bg-slate-50 transition-colors">Cancelar</button>
+            <button type="submit" class="px-4 py-2 bg-sky-400 hover:bg-sky-500 text-white rounded-md text-sm font-medium transition-colors">Guardar</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Modal: Nueva sesión planificada -->
+    <div id="modal-planned-workout" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black/40">
+      <div class="bg-white rounded-xl shadow-xl w-full max-w-md mx-4">
+        <div class="p-6 border-b border-slate-200 flex items-center justify-between">
+          <h3 id="modal-pw-title" class="text-lg font-semibold">Nueva sesión planificada</h3>
+          <button id="modal-pw-close" class="text-slate-400 hover:text-slate-600 text-xl"><i class="bi bi-x-lg"></i></button>
+        </div>
+        <form id="form-planned-workout" class="p-6 flex flex-col gap-4">
+          <input id="pw-plan-id" type="hidden" />
+          <div>
+            <label class="block text-sm text-slate-500 mb-1">Fecha *</label>
+            <input id="pw-date" type="date" required
+              class="w-full border border-slate-200 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-sky-400" />
+          </div>
+          <div>
+            <label class="block text-sm text-slate-500 mb-1">Nombre</label>
+            <input id="pw-name" type="text" placeholder="Ej: Tempo 5K"
+              class="w-full border border-slate-200 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-sky-400" />
+          </div>
+          <div>
+            <label class="block text-sm text-slate-500 mb-1">Descripción</label>
+            <textarea id="pw-description" rows="2" placeholder="Instrucciones..."
+              class="w-full border border-slate-200 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-sky-400"></textarea>
+          </div>
+          <div class="grid grid-cols-2 gap-4">
+            <div>
+              <label class="block text-sm text-slate-500 mb-1">Duración (min)</label>
+              <input id="pw-duration" type="number" min="1" placeholder="45"
+                class="w-full border border-slate-200 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-sky-400" />
+            </div>
+            <div>
+              <label class="block text-sm text-slate-500 mb-1">Distancia (km)</label>
+              <input id="pw-distance" type="number" min="0" step="0.1" placeholder="10"
+                class="w-full border border-slate-200 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-sky-400" />
+            </div>
+          </div>
+          <div class="flex justify-end gap-3 pt-2">
+            <button type="button" id="modal-pw-cancel" class="px-4 py-2 border border-slate-300 rounded-md text-sm font-medium hover:bg-slate-50 transition-colors">Cancelar</button>
             <button type="submit" class="px-4 py-2 bg-sky-400 hover:bg-sky-500 text-white rounded-md text-sm font-medium transition-colors">Guardar</button>
           </div>
         </form>
