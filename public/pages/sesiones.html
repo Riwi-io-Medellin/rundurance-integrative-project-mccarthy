@@ -272,7 +272,7 @@
         </div>
         <form id="form-upload" class="p-6 flex flex-col gap-4">
           <div>
-            <label class="block text-sm text-slate-500 mb-1">Atleta *</label>
+            <label class="block text-sm font-medium text-slate-700 mb-1">Atleta <span class="text-red-400">*</span></label>
             <select
               id="upload-athlete"
               required
@@ -280,11 +280,13 @@
             >
               <option value="">Selecciona un atleta</option>
             </select>
+            <p class="text-xs text-slate-400 mt-1">El atleta al que se le asignará esta sesión</p>
           </div>
           <div>
-            <label class="block text-sm text-slate-500 mb-1"
-              >Archivo .FIT *</label
-            >
+            <label class="block text-sm font-medium text-slate-700 mb-1">
+              Actividad completada <span class="text-red-400">*</span>
+              <span class="ml-1 text-xs font-normal text-slate-400">(.fit · .fit.gz)</span>
+            </label>
             <input
               id="upload-file"
               type="file"
@@ -293,11 +295,14 @@
               class="w-full border border-slate-200 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-sky-400 file:mr-3 file:py-1 file:px-3 file:rounded file:border-0 file:text-xs file:bg-sky-50 file:text-sky-600 hover:file:bg-sky-100"
             />
             <p class="text-xs text-slate-400 mt-1">
-              Acepta archivos .FIT de Garmin o COROS (.fit, .fit.gz)
+              Archivo grabado por el dispositivo GPS al terminar la carrera — Garmin (.fit) o COROS (.fit.gz)
             </p>
           </div>
           <div>
-            <label class="block text-sm text-slate-500 mb-1">Archivo .ZWO <span class="text-slate-400 font-normal">(opcional)</span></label>
+            <label class="block text-sm font-medium text-slate-700 mb-1">
+              Plan de entrenamiento
+              <span class="ml-1 text-xs font-normal text-slate-400">(opcional · .zwo)</span>
+            </label>
             <input
               id="upload-zwo"
               type="file"
@@ -305,7 +310,7 @@
               class="w-full border border-slate-200 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-sky-400 file:mr-3 file:py-1 file:px-3 file:rounded file:border-0 file:text-xs file:bg-violet-50 file:text-violet-600 hover:file:bg-violet-100"
             />
             <p class="text-xs text-slate-400 mt-1">
-              Plan de entrenamiento Zwift para comparar con el resultado
+              Archivo Zwift (.zwo) con los intervalos planificados — permite a la IA comparar plan vs ejecución
             </p>
           </div>
           <div

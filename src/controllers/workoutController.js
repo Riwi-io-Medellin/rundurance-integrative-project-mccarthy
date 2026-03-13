@@ -45,12 +45,12 @@ async function upload(req, res) {
 
     const zwoFile = req.files?.find(f => f.fieldname === 'zwo') ?? null;
 
-    // 1. Parse .FIT
+    // 1. Parse .FIT (supports both .fit and .fit.gz)
     let summary, laps;
     try {
       ({ summary, laps } = await parseFit(fitFile.buffer));
-    } catch {
-      return res.status(400).json({ error: 'El archivo no es un .FIT válido. Asegúrate de subir un archivo binario de Garmin.' });
+    } catch (err) {
+      return res.status(400).json({ error: err.message ?? 'El archivo no es un .FIT válido.' });
     }
 
     // 2. Parse .ZWO (optional)
