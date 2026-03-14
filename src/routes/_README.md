@@ -1,54 +1,58 @@
-# routes/ — URL Mapping
+# routes/ — Mapeo de URLs
 
-Routes are the **entry point** for every API request. They answer one question: **"When someone calls this URL, which function should run?"**
+Las rutas son el **punto de entrada** de cada petición a la API. Responden una sola pregunta: **"Cuando alguien llama esta URL, ¿qué función debe ejecutarse?"**
 
-## How It Works
+## Cómo Funciona
 
 ```javascript
-// This says: when someone calls GET /api/athletes, run controller.getAll
+// Esto dice: cuando alguien llame GET /api/athletes, ejecuta controller.getAll
 router.get('/', auth, controller.getAll);
 ```
 
-Each route has three parts:
-1. **HTTP method** — `get`, `post`, `put`, `delete`
-2. **Path** — the URL after `/api/athletes` (e.g., `/:id` means `/api/athletes/5`)
-3. **Handler(s)** — middleware and/or controller function to run
+Cada ruta tiene tres partes:
+1. **Método HTTP** — `get`, `post`, `put`, `delete`
+2. **Path** — la URL después de `/api/athletes` (ej: `/:id` significa `/api/athletes/5`)
+3. **Handlers** — middleware y/o función del controlador a ejecutar
 
-## Connection to Other Folders
+## Conexión con Otras Carpetas
 
 ```
-routes/ uses:
-  ├── middleware/auth.js  → to protect routes (only logged-in users)
-  └── controllers/        → to handle the actual logic
+routes/ usa:
+  ├── middleware/auth.js  → para proteger rutas (solo usuarios logueados)
+  └── controllers/        → para manejar la lógica real
 ```
 
-## Files in This Folder
+## Archivos en Esta Carpeta
 
-| File | Base URL | Status |
-|------|----------|--------|
-| auth.js | `/api/auth` | DONE — register, login |
-| workouts.js | `/api/workouts` | DONE — upload .FIT, save feedback, get by athlete |
-| athletes.js | `/api/athletes` | TODO — CRUD for athletes |
-| finances.js | `/api/finances` | TODO — payment management |
+| Archivo | URL Base | Estado |
+|---------|---------|--------|
+| auth.js | `/api/auth` | ✅ LISTO — register, login |
+| workouts.js | `/api/workouts` | ✅ LISTO — subir .FIT, guardar feedback, listar, análisis, stats |
+| athletes.js | `/api/athletes` | ✅ LISTO — CRUD de atletas |
+| finances.js | `/api/finances` | ✅ LISTO — gestión de pagos |
+| plans.js | `/api/plans` | ✅ LISTO — planes de entrenamiento y sesiones planificadas |
 
-## How Routes Are Mounted
+## Cómo se Montan las Rutas
 
-In `server.js`, each router is "mounted" at a base path:
+En `server.js`, cada router se "monta" en un path base:
 
 ```javascript
-app.use('/api/auth',     authRouter);      // auth.js handles everything under /api/auth
-app.use('/api/athletes', athletesRouter);   // athletes.js handles everything under /api/athletes
+app.use('/api/auth',     authRouter);
+app.use('/api/athletes', athletesRouter);
+app.use('/api/workouts', workoutsRouter);
+app.use('/api/finances', financesRouter);
+app.use('/api/plans',    plansRouter);
 ```
 
-So if `athletes.js` defines `router.get('/:id', ...)`, the full URL is `/api/athletes/:id`.
+Entonces si `athletes.js` define `router.get('/:id', ...)`, la URL completa es `/api/athletes/:id`.
 
-## The `auth` Middleware
+## El Middleware `auth`
 
-When you see `auth` before the controller, it means that route is **protected**:
+Cuando ves `auth` antes del controlador, significa que esa ruta está **protegida**:
 
 ```javascript
-router.get('/', auth, controller.getAll);   // needs token
-router.post('/login', controller.login);     // no auth needed (user is logging in!)
+router.get('/', auth, controller.getAll);   // necesita token JWT
+router.post('/login', controller.login);     // sin auth (el usuario está iniciando sesión)
 ```
 
-The `auth` middleware checks the JWT token. If valid, it adds `req.trainer` with the coach's info. If not, it returns 401 (unauthorized).
+El middleware `auth` verifica el token JWT. Si es válido, agrega `req.trainer` con la info del entrenador. Si no, devuelve 401 (no autorizado).

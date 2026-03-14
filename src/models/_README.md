@@ -1,8 +1,8 @@
-# models/ — Database Queries
+# models/ — Consultas a la Base de Datos
 
-Models are the **only** layer that talks to PostgreSQL. Each model file contains functions that run SQL queries and return the results.
+Los modelos son la **única** capa que habla con PostgreSQL. Cada archivo de modelo contiene funciones que ejecutan consultas SQL y devuelven los resultados.
 
-## What a Model Does (Always the Same Pattern)
+## Qué Hace un Modelo (Siempre el Mismo Patrón)
 
 ```javascript
 async function findById(athleteId) {
@@ -14,58 +14,59 @@ async function findById(athleteId) {
 }
 ```
 
-Every model function follows these steps:
-1. Call `db.query(sql, params)` — runs the SQL query
-2. Destructure `{ rows }` — PostgreSQL always returns an object with a `rows` array
-3. Return the data — either `rows` (array), `rows[0]` (single object), or `rows[0] ?? null`
+Cada función de modelo sigue estos pasos:
+1. Llama `db.query(sql, params)` — ejecuta la consulta SQL
+2. Desestructura `{ rows }` — PostgreSQL siempre devuelve un objeto con un array `rows`
+3. Devuelve los datos — ya sea `rows` (array), `rows[0]` (objeto único), o `rows[0] ?? null`
 
-## Key Concept: Parameterized Queries ($1, $2, ...)
+## Concepto Clave: Consultas Parametrizadas ($1, $2, ...)
 
-**NEVER** do this (SQL injection vulnerability):
+**NUNCA** hagas esto (vulnerabilidad de inyección SQL):
 ```javascript
-// BAD — a hacker could send malicious input
+// MAL — un hacker podría enviar input malicioso
 db.query(`SELECT * FROM athlete WHERE email = '${email}'`);
 ```
 
-**ALWAYS** do this:
+**SIEMPRE** haz esto:
 ```javascript
-// GOOD — PostgreSQL safely escapes the value
+// BIEN — PostgreSQL escapa el valor de forma segura
 db.query('SELECT * FROM athlete WHERE email = $1', [email]);
 ```
 
-The `$1` is a placeholder. The actual value comes from the array `[email]`. PostgreSQL handles escaping so hackers can't inject SQL.
+El `$1` es un placeholder. El valor real viene del array `[email]`. PostgreSQL maneja el escapado para que los hackers no puedan inyectar SQL.
 
-## Common SQL Operations
+## Operaciones SQL Comunes
 
-| Operation | SQL | Returns |
+| Operación | SQL | Devuelve |
 |-----------|-----|---------|
-| Get all | `SELECT * FROM table WHERE condition` | `rows` (array) |
-| Get one | `SELECT * FROM table WHERE id = $1` | `rows[0] ?? null` |
-| Create | `INSERT INTO table (...) VALUES ($1,$2) RETURNING *` | `rows[0]` (the new row) |
-| Update | `UPDATE table SET col=$1 WHERE id=$2 RETURNING *` | `rows[0]` (the updated row) |
-| Soft delete | `UPDATE table SET is_active=FALSE WHERE id=$1` | `rows[0]` |
+| Obtener todos | `SELECT * FROM tabla WHERE condicion` | `rows` (array) |
+| Obtener uno | `SELECT * FROM tabla WHERE id = $1` | `rows[0] ?? null` |
+| Crear | `INSERT INTO tabla (...) VALUES ($1,$2) RETURNING *` | `rows[0]` (la fila nueva) |
+| Actualizar | `UPDATE tabla SET col=$1 WHERE id=$2 RETURNING *` | `rows[0]` (la fila actualizada) |
+| Borrado lógico | `UPDATE tabla SET is_active=FALSE WHERE id=$1` | `rows[0]` |
 
-The `RETURNING *` at the end makes PostgreSQL return the row it just created/updated, so you can send it back to the frontend.
+El `RETURNING *` al final hace que PostgreSQL devuelva la fila que acaba de crear/actualizar, para poder enviarla de vuelta al frontend.
 
-## Connection to Other Folders
+## Conexión con Otras Carpetas
 
 ```
-models/ uses:
-  └── db/connection.js → the database connection pool
+models/ usa:
+  └── db/connection.js → el pool de conexión a la base de datos
 
-models/ is used by:
-  └── controllers/     → controllers call model functions to get/save data
+models/ es usado por:
+  └── controllers/     → los controladores llaman funciones del modelo para obtener/guardar datos
 ```
 
-## Files in This Folder
+## Archivos en Esta Carpeta
 
-| File | Table(s) | Status |
-|------|----------|--------|
-| userModel.js | `trainer` | DONE — findByEmail, createTrainer |
-| workoutModel.js | `completed_workout`, `completed_workout_lap`, `workout_feedback`, `planned_workout` | DONE |
-| athleteModel.js | `athlete` | TODO — CRUD operations |
-| financeModel.js | `payment` | TODO — payment operations + grace period logic |
+| Archivo | Tabla(s) | Estado |
+|---------|---------|--------|
+| userModel.js | `trainer` | ✅ LISTO — findByEmail, createTrainer |
+| workoutModel.js | `completed_workout`, `completed_workout_lap`, `workout_feedback`, `planned_workout` | ✅ LISTO |
+| athleteModel.js | `athlete` | ✅ LISTO — CRUD completo |
+| financeModel.js | `payment` | ✅ LISTO — operaciones de pago + lógica de período de gracia |
+| planModel.js | `workout_plan`, `planned_workout` | ✅ LISTO — CRUD de planes y sesiones planificadas |
 
-## Where to Find Table Definitions
+## Dónde Encontrar las Definiciones de Tablas
 
-All columns and types are defined in `docs/database/schema.sql`. Always check it before writing a query to know the exact column names and types.
+Todas las columnas y tipos están definidos en `docs/database/schema.sql`. Siempre consúltalo antes de escribir una consulta para conocer los nombres exactos de columnas y tipos.

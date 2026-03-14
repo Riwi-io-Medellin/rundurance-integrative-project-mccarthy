@@ -1,42 +1,43 @@
-# src/ — Backend (Server-Side Code)
+# src/ — Backend (Código del Servidor)
 
-Everything inside `src/` runs on the **server** (Node.js). The user never sees this code directly — it processes requests and talks to the database.
+Todo lo que está dentro de `src/` se ejecuta en el **servidor** (Node.js). El usuario nunca ve este código directamente — procesa las peticiones y habla con la base de datos.
 
-## Folder Structure
+## Estructura de Carpetas
 
 ```
 src/
-├── routes/        → Step 1: Receives the HTTP request (the URL)
-├── middleware/     → Step 1.5: Checks if the user is logged in (JWT token)
-├── controllers/   → Step 2: Processes the request (validates, decides what to do)
-├── models/        → Step 3: Talks to the PostgreSQL database (SQL queries)
-├── services/      → Helper tools (file parsing, S3 uploads, webhooks)
-└── db/            → Database connection setup
+├── routes/        → Paso 1: Recibe la petición HTTP (la URL)
+├── middleware/    → Paso 1.5: Verifica si el usuario está autenticado (token JWT)
+├── controllers/   → Paso 2: Procesa la petición (valida, decide qué hacer)
+├── models/        → Paso 3: Habla con PostgreSQL (consultas SQL)
+├── services/      → Herramientas especializadas (parseo de archivos, S3, webhooks)
+└── db/            → Configuración de la conexión a la base de datos
 ```
 
-## How They Connect (The Request Journey)
+## Cómo se Conectan (El Recorrido de una Petición)
 
-When someone calls `GET /api/athletes`, this is what happens step by step:
+Cuando alguien llama `GET /api/athletes`, esto es lo que ocurre paso a paso:
 
 ```
-1. server.js          → Express receives the request
-2. routes/athletes.js  → Matches "/api/athletes" to a controller function
-3. middleware/auth.js   → Checks the JWT token (is the user logged in?)
-4. controllers/athleteController.js → Validates input, calls the model
-5. models/athleteModel.js           → Runs SQL query against PostgreSQL
-6. controllers/athleteController.js → Gets the data back, sends JSON response
+1. server.js                     → Express recibe la petición
+2. routes/athletes.js            → Asocia "/api/athletes" a una función del controlador
+3. middleware/auth.js             → Verifica el token JWT (¿está el usuario logueado?)
+4. controllers/athleteController.js → Valida el input, llama al modelo
+5. models/athleteModel.js         → Ejecuta la consulta SQL contra PostgreSQL
+6. controllers/athleteController.js → Recibe los datos, envía la respuesta JSON
 ```
 
-The data flows DOWN (request) and then back UP (response). Each layer has ONE job:
-- **Routes** = "which URL goes to which function?"
-- **Middleware** = "is this request allowed?"
-- **Controllers** = "what do I do with this request?"
-- **Models** = "what data do I need from the database?"
-- **Services** = "I need help with something specific (S3, .FIT files, n8n)"
+Los datos fluyen HACIA ABAJO (petición) y luego de VUELTA HACIA ARRIBA (respuesta). Cada capa tiene UN solo trabajo:
+- **Routes** = "¿qué URL va a qué función?"
+- **Middleware** = "¿está permitida esta petición?"
+- **Controllers** = "¿qué hago con esta petición?"
+- **Models** = "¿qué datos necesito de la base de datos?"
+- **Services** = "necesito ayuda con algo específico (S3, archivos .FIT, n8n)"
 
-## Key Concept: Why Separate Layers?
+## Concepto Clave: ¿Por Qué Capas Separadas?
 
-If you put everything in one file, it becomes impossible to maintain. By separating:
-- You can change how the database works (model) without touching the request handling (controller)
-- You can add new routes without rewriting business logic
-- Multiple routes can reuse the same model function
+Si se pusiera todo en un solo archivo, sería imposible de mantener. Al separar:
+- Se puede cambiar cómo funciona la base de datos (modelo) sin tocar el manejo de peticiones (controlador)
+- Se pueden agregar nuevas rutas sin reescribir la lógica de negocio
+- Varias rutas pueden reutilizar la misma función del modelo
+- Diferentes desarrolladores pueden trabajar en capas distintas sin conflictos

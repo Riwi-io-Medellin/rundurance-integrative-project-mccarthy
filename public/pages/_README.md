@@ -1,58 +1,52 @@
-# pages/ — HTML Screens
+# pages/ — Pantallas HTML
 
-Each file is one screen of the application. They all share the same layout pattern: sidebar navigation on the left, main content on the right.
+Cada archivo es una pantalla de la aplicación. Todas comparten el mismo patrón de diseño: navegación lateral (sidebar) a la izquierda, contenido principal a la derecha.
 
-## Page Map
+## Mapa de Páginas
 
-| Page | Who uses it | Needs login? | Backend endpoints it calls |
-|------|------------|-------------|--------------------------|
-| index.html | Everyone | No | None (static landing page) |
-| login.html | Coach | No | `POST /api/auth/login` |
-| dashboard.html | Coach | Yes | `GET /api/athletes`, alerts, fitness data |
-| atletas.html | Coach | Yes | `GET/POST/PUT/DELETE /api/athletes` |
-| finance.html | Coach | Yes | `GET/POST/PUT /api/finances` |
-| progreso.html | Coach | Yes | `GET /api/workouts/athlete/:id`, fitness snapshots |
-| configuracion.html | Coach | Yes | Future: coach profile settings |
-| app.html | Athlete | Yes | `GET /api/workouts/athlete/:id` (read-only) |
+| Página | Quién la usa | ¿Requiere login? | Endpoints del backend que llama |
+|--------|-------------|-----------------|--------------------------------|
+| index.html | Todos | No | Ninguno (landing estático) |
+| login.html | Entrenador | No | `POST /api/auth/login` |
+| dashboard.html | Entrenador | Sí | `GET /api/athletes`, alertas, datos de fitness |
+| atletas.html | Entrenador | Sí | `GET/POST/PUT/DELETE /api/athletes` |
+| sesiones.html | Entrenador | Sí | `POST /api/workouts/upload`, `GET /api/workouts/athlete/:id` |
+| finance.html | Entrenador | Sí | `GET/POST/PUT /api/finances` |
+| progreso.html | Entrenador | Sí | `GET /api/workouts/athlete/:id`, snapshots de fitness |
+| configuracion.html | Entrenador | Sí | Configuración del perfil del entrenador |
 
-## Current State
+## Lo que Necesita Cada Página (JavaScript)
 
-All pages have the **HTML structure and Tailwind styling** already built. What's missing is the **JavaScript** that connects them to the backend API.
-
-## What Each Page Needs (JavaScript)
-
-Every protected page needs this at the top of its `<script>`:
+Toda página protegida necesita esto al inicio de su `<script>`:
 
 ```javascript
-// 1. Check if user is logged in
-const token = localStorage.getItem('token');
-if (!token) window.location.href = 'login.html';
+// 1. Verificar si el usuario está logueado
+import { checkAuth, apiGet } from './api.js';
+checkAuth(); // redirige a login.html si no hay token
 
-// 2. Helper to make authenticated API calls
-async function apiFetch(url, options = {}) {
-  options.headers = {
-    ...options.headers,
-    'Authorization': 'Bearer ' + token,
-    'Content-Type': 'application/json',
-  };
-  const res = await fetch(url, options);
-  if (res.status === 401) {
-    localStorage.removeItem('token');
-    window.location.href = 'login.html';
-  }
-  return res;
-}
+// 2. Cargar datos al iniciar la página
+document.addEventListener('DOMContentLoaded', async () => {
+  const athletes = await apiGet('/athletes');
+  // construir HTML con los datos...
+});
 ```
 
-Then each page loads its specific data:
-- **atletas.html** → calls `apiFetch('/api/athletes')` and fills the table
-- **finance.html** → calls `apiFetch('/api/finances')` and fills the payment list
-- **dashboard.html** → calls multiple endpoints to build the overview
+Luego cada página carga sus datos específicos:
+- **atletas.html** → llama `apiGet('/athletes')` y rellena la tabla
+- **finance.html** → llama `apiGet('/finances')` y muestra el listado de pagos
+- **sesiones.html** → llama `apiGet('/workouts/athlete/:id')` por cada atleta
+- **dashboard.html** → llama múltiples endpoints para construir el resumen
 
-## Shared Layout
+## Layout Compartido
 
-All pages (except index.html and login.html) share a **sidebar** with navigation links:
-- Dashboard, Atletas, Finanzas, Reportes, Configuracion
-- Coach profile at the bottom
+Todas las páginas (excepto index.html y login.html) comparten un **sidebar** con:
+- Links de navegación: Dashboard, Atletas, Sesiones, Finanzas, Progreso, Configuración
+- Nombre del entrenador al fondo (leído desde `sessionStorage`)
 
-Currently the sidebar has hardcoded coach name. Eventually it should read from the JWT token or a profile endpoint.
+## Módulo Compartido: api.js
+
+Todas las páginas importan `assets/js/api.js`, que centraliza:
+- El token JWT (`sessionStorage.getItem('token')`)
+- Las funciones `apiGet`, `apiPost`, `apiPut`, `apiDelete`
+- La función `checkAuth` (redirige si no hay sesión)
+- La función `loadSidebar` (muestra el nombre del entrenador)

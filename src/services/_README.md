@@ -1,64 +1,79 @@
-# services/ — Specialized Helper Tools
+# services/ — Herramientas Especializadas
 
-Services handle **specific technical tasks** that don't fit in models or controllers. They are reusable utilities that any controller can call.
+Los servicios manejan **tareas técnicas específicas** que no encajan en modelos ni controladores. Son utilidades reutilizables que cualquier controlador puede llamar.
 
-## How Services Differ from Models
+## Cómo Difieren los Servicios de los Modelos
 
-- **Models** = talk to the database (SQL queries)
-- **Services** = talk to external systems (AWS S3, n8n, file parsing)
+- **Modelos** = hablan con la base de datos (consultas SQL)
+- **Servicios** = hablan con sistemas externos (AWS S3, n8n, parseo de archivos)
 
-## Files in This Folder
+## Archivos en Esta Carpeta
 
-### fitParser.js — .FIT File Parser (DONE)
+### fitParser.js — Parser de Archivos .FIT ✅
 
-Converts binary .FIT files (from Garmin/COROS watches) into JavaScript objects.
+Convierte archivos binarios .FIT (de relojes Garmin/COROS) en objetos JavaScript.
 
-- **Input:** A raw binary Buffer (the uploaded file)
-- **Output:** `{ summary, laps }` — structured data with all metrics
-- Handles gzip-compressed files automatically
-- Handles both Garmin (cascade mode) and COROS (flat mode) file structures
-- Rejects workout plan files (only accepts completed activity files)
-
-```
-Used by: workoutController.js (during .FIT upload)
-```
-
-### s3.js — AWS S3 File Storage (DONE)
-
-Uploads files to Amazon S3 (cloud storage) and generates download URLs.
-
-- `uploadFitFile(buffer, athleteId, filename)` → uploads .FIT, returns the S3 key
-- `uploadZwoFile(buffer, planId, filename)` → uploads .ZWO workout plan files
-- `getPresignedUrl(s3Key)` → generates a temporary URL to download a private file
-
-File paths in S3:
-- .FIT files: `fit/{athleteId}/{YYYY-MM-DD}_{filename}`
-- .ZWO files: `zwo/{planId}/{filename}`
+- **Entrada:** Un Buffer binario crudo (el archivo subido)
+- **Salida:** `{ summary, laps }` — datos estructurados con todas las métricas
+- Detecta y descomprime automáticamente archivos gzip (.fit.gz) por magic bytes `1f 8b`
+- Soporta tanto Garmin (campo `enhanced_avg_speed`) como COROS (campo `avg_speed`)
+- Rechaza archivos de planes de entrenamiento (solo acepta actividades completadas)
 
 ```
-Used by: workoutController.js (upload), future plan management
+Usado por: workoutController.js (durante la subida de .FIT)
 ```
 
-### n8n.js — AI Feedback Webhook (DONE)
+### s3.js — Almacenamiento de Archivos AWS S3 ✅
 
-Sends workout data to n8n (automation platform) which triggers AI analysis.
+Sube archivos a Amazon S3 (almacenamiento en la nube) y genera URLs de descarga.
 
-- **Fire-and-forget:** The upload doesn't wait for AI feedback to finish
-- n8n receives the data, sends it to Claude AI, and the AI posts feedback back to our API at `POST /api/workouts/:id/feedback`
-- If `N8N_WEBHOOK_URL` is not configured, it silently skips (no crash)
+- `uploadFitFile(buffer, athleteId, filename)` → sube .FIT, devuelve la clave S3
+- `uploadParsedFit(parsed, athleteId, filename)` → sube el JSON parseado
+- `uploadZwoForAthlete(buffer, athleteId, filename)` → sube archivos .ZWO de planes
+- `getObjectBuffer(s3Key)` → descarga un objeto S3 como Buffer
+- `getPresignedUrl(s3Key)` → genera una URL temporal para descargar un archivo privado
+
+Rutas de archivos en S3:
+- Archivos .FIT: `fit/{athleteId}/{YYYY-MM-DD}_{filename}`
+- Archivos .ZWO: `zwo/{athleteId}/{YYYY-MM-DD}_{filename}`
+- JSON parseado: `fit/{athleteId}/{YYYY-MM-DD}_{basename}.json`
 
 ```
-Used by: workoutController.js (after successful upload)
+Usado por: workoutController.js (subida), planController.js (futuro)
 ```
 
-## Connection to Other Folders
+### n8n.js — Webhook de Feedback con IA ✅
+
+Envía datos de la sesión a n8n (plataforma de automatización) que dispara el análisis con IA.
+
+- **Fire-and-forget:** La subida no espera a que termine el feedback de la IA
+- n8n recibe los datos, los envía a Claude AI, y la IA postea el feedback de vuelta a nuestra API en `POST /api/workouts/:id/feedback`
+- Si `N8N_WEBHOOK_URL` no está configurado, omite silenciosamente (sin crash)
 
 ```
-services/ uses:
-  └── External systems (AWS S3, n8n webhooks, zlib for decompression)
-
-services/ is used by:
-  └── controllers/ → controllers call service functions when needed
+Usado por: workoutController.js (después de una subida exitosa)
 ```
 
-Services do NOT use models or the database directly. They are pure utilities.
+### zwoParser.js — Parser de Archivos .ZWO ✅
+
+Convierte archivos XML de planes de entrenamiento Zwift en objetos JavaScript.
+
+- **Entrada:** Buffer de un archivo .ZWO
+- **Salida:** `{ name, description, author, sport_type, total_duration_s, intervals[] }`
+- Soporta bloques: Warmup, Cooldown, SteadyState, Ramp, IntervalsT, FreeRide
+
+```
+Usado por: workoutController.js (al subir .ZWO junto a la actividad, y al obtener análisis)
+```
+
+## Conexión con Otras Carpetas
+
+```
+services/ usa:
+  └── Sistemas externos (AWS S3, webhooks n8n, zlib para descompresión)
+
+services/ es usado por:
+  └── controllers/ → los controladores llaman funciones de servicio cuando las necesitan
+```
+
+Los servicios NO usan modelos ni la base de datos directamente. Son utilidades puras.

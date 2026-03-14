@@ -1,25 +1,25 @@
-# db/ — Database Connection
+# db/ — Conexión a la Base de Datos
 
-This folder has one file: `connection.js`. It creates and exports the **connection pool** to PostgreSQL.
+Esta carpeta tiene un solo archivo: `connection.js`. Crea y exporta el **pool de conexiones** a PostgreSQL.
 
-## What is a Connection Pool?
+## ¿Qué es un Pool de Conexiones?
 
-Instead of opening a new database connection for every query (slow), a pool keeps several connections open and reuses them. Think of it like a team of waiters — instead of hiring a new waiter for each table, you have a team that takes turns.
+En lugar de abrir una nueva conexión a la base de datos por cada consulta (lento), un pool mantiene varias conexiones abiertas y las reutiliza. Es como un equipo de meseros: en lugar de contratar uno nuevo por cada mesa, tienes un equipo que se turna.
 
-## How It Works
+## Cómo Funciona
 
 ```javascript
 const { Pool } = require('pg');
 const pool = new Pool({ connectionString: process.env.DATABASE_URL });
 ```
 
-- Reads `DATABASE_URL` from the `.env` file
-- Format: `postgres://user:password@host:5432/database_name`
-- Exports a `query` function that all models use
+- Lee `DATABASE_URL` del archivo `.env`
+- Formato: `postgres://usuario:contraseña@host:5432/nombre_base_datos`
+- Exporta una función `query` que usan todos los modelos
 
-## How Models Use It
+## Cómo lo Usan los Modelos
 
-Every model imports this file and calls `db.query()`:
+Cada modelo importa este archivo y llama a `db.query()`:
 
 ```javascript
 const db = require('../db/connection');
@@ -27,11 +27,11 @@ const db = require('../db/connection');
 const { rows } = await db.query('SELECT * FROM athlete WHERE athlete_id = $1', [id]);
 ```
 
-## Connection to Other Folders
+## Conexión con Otras Carpetas
 
 ```
-db/connection.js is used by:
-  └── models/ → every model file imports db to run queries
+db/connection.js es usado por:
+  └── models/ → cada archivo de modelo importa db para ejecutar consultas
 ```
 
-This is the ONLY file that connects to PostgreSQL. No other file should create database connections.
+Este es el ÚNICO archivo que se conecta a PostgreSQL. Ningún otro archivo debe crear conexiones a la base de datos directamente.

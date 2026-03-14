@@ -1,38 +1,39 @@
-# middleware/ — Request Interceptors
+# middleware/ — Interceptores de Peticiones
 
-Middleware runs **between** the route and the controller. It can inspect, modify, or reject a request before it reaches the controller.
+El middleware se ejecuta **entre** la ruta y el controlador. Puede inspeccionar, modificar o rechazar una petición antes de que llegue al controlador.
 
-## How It Works
+## Cómo Funciona
 
 ```
-Request → Route → [Middleware] → Controller
+Petición → Ruta → [Middleware] → Controlador
                       ↑
-              If token is invalid,
-              the request STOPS here
-              and returns 401 error
+              Si el token es inválido,
+              la petición SE DETIENE aquí
+              y devuelve error 401
 ```
 
-## File: auth.js
+## Archivo: auth.js
 
-This is the only middleware in the project. It does:
+Es el único middleware del proyecto. Hace lo siguiente:
 
-1. Reads the `Authorization` header from the request
-2. Expects format: `Bearer eyJhbGciOi...` (the JWT token)
-3. Verifies the token using `JWT_SECRET` from `.env`
-4. If valid: adds `req.trainer` object with `{ trainer_id, email, role }` and calls `next()` to continue
-5. If invalid/missing: returns `401 Unauthorized` and the request stops
+1. Lee el header `Authorization` de la petición
+2. Espera el formato: `Bearer eyJhbGciOi...` (el token JWT)
+3. Verifica el token usando `JWT_SECRET` del `.env`
+4. Si es válido: agrega el objeto `req.trainer` con `{ trainer_id, email, role }` y llama `next()` para continuar
+5. Si es inválido o falta: devuelve `401 Unauthorized` y la petición se detiene
 
-## Why This Matters
+## Por Qué Importa
 
-After `auth` runs, every controller can access `req.trainer.trainer_id` to know **which coach** is making the request. This is how we ensure coaches only see their own athletes and payments — we filter by `trainer_id` in every query.
+Después de que `auth` se ejecuta, cada controlador puede acceder a `req.trainer.trainer_id` para saber **qué entrenador** está haciendo la petición. Así es como garantizamos que los entrenadores solo vean sus propios atletas y pagos — filtramos por `trainer_id` en cada consulta.
 
-## Connection to Other Folders
+## Conexión con Otras Carpetas
 
 ```
-middleware/auth.js is used by:
-  ├── routes/athletes.js  → protects all athlete endpoints
-  ├── routes/workouts.js  → protects upload and listing (but NOT the n8n feedback callback)
-  └── routes/finances.js  → protects all finance endpoints
+middleware/auth.js es usado por:
+  ├── routes/athletes.js  → protege todos los endpoints de atletas
+  ├── routes/workouts.js  → protege la subida y listado (pero NO el callback de feedback de n8n)
+  ├── routes/finances.js  → protege todos los endpoints de finanzas
+  └── routes/plans.js     → protege todos los endpoints de planes
 ```
 
-Note: The `POST /api/workouts/:id/feedback` route does NOT use auth — because n8n (an external service) calls it, and n8n doesn't have a JWT token.
+Nota: La ruta `POST /api/workouts/:id/feedback` NO usa auth — porque n8n (un servicio externo) la llama, y n8n no tiene un token JWT. En su lugar, usa un `x-webhook-secret` opcional.

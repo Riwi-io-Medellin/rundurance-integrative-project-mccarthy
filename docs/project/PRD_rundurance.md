@@ -1,268 +1,263 @@
-# Product Requirements Document (PRD)
+# Documento de Requisitos del Producto (PRD)
 
-## Rundurance — AI-Powered Coach Management Platform
+## Rundurance — Plataforma de Gestión de Entrenadores con IA
 
-**Version:** 1.1
-**Date:** 2026-03-05
-**Status:** Draft
-
----
-
-## 1. Overview
-
-### 1.1 Product Vision
-
-Rundurance is an all-in-one web platform that eliminates coach burnout by automating workout data analysis, centralizing athlete management, and providing a premium progress portal — so coaches can scale their business without sacrificing personalization.
-
-### 1.2 Problem Statement
-
-High-performance endurance coaches spend ~70% of their time on data analysis and administrative tasks (manual feedback, billing, session review) and only ~30% actually coaching. Existing tools like TrainingPeaks provide raw data but no interpretation layer. This leads to:
-
-- Mental fatigue from manual, one-by-one feedback delivery
-- Lack of personalization at scale
-- Disorganized financial management that stalls business growth
-- Repetitive Excel/spreadsheet workflows with poor data interpretation
-
-### 1.3 Product Goals
-
-1. Reduce non-coaching time for the coach by ≥50%
-2. Automate AI-generated workout feedback aligned to the coach's personal criteria
-3. Centralize athlete management, training plans, and billing in one platform
-4. Provide athletes with a motivating, self-service progress portal
+**Versión:** 1.1
+**Fecha:** 2026-03-05
+**Estado:** Borrador
 
 ---
 
-## 2. Target Users
+## 1. Resumen
 
-### Primary User: The Coach
+### 1.1 Visión del Producto
+
+Rundurance es una plataforma web integral que elimina el agotamiento del entrenador automatizando el análisis de datos de entrenamiento, centralizando la gestión de atletas y proporcionando un portal de progreso premium — para que los entrenadores puedan escalar su negocio sin sacrificar la personalización.
+
+### 1.2 Planteamiento del Problema
+
+Los entrenadores de resistencia de alto rendimiento dedican ~70% de su tiempo al análisis de datos y tareas administrativas (feedback manual, facturación, revisión de sesiones) y solo ~30% realmente entrenando. Herramientas existentes como TrainingPeaks ofrecen datos crudos pero no tienen capa de interpretación. Esto lleva a:
+
+- Fatiga mental por la entrega manual de feedback uno a uno
+- Falta de personalización a escala
+- Gestión financiera desorganizada que frena el crecimiento del negocio
+- Flujos repetitivos en Excel/hojas de cálculo con pobre interpretación de datos
+
+### 1.3 Objetivos del Producto
+
+1. Reducir el tiempo no dedicado al coaching en ≥50%
+2. Automatizar el feedback de entrenamientos generado por IA alineado a los criterios personales del entrenador
+3. Centralizar la gestión de atletas, planes de entrenamiento y facturación en una sola plataforma
+4. Ofrecer a los atletas un portal de progreso motivador y de autoservicio
+
+---
+
+## 2. Usuarios Objetivo
+
+### Usuario Primario: El Entrenador
 
 **Persona: Mauricio**
 
-- Age: 25–30 | Location: Medellín, Colombia
-- Occupation: Running coach (10K, 21K, Marathon)
-- Trains athletes with 100% individualized plans (his core value promise)
-- Has strong technical criteria for metrics (cadence, power, HRV, pace)
-- Currently overwhelmed by one-by-one analysis and manual audio feedback
-- Goal: Automate the repetitive without losing his technical standard
+- Edad: 25–30 | Ubicación: Medellín, Colombia
+- Ocupación: Entrenador de running (10K, 21K, Maratón)
+- Entrena atletas con planes 100% individualizados (su promesa de valor central)
+- Tiene criterios técnicos fuertes para métricas (cadencia, potencia, HRV, ritmo)
+- Actualmente abrumado por el análisis uno a uno y el feedback manual en audio
+- Meta: Automatizar lo repetitivo sin perder su estándar técnico
 
-**Target Segment:** Personal trainers, endurance academies (running, cycling, triathlon), and fitness coaches looking to scale without sacrificing analysis quality.
+**Segmento objetivo:** Entrenadores personales, academias de resistencia (running, ciclismo, triatlón) y coaches de fitness que buscan escalar sin sacrificar la calidad del análisis.
 
-### Secondary User: The Athlete
+### Usuario Secundario: El Atleta
 
-- Needs visibility into their own training history and progress
-- Wants to understand feedback, not just receive it
-- Motivated by visual progress tracking and clear goal alignment
-
----
-
-## 3. User Stories
-
-### Coach
-
-| ID  | As a coach, I want to...                                          | So that...                                                |
-| --- | ----------------------------------------------------------------- | --------------------------------------------------------- |
-| C1  | Upload a .FIT file for a completed workout                        | The system processes and stores all metrics automatically |
-| C2  | View a summary dashboard of all my athletes                       | I can quickly identify who needs attention                |
-| C3  | Receive AI-generated feedback on each workout                     | I don't have to write manual analysis one-by-one          |
-| C4  | Create and assign training plans with .ZWO files                  | Athletes have structured sessions to follow               |
-| C5  | See ATL/CTL/TSB (Forma/Fatiga) charts per athlete                 | I can detect overtraining or underload risk early         |
-| C6  | Get alerts for missed sessions, overtraining, or overdue payments | I don't miss critical events across my roster             |
-| C7  | Manage billing and payment status per athlete                     | I keep my finances organized without a separate tool      |
-| C8  | Customize AI feedback parameters to match my coaching criteria    | Feedback sounds like me, not a generic bot                |
-
-| C10 | Export financial reports as PDF | I can share or archive billing records easily |
-| C11 | See a competition countdown for each athlete on the dashboard | I know which athletes have races coming up soon |
-| C12 | Set and update the training plan status for each athlete | I have a quick visual of where each athlete stands |
-
-### Athlete
-
-| ID  | As an athlete, I want to...                       | So that...                                |
-| --- | ------------------------------------------------- | ----------------------------------------- |
-| A1  | See my completed workout history with key metrics | I understand my progress over time        |
-| A2  | Read my coach's feedback after each session       | I know what to improve and feel supported |
-| A3  | View my upcoming planned workouts                 | I know what to do each day                |
-| A4  | See my fitness/fatigue trend (CTL/ATL/TSB)        | I understand my training load visually    |
+- Necesita visibilidad sobre su historial de entrenamiento y progreso
+- Quiere entender el feedback, no solo recibirlo
+- Se motiva con el seguimiento visual del progreso y la alineación con sus objetivos
 
 ---
 
-## 4. Functional Requirements
+## 3. Historias de Usuario
 
-### 4.1 Authentication & Roles
+### Entrenador
 
-- **FR-01:** Coaches log in with email + password (JWT-based auth)
-- **FR-02:** Athletes may optionally have login access (nullable password in schema)
-- **FR-03:** Role-based access: `coach`, `admin`; athlete portal is read-only
+| ID  | Como entrenador, quiero...                                           | Para que...                                                       |
+| --- | -------------------------------------------------------------------- | ----------------------------------------------------------------- |
+| C1  | Subir un archivo .FIT de un entrenamiento completado                 | El sistema procese y almacene todas las métricas automáticamente  |
+| C2  | Ver un dashboard resumen de todos mis atletas                        | Pueda identificar rápidamente quién necesita atención             |
+| C3  | Recibir feedback generado por IA de cada entrenamiento               | No tenga que escribir análisis manual uno a uno                   |
+| C4  | Crear y asignar planes de entrenamiento con archivos .ZWO            | Los atletas tengan sesiones estructuradas que seguir              |
+| C5  | Ver gráficas ATL/CTL/TSB (Forma/Fatiga) por atleta                   | Detecte riesgo de sobreentrenamiento o subcarga temprano          |
+| C6  | Recibir alertas de sesiones perdidas, sobreentrenamiento o pagos vencidos | No pierda eventos críticos en todo mi grupo de atletas       |
+| C7  | Gestionar la facturación y estado de pagos por atleta                | Mantenga mis finanzas organizadas sin una herramienta separada    |
+| C8  | Personalizar los parámetros del feedback de IA según mis criterios   | El feedback suene como yo, no como un bot genérico               |
+| C10 | Exportar informes financieros en PDF                                 | Pueda compartir o archivar registros de facturación fácilmente    |
+| C11 | Ver cuenta regresiva de competencias por atleta en el dashboard      | Sepa qué atletas tienen carreras próximas                         |
+| C12 | Establecer y actualizar el estado del plan de entrenamiento por atleta | Tenga una vista rápida de dónde está cada atleta               |
 
-### 4.2 Athlete Management
+### Atleta
 
-- **FR-04:** Coach can create, edit, and deactivate athlete profiles
-- **FR-05:** Each athlete is linked to one trainer
-- **FR-06:** Athlete profile includes: name, document, email, birth date
-- **FR-06b:** Each athlete profile includes an optional **next competition date** field
-- **FR-06c:** Athlete profile displays a **training plan status block** showing current plan state: `pendiente`, `cargado`, `completado`, or `programado`
-
-### 4.3 Training Plan Management
-
-- **FR-07:** Coach creates workout plans with category (Resistencia, Velocidad, Fuerza, Recuperación), dates, and description
-- **FR-08:** Plans contain individual planned sessions (`planned_workout`) with scheduled date, name, description, optional `.ZWO` file (stored in S3), planned duration and distance
-- **FR-09:** Coach can upload `.ZWO` structured workout files per session
-
-### 4.4 .FIT File Upload & Processing
-
-<!-- - **FR-10:** Coach uploads a `.FIT` file for a completed workout -->
-
-- **FR-11:** System parses the `.FIT` file and extracts all metrics (see Data Model §6)
-- **FR-12:** Parsed metrics are stored in `completed_workout` and `completed_workout_lap`
-- **FR-13:** Raw `.FIT` file is stored in S3; GPS track data is discarded from DB
-- **FR-14:** System attempts to match the completed workout to a planned session by date
-
-### 4.5 AI Feedback
-
-- **FR-15:** After a `.FIT` file is processed, an n8n workflow triggers AI analysis
-- **FR-16:** AI generates feedback text based on workout metrics + coach-defined parameters
-- **FR-17:** Feedback is stored in `workout_feedback` with `source = 'ai'`
-- **FR-18:** Coach can add or override feedback manually (`source = 'coach'`)
-- **FR-19:** Coach can configure their AI agent's analysis criteria (tone, focus metrics, thresholds)
-
-### 4.6 Coach Dashboard
-
-- **FR-20:** Dashboard shows all active athletes with key status indicators
-- **FR-21:** Active alerts displayed: overtraining (`sobrentrenamiento`), missed sessions (`sesion_perdida`), overdue payments (`pago_vencido`), and upcoming competition countdown (`competencia_proxima`)
-- **FR-21b:** Dashboard shows a **competition countdown** for each athlete with a `next_competition_date` set — displaying days remaining until their nearest race
-- **FR-22:** Per-athlete view shows: recent workouts, upcoming plan, ATL/CTL/TSB trend chart, payment status
-- **FR-23:** ATL/CTL/TSB data sourced from weekly `athlete_fitness_snapshot` table
-- **FR-23:** Coach can select with a checkbox if he already upload a workout per athlete just to have a visual reference of it
-
-### 4.7 Athlete Portal
-
-- **FR-24:** Athlete views their own workout history, metrics, and feedback
-- **FR-25:** Athlete sees their upcoming planned sessions
-- **FR-26:** Athlete can view their CTL/ATL/TSB trend chart
-- **FR-27:** Athlete cannot edit any data; portal is read-only
-
-### 4.8 Financial Management
-
-- **FR-28:** Coach creates payment records per athlete with amount, due date, and notes
-- **FR-29:** Payment statuses: `pendiente`, `pagado`, `vencido`
-- **FR-30:** Coach marks payments as paid (sets `paid_at` timestamp)
-- **FR-31:** Finance view shows all athletes' billing status at a glance; all financial operations are accessible from this single view
-- **FR-32:** Payment grace period logic:
-  - Days 0–5 after `due_date` without `paid_at` → status remains `pendiente`
-  - After 5 days without `paid_at` → status auto-transitions to `vencido`
-- **FR-33:** System sends a **WhatsApp notification** to athletes whose payments are in `pendiente` state (within the 5-day grace window) as a reminder
-- **FR-34:** Coach can export financial reports as **PDF** from the Finance view
+| ID  | Como atleta, quiero...                                    | Para que...                                        |
+| --- | --------------------------------------------------------- | -------------------------------------------------- |
+| A1  | Ver mi historial de entrenamientos con métricas clave     | Entienda mi progreso a lo largo del tiempo         |
+| A2  | Leer el feedback de mi entrenador después de cada sesión  | Sepa qué mejorar y me sienta apoyado               |
+| A3  | Ver mis próximos entrenamientos planificados              | Sepa qué hacer cada día                            |
+| A4  | Ver mi tendencia de fitness/fatiga (CTL/ATL/TSB)          | Entienda mi carga de entrenamiento visualmente     |
 
 ---
 
-## 5. Non-Functional Requirements
+## 4. Requisitos Funcionales
 
-| ID     | Requirement                                                                   |
-| ------ | ----------------------------------------------------------------------------- |
-| NFR-01 | The app must be responsive (mobile + desktop)                                 |
-| NFR-02 | .FIT file upload must complete processing in < 30 seconds                     |
-| NFR-03 | AI feedback generation must complete in < 60 seconds of upload                |
-| NFR-04 | All athlete data must be isolated per trainer (no cross-trainer data leakage) |
-| NFR-05 | Passwords stored as hashed values only (bcrypt or equivalent)                 |
-| NFR-06 | .FIT and .ZWO files stored in AWS S3; only S3 keys stored in DB               |
-| NFR-07 | Platform must support at least 50 concurrent athletes per coach at launch     |
+### 4.1 Autenticación y Roles
+
+- **FR-01:** Los entrenadores inician sesión con email + contraseña (auth basada en JWT)
+- **FR-02:** Los atletas pueden opcionalmente tener acceso de login (contraseña nullable en el esquema)
+- **FR-03:** Acceso basado en roles: `coach`, `admin`; el portal del atleta es de solo lectura
+
+### 4.2 Gestión de Atletas
+
+- **FR-04:** El entrenador puede crear, editar y desactivar perfiles de atletas
+- **FR-05:** Cada atleta está vinculado a un entrenador
+- **FR-06:** El perfil del atleta incluye: nombre, documento, email, fecha de nacimiento
+- **FR-06b:** Cada perfil de atleta incluye un campo opcional de **fecha de próxima competencia**
+- **FR-06c:** El perfil del atleta muestra un **bloque de estado del plan** con el estado actual: `pendiente`, `cargado`, `completado` o `programado`
+
+### 4.3 Gestión de Planes de Entrenamiento
+
+- **FR-07:** El entrenador crea planes con categoría (Resistencia, Velocidad, Fuerza, Recuperación), fechas y descripción
+- **FR-08:** Los planes contienen sesiones planificadas individuales (`planned_workout`) con fecha programada, nombre, descripción, archivo `.ZWO` opcional (almacenado en S3), duración y distancia planificadas
+- **FR-09:** El entrenador puede subir archivos `.ZWO` de entrenamientos estructurados por sesión
+
+### 4.4 Subida y Procesamiento de Archivos .FIT
+
+- **FR-11:** El sistema parsea el archivo `.FIT` y extrae todas las métricas (ver Modelo de Datos §6)
+- **FR-12:** Las métricas parseadas se almacenan en `completed_workout` y `completed_workout_lap`
+- **FR-13:** El archivo `.FIT` crudo se almacena en S3; los datos de track GPS se descartan de la BD
+- **FR-14:** El sistema intenta asociar el entrenamiento completado con una sesión planificada por fecha
+
+### 4.5 Feedback con IA
+
+- **FR-15:** Después de procesar un archivo `.FIT`, un flujo n8n dispara el análisis con IA
+- **FR-16:** La IA genera texto de feedback basado en métricas del entrenamiento + parámetros definidos por el entrenador
+- **FR-17:** El feedback se almacena en `workout_feedback` con `source = 'ai'`
+- **FR-18:** El entrenador puede agregar o sobreescribir el feedback manualmente (`source = 'coach'`)
+- **FR-19:** El entrenador puede configurar los criterios de análisis de su agente de IA (tono, métricas clave, umbrales)
+
+### 4.6 Dashboard del Entrenador
+
+- **FR-20:** El dashboard muestra todos los atletas activos con indicadores de estado clave
+- **FR-21:** Se muestran alertas activas: sobreentrenamiento, sesiones perdidas, pagos vencidos y cuenta regresiva de competencias próximas
+- **FR-22:** La vista por atleta muestra: entrenamientos recientes, próximo plan, gráfica de tendencia ATL/CTL/TSB, estado de pago
+- **FR-23:** Datos ATL/CTL/TSB obtenidos de la tabla semanal `athlete_fitness_snapshot`
+
+### 4.7 Portal del Atleta
+
+- **FR-24:** El atleta ve su propio historial de entrenamientos, métricas y feedback
+- **FR-25:** El atleta ve sus próximas sesiones planificadas
+- **FR-26:** El atleta puede ver su gráfica de tendencia CTL/ATL/TSB
+- **FR-27:** El atleta no puede editar ningún dato; el portal es de solo lectura
+
+### 4.8 Gestión Financiera
+
+- **FR-28:** El entrenador crea registros de pago por atleta con monto, fecha de vencimiento y notas
+- **FR-29:** Estados de pago: `pendiente`, `pagado`, `vencido`
+- **FR-30:** El entrenador marca pagos como pagados (establece timestamp `paid_at`)
+- **FR-31:** La vista de finanzas muestra el estado de facturación de todos los atletas de un vistazo
+- **FR-32:** Lógica de período de gracia:
+  - Días 0–5 después de `due_date` sin `paid_at` → el estado permanece `pendiente`
+  - Después de 5 días sin `paid_at` → el estado transiciona automáticamente a `vencido`
+- **FR-33:** El sistema envía una **notificación de WhatsApp** a atletas con pagos en estado `pendiente` como recordatorio
+- **FR-34:** El entrenador puede exportar informes financieros como **PDF** desde la vista de Finanzas
 
 ---
 
-## 6. Data Model Summary
+## 5. Requisitos No Funcionales
 
-Based on the confirmed PostgreSQL schema:
-
-| Table                      | Purpose                                                   |
-| -------------------------- | --------------------------------------------------------- |
-| `trainer`                  | Coach accounts and roles                                  |
-| `athlete`                  | Athletes linked to a trainer                              |
-| `workout_category`         | Plan categories (Resistencia, Velocidad, etc.)            |
-| `workout_plan`             | Training blocks assigned to an athlete                    |
-| `planned_workout`          | Individual sessions within a plan (.ZWO support)          |
-| `completed_workout`        | Executed sessions from .FIT file upload with full metrics |
-| `completed_workout_lap`    | Per-lap breakdown of completed workouts                   |
-| `workout_feedback`         | AI or coach-written feedback per session                  |
-| `athlete_fitness_snapshot` | Weekly ATL/CTL/TSB snapshots per athlete                  |
-| `athlete_alert`            | Active alerts for the coach dashboard                     |
-| `payment`                  | Monthly billing tracking per athlete                      |
-
-**Key metrics stored per completed workout:** duration, distance, avg/max heart rate, avg pace, cadence, total ascent, training load, calories, aerobic/anaerobic training effect, RPE, Stryd power, vertical oscillation, stance time, step length, vertical ratio.
+| ID     | Requisito                                                                          |
+| ------ | ---------------------------------------------------------------------------------- |
+| NFR-01 | La app debe ser responsiva (móvil + escritorio)                                    |
+| NFR-02 | La subida de archivos .FIT debe completar el procesamiento en < 30 segundos        |
+| NFR-03 | La generación de feedback con IA debe completarse en < 60 segundos de la subida    |
+| NFR-04 | Todos los datos de atletas deben estar aislados por entrenador (sin filtración)    |
+| NFR-05 | Contraseñas almacenadas solo como valores hasheados (bcrypt)                       |
+| NFR-06 | Archivos .FIT y .ZWO almacenados en AWS S3; solo las claves S3 en la BD            |
+| NFR-07 | La plataforma debe soportar al menos 50 atletas concurrentes por entrenador        |
 
 ---
 
-## 7. Technical Architecture
+## 6. Resumen del Modelo de Datos
+
+Basado en el esquema PostgreSQL confirmado:
+
+| Tabla                      | Propósito                                                         |
+| -------------------------- | ----------------------------------------------------------------- |
+| `trainer`                  | Cuentas de entrenadores y roles                                   |
+| `athlete`                  | Atletas vinculados a un entrenador                                |
+| `workout_category`         | Categorías de planes (Resistencia, Velocidad, etc.)               |
+| `workout_plan`             | Bloques de entrenamiento asignados a un atleta                    |
+| `planned_workout`          | Sesiones individuales dentro de un plan (soporte .ZWO)            |
+| `completed_workout`        | Sesiones ejecutadas desde subida de .FIT con métricas completas   |
+| `completed_workout_lap`    | Desglose por vuelta de entrenamientos completados                 |
+| `workout_feedback`         | Feedback escrito por IA o por el entrenador por sesión            |
+| `athlete_fitness_snapshot` | Snapshots semanales ATL/CTL/TSB por atleta                        |
+| `athlete_alert`            | Alertas activas para el dashboard del entrenador                  |
+| `payment`                  | Seguimiento de facturación mensual por atleta                     |
+
+**Métricas clave almacenadas por entrenamiento completado:** duración, distancia, FC media/máxima, ritmo promedio, cadencia, desnivel total, carga de entrenamiento, calorías, efecto de entrenamiento aeróbico/anaeróbico, RPE, potencia Stryd, oscilación vertical, tiempo de apoyo, longitud de zancada, ratio vertical.
+
+---
+
+## 7. Arquitectura Técnica
 
 ### Stack
 
-| Layer                         | Technology                                        |
-| ----------------------------- | ------------------------------------------------- |
-| Frontend                      | HTML5, CSS3, Tailwind, Boostrap icons, Vanilla JS |
-| Backend                       | Node.js + Express                                 |
-| Database                      | PostgreSQL                                        |
-| Automation / AI Orchestration | n8n (webhooks, ETL, AI agent triggers)            |
-| File Storage                  | AWS S3 (.FIT, .ZWO)                               |
-| .FIT Parser                   | `fit-file-parser` (Node.js)                       |
+| Capa                          | Tecnología                                          |
+| ----------------------------- | --------------------------------------------------- |
+| Frontend                      | HTML5, CSS3, Tailwind, Bootstrap Icons, Vanilla JS  |
+| Backend                       | Node.js + Express                                   |
+| Base de datos                 | PostgreSQL                                          |
+| Automatización / Orquestación IA | n8n (webhooks, ETL, disparadores de agentes IA)  |
+| Almacenamiento de archivos    | AWS S3 (.FIT, .ZWO)                                 |
+| Parser .FIT                   | `fit-file-parser` (Node.js)                         |
 
-### Data Flow
+### Flujo de Datos
 
 ```
-Athlete's Garmin/Device
-    ↓ exports .FIT file
-Coach uploads .FIT to Rundurance
+Dispositivo Garmin/COROS del Atleta
+    ↓ exporta archivo .FIT
+El entrenador sube el .FIT a Rundurance
     ↓
-Backend parses .FIT → stores metrics in PostgreSQL
+El backend parsea el .FIT → almacena métricas en PostgreSQL
     ↓
-n8n webhook triggered → AI agent analyzes metrics
+Se dispara webhook de n8n → el agente de IA analiza las métricas
     ↓
-AI feedback stored → visible to coach + athlete
+El feedback de la IA se almacena → visible para el entrenador y el atleta
 ```
 
-### TrainingPeaks Integration
+### Integración con TrainingPeaks
 
-- TrainingPeaks API is restricted (requires partner registration + OAuth 2.0)
-- **Current approach:** Manual `.FIT` / `.TCX` export from TrainingPeaks or Garmin Connect
-
----
-
-## 8. Features & Scope
-
-### MVP (v1.0) — In Scope
-
-- [x] Coach authentication and profile
-- [x] Athlete CRUD management
-- [x] Workout plan creation with planned sessions + .ZWO upload
-- [x] .FIT file upload and automatic metric parsing
-- [x] Per-workout and per-lap data storage
-- [x] AI feedback generation via n8n pipeline
-- [x] Coach dashboard with athlete overview and alerts
-- [x] ATL/CTL/TSB chart visualization
-- [x] Athlete read-only portal
-- [x] Payment/billing management
-- [x] Payment 5-day grace period logic (`pendiente` → `vencido`)
-- [x] WhatsApp payment reminder notifications (via n8n)
-- [x] PDF export for financial reports
-- [x] Competition countdown alert per athlete
-- [x] Training plan status block on athlete profile (`pendiente`, `cargado`, `completado`, `programado`)
+- La API de TrainingPeaks está restringida (requiere registro de partner + OAuth 2.0)
+- **Enfoque actual:** Exportación manual de `.FIT` / `.TCX` desde TrainingPeaks o Garmin Connect
 
 ---
 
-## 9. Success Metrics
+## 8. Funcionalidades y Alcance
 
-| Metric                                  | Target                                    |
-| --------------------------------------- | ----------------------------------------- |
-| Time spent on manual analysis per coach | Reduced by ≥50%                           |
-| Feedback delivery time per session      | < 60 seconds (AI) vs. hours (manual)      |
-| Coach NPS                               | ≥ 8/10 after 30 days                      |
-| Athletes with portal login              | ≥70% activation rate                      |
-| Overdue payment detection               | 100% auto-flagged before manual follow-up |
+### MVP (v1.0) — En Alcance
+
+- [x] Autenticación y perfil del entrenador
+- [x] Gestión CRUD de atletas
+- [x] Creación de planes con sesiones planificadas + subida de .ZWO
+- [x] Subida de archivos .FIT y parseo automático de métricas
+- [x] Almacenamiento de datos por sesión y por vuelta
+- [x] Generación de feedback con IA via pipeline n8n
+- [x] Dashboard del entrenador con resumen de atletas y alertas
+- [x] Visualización de gráficas ATL/CTL/TSB
+- [x] Portal del atleta de solo lectura
+- [x] Gestión de pagos y facturación
+- [x] Lógica de período de gracia de 5 días en pagos (`pendiente` → `vencido`)
+- [x] Notificaciones de recordatorio de pago por WhatsApp (via n8n)
+- [x] Exportación de informes financieros en PDF
+- [x] Alerta de cuenta regresiva de competencia por atleta
+- [x] Bloque de estado del plan de entrenamiento en el perfil del atleta
 
 ---
 
-## 10. Assumptions & Constraints
+## 9. Métricas de Éxito
 
-- Coaches export `.FIT` files manually from Garmin Connect or TrainingPeaks (no auto-sync at launch)
-- All users are Spanish-speaking (Colombian market initially)
-- n8n is self-hosted and managed by the team
-- AWS S3 costs are acceptable at current scale
-- Athletes use Garmin devices as primary data source (Stryd as optional power meter); Garmin represents ~80–90% of all workout data
-- WhatsApp notifications are delivered via n8n automation (no direct WhatsApp Business API integration at launch)
+| Métrica                                  | Objetivo                                         |
+| ---------------------------------------- | ------------------------------------------------ |
+| Tiempo dedicado al análisis manual por entrenador | Reducido en ≥50%                        |
+| Tiempo de entrega del feedback por sesión | < 60 segundos (IA) vs. horas (manual)           |
+| NPS del entrenador                       | ≥ 8/10 después de 30 días                        |
+| Atletas con login en el portal           | ≥70% de tasa de activación                       |
+| Detección de pagos vencidos              | 100% marcados automáticamente antes del seguimiento manual |
+
+---
+
+## 10. Supuestos y Restricciones
+
+- Los entrenadores exportan archivos `.FIT` manualmente desde Garmin Connect o TrainingPeaks (sin sincronización automática en el lanzamiento)
+- Todos los usuarios son hispanohablantes (mercado colombiano inicialmente)
+- n8n está autoalojado y gestionado por el equipo
+- Los costos de AWS S3 son aceptables a la escala actual
+- Los atletas usan dispositivos Garmin como fuente principal de datos (Stryd como medidor de potencia opcional); Garmin representa ~80–90% de todos los datos de entrenamientos
+- Las notificaciones de WhatsApp se entregan via automatización de n8n (sin integración directa de WhatsApp Business API en el lanzamiento)
