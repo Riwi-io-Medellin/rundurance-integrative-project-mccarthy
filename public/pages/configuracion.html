@@ -23,6 +23,9 @@
         <a href="atletas.html" class="flex items-center gap-3 px-3 py-2 rounded-md text-slate-500 hover:text-slate-900 hover:bg-slate-100 transition-all">
           <i class="bi bi-people"></i> Atletas
         </a>
+        <a href="sesiones.html" class="flex items-center gap-3 px-3 py-2 rounded-md text-slate-500 hover:text-slate-900 hover:bg-slate-100 transition-all">
+          <i class="bi bi-activity"></i> Sesiones
+        </a>
         <a href="finance.html" class="flex items-center gap-3 px-3 py-2 rounded-md text-slate-500 hover:text-slate-900 hover:bg-slate-100 transition-all">
           <i class="bi bi-cash-coin"></i> Finanzas
         </a>
@@ -34,13 +37,16 @@
         </a>
       </nav>
       <div class="p-4 border-t border-slate-200">
-        <div class="flex items-center gap-3 p-2 rounded-lg hover:bg-slate-100 transition-colors cursor-pointer">
+        <div class="flex items-center gap-3 p-2 rounded-lg">
           <img src="https://st2.depositphotos.com/4196725/6217/i/450/depositphotos_62170405-stock-photo-young-cool-black-man-proud.jpg" alt="Trainer" class="w-10 h-10 rounded-full border border-slate-300" />
           <div>
-            <p class="text-sm font-semibold">Carlos Méndez</p>
-            <p class="text-xs text-slate-400 uppercase tracking-wider">Trainer</p>
+            <p id="sidebar-name" class="text-sm font-semibold">Trainer</p>
+            <p class="text-xs text-slate-400 uppercase tracking-wider">Coach</p>
           </div>
         </div>
+        <button onclick="sessionStorage.clear(); window.location.href='login.html'" class="mt-2 w-full flex items-center gap-2 px-3 py-2 text-sm text-slate-500 hover:text-red-500 hover:bg-red-50 rounded-md transition-colors">
+          <i class="bi bi-box-arrow-right"></i> Cerrar sesion
+        </button>
       </div>
     </aside>
 
@@ -60,44 +66,27 @@
             <i class="bi bi-person-circle text-slate-400"></i>
             <h3 class="font-semibold">Perfil del entrenador</h3>
           </div>
-          <div class="p-6 flex flex-col sm:flex-row gap-6 items-start">
-            <!-- Avatar -->
-            <div class="flex flex-col items-center gap-3 shrink-0">
-              <img
-                src="https://st2.depositphotos.com/4196725/6217/i/450/depositphotos_62170405-stock-photo-young-cool-black-man-proud.jpg"
-                alt="Trainer"
-                class="w-20 h-20 rounded-full border-2 border-slate-200 object-cover"
-              />
-              <button class="text-xs text-sky-500 hover:text-sky-700 font-medium transition-colors">
-                Cambiar foto
-              </button>
-            </div>
-            <!-- Fields -->
-            <div class="flex-1 grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div class="p-6">
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
               <div>
                 <label class="block text-sm text-slate-500 mb-1">Nombre completo</label>
-                <input type="text" value="Carlos Méndez"
+                <input id="cfg-name" type="text" placeholder="Tu nombre"
                   class="w-full bg-white border border-slate-200 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-sky-400 transition-all" />
               </div>
               <div>
                 <label class="block text-sm text-slate-500 mb-1">Correo electrónico</label>
-                <input type="email" value="carlos@rundurance.com"
+                <input id="cfg-email" type="email" placeholder="tu@email.com"
                   class="w-full bg-white border border-slate-200 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-sky-400 transition-all" />
               </div>
               <div>
                 <label class="block text-sm text-slate-500 mb-1">Teléfono</label>
-                <input type="tel" placeholder="+57 300 000 0000"
-                  class="w-full bg-white border border-slate-200 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-sky-400 transition-all" />
-              </div>
-              <div>
-                <label class="block text-sm text-slate-500 mb-1">Ciudad</label>
-                <input type="text" placeholder="Medellín, Colombia"
+                <input id="cfg-phone" type="tel" placeholder="+57 300 000 0000"
                   class="w-full bg-white border border-slate-200 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-sky-400 transition-all" />
               </div>
             </div>
           </div>
           <div class="px-6 py-4 border-t border-slate-100 flex justify-end">
-            <button class="px-4 py-2 bg-sky-400 hover:bg-sky-500 text-white rounded-md text-sm font-medium transition-colors">
+            <button id="btn-save-profile" class="px-4 py-2 bg-sky-400 hover:bg-sky-500 text-white rounded-md text-sm font-medium transition-colors">
               Guardar cambios
             </button>
           </div>
@@ -116,7 +105,7 @@
                 <p class="text-xs text-slate-400 mt-0.5">Recibe alertas cuando un atleta tenga incumplimiento o sobreentrenamiento</p>
               </div>
               <label class="relative inline-flex items-center cursor-pointer">
-                <input type="checkbox" class="sr-only peer" checked />
+                <input id="cfg-notify-athletes" type="checkbox" class="sr-only peer" checked />
                 <div class="w-10 h-6 bg-slate-200 peer-checked:bg-sky-400 rounded-full transition-colors after:content-[''] after:absolute after:top-0.5 after:left-0.5 after:w-5 after:h-5 after:bg-white after:rounded-full after:transition-all peer-checked:after:translate-x-4"></div>
               </label>
             </div>
@@ -126,7 +115,7 @@
                 <p class="text-xs text-slate-400 mt-0.5">Notificación cuando un atleta tiene cuota vencida o próxima a vencer</p>
               </div>
               <label class="relative inline-flex items-center cursor-pointer">
-                <input type="checkbox" class="sr-only peer" checked />
+                <input id="cfg-notify-payments" type="checkbox" class="sr-only peer" checked />
                 <div class="w-10 h-6 bg-slate-200 peer-checked:bg-sky-400 rounded-full transition-colors after:content-[''] after:absolute after:top-0.5 after:left-0.5 after:w-5 after:h-5 after:bg-white after:rounded-full after:transition-all peer-checked:after:translate-x-4"></div>
               </label>
             </div>
@@ -136,7 +125,7 @@
                 <p class="text-xs text-slate-400 mt-0.5">Recibe cada lunes un resumen del desempeño del grupo</p>
               </div>
               <label class="relative inline-flex items-center cursor-pointer">
-                <input type="checkbox" class="sr-only peer" />
+                <input id="cfg-notify-weekly" type="checkbox" class="sr-only peer" />
                 <div class="w-10 h-6 bg-slate-200 peer-checked:bg-sky-400 rounded-full transition-colors after:content-[''] after:absolute after:top-0.5 after:left-0.5 after:w-5 after:h-5 after:bg-white after:rounded-full after:transition-all peer-checked:after:translate-x-4"></div>
               </label>
             </div>
@@ -166,7 +155,7 @@
               </div>
               <div>
                 <label class="block text-xs text-slate-400 mb-1">URL del webhook</label>
-                <input type="url" placeholder="https://tu-instancia.n8n.io/webhook/rundurance"
+                <input id="cfg-n8n-url" type="url" placeholder="https://tu-instancia.n8n.io/webhook/rundurance"
                   class="w-full bg-white border border-slate-200 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-sky-400 transition-all" />
               </div>
             </div>
@@ -182,7 +171,7 @@
                 </div>
               </div>
               <label class="relative inline-flex items-center cursor-pointer">
-                <input type="checkbox" class="sr-only peer" />
+                <input id="cfg-garmin-toggle" type="checkbox" class="sr-only peer" />
                 <div class="w-10 h-6 bg-slate-200 peer-checked:bg-sky-400 rounded-full transition-colors after:content-[''] after:absolute after:top-0.5 after:left-0.5 after:w-5 after:h-5 after:bg-white after:rounded-full after:transition-all peer-checked:after:translate-x-4"></div>
               </label>
             </div>
@@ -201,7 +190,7 @@
             </div>
           </div>
           <div class="px-6 py-4 border-t border-slate-100 flex justify-end">
-            <button class="px-4 py-2 bg-sky-400 hover:bg-sky-500 text-white rounded-md text-sm font-medium transition-colors">
+            <button id="btn-save-integrations" class="px-4 py-2 bg-sky-400 hover:bg-sky-500 text-white rounded-md text-sm font-medium transition-colors">
               Guardar integraciones
             </button>
           </div>
@@ -214,10 +203,13 @@
             <h3 class="font-semibold">Seguridad</h3>
           </div>
           <div class="p-6 flex flex-col sm:flex-row gap-3">
-            <button class="px-4 py-2 border border-slate-300 rounded-md text-sm font-medium hover:bg-slate-50 transition-colors inline-flex items-center gap-2">
+            <button id="btn-change-password" class="px-4 py-2 border border-slate-300 rounded-md text-sm font-medium hover:bg-slate-50 transition-colors inline-flex items-center gap-2">
               <i class="bi bi-key"></i> Cambiar contraseña
             </button>
-            <button class="px-4 py-2 border border-red-200 text-red-500 rounded-md text-sm font-medium hover:bg-red-50 transition-colors inline-flex items-center gap-2">
+            <button id="btn-logout" class="px-4 py-2 border border-amber-300 text-amber-600 rounded-md text-sm font-medium hover:bg-amber-50 transition-colors inline-flex items-center gap-2">
+              <i class="bi bi-box-arrow-right"></i> Cerrar sesion
+            </button>
+            <button id="btn-delete-account" class="px-4 py-2 border border-red-200 text-red-500 rounded-md text-sm font-medium hover:bg-red-50 transition-colors inline-flex items-center gap-2">
               <i class="bi bi-trash3"></i> Eliminar cuenta
             </button>
           </div>
@@ -225,5 +217,46 @@
 
       </div>
     </main>
+    <!-- Toast -->
+    <div id="toast" class="fixed bottom-6 right-6 z-50 hidden items-center gap-3 px-4 py-3 rounded-lg shadow-lg text-sm font-medium text-white transition-all">
+      <i id="toast-icon" class="bi"></i>
+      <span id="toast-msg"></span>
+    </div>
+
+    <!-- Password Modal -->
+    <div id="modal-password" class="fixed inset-0 z-40 hidden items-center justify-center bg-black/40 backdrop-blur-sm">
+      <div class="bg-white rounded-xl shadow-xl w-full max-w-sm mx-4 overflow-hidden">
+        <div class="px-6 py-4 border-b border-slate-200 flex items-center justify-between">
+          <h3 class="font-semibold text-slate-800">Cambiar contraseña</h3>
+          <button id="btn-close-password-modal" class="text-slate-400 hover:text-slate-600 transition-colors">
+            <i class="bi bi-x-lg"></i>
+          </button>
+        </div>
+        <div class="p-6 flex flex-col gap-4">
+          <div>
+            <label class="block text-sm text-slate-500 mb-1">Contraseña actual</label>
+            <input id="pwd-current" type="password" placeholder="••••••••"
+              class="w-full bg-white border border-slate-200 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-sky-400 transition-all" />
+          </div>
+          <div>
+            <label class="block text-sm text-slate-500 mb-1">Nueva contraseña</label>
+            <input id="pwd-new" type="password" placeholder="••••••••"
+              class="w-full bg-white border border-slate-200 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-sky-400 transition-all" />
+          </div>
+          <div>
+            <label class="block text-sm text-slate-500 mb-1">Confirmar nueva contraseña</label>
+            <input id="pwd-confirm" type="password" placeholder="••••••••"
+              class="w-full bg-white border border-slate-200 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-sky-400 transition-all" />
+          </div>
+          <p id="pwd-error" class="text-xs text-red-500 hidden"></p>
+        </div>
+        <div class="px-6 py-4 border-t border-slate-100 flex justify-end gap-2">
+          <button id="btn-cancel-password" class="px-4 py-2 border border-slate-200 rounded-md text-sm font-medium hover:bg-slate-50 transition-colors">Cancelar</button>
+          <button id="btn-submit-password" class="px-4 py-2 bg-sky-400 hover:bg-sky-500 text-white rounded-md text-sm font-medium transition-colors">Guardar</button>
+        </div>
+      </div>
+    </div>
+
+    <script type="module" src="../assets/js/configuracion.js"></script>
   </body>
 </html>

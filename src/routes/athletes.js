@@ -17,7 +17,7 @@ const router = express.Router();
 // PATTERN:
 //   router.get('/path',    auth, controller.functionName);
 //   router.post('/path',   auth, controller.functionName);
-//   router.put('/path',    auth, controller.functionName);
+  //   router.patch('/path',  auth, controller.functionName);
 //   router.delete('/path', auth, controller.functionName);
 // =============================================================================
 
@@ -33,11 +33,12 @@ router.get('/:id', auth, controller.getOne);
 
 router.post('/', auth, controller.create);
 
-// TODO 4: PUT /api/athletes/:id — Update an athlete
+// TODO 4: PATCH /api/athletes/:id — Update an athlete
 
-router.put('/:id', auth, controller.update);
+router.patch('/:id', auth, controller.update);
 
 // TODO 5: DELETE /api/athletes/:id — Deactivate an athlete (soft delete)
-// router.delete('/:id', auth, controller.deactivate);
+
+router.delete('/:id', auth, controller.deactivate);
 
 module.exports = router;

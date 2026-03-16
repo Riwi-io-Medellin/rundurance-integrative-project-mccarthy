@@ -1,4 +1,5 @@
 require('dotenv').config();
+const { getPresignedUrl } = require('./s3');
 
 /**
  * Sends a compact workout summary to the n8n webhook.
@@ -7,21 +8,21 @@ require('dotenv').config();
  *
  * Fire-and-forget: errors are logged but do not fail the upload.
  *
- * @param {object} athlete       - { name, weight_kg, height_cm }
+ * @param {object} athlete       - { name, weight_kg, height_cm, birth_date }
  * @param {object} summary       - parsed FIT session summary
  * @param {object[]} laps        - parsed FIT laps array
  * @param {string} fitS3Key      - S3 key of the raw .FIT file
  * @param {number} completedWorkoutId
  * @param {object|null} plannedWorkout - { name, description } or null
  */
-async function triggerFeedback(athlete, summary, laps, fitS3Key, completedWorkoutId, plannedWorkout = null) {
+async function triggerFeedback(athlete, summary, laps, fitS3Key, completedWorkoutId, plannedWorkout = null, zwoParsed = null) {
   const webhookUrl = process.env.N8N_WEBHOOK_URL;
   if (!webhookUrl) {
     console.warn('N8N_WEBHOOK_URL no configurado — omitiendo feedback automático');
     return;
   }
 
-  const payload = buildPayload(athlete, summary, laps, fitS3Key, completedWorkoutId, plannedWorkout);
+  const payload = await buildPayload(athlete, summary, laps, fitS3Key, completedWorkoutId, plannedWorkout, zwoParsed);
 
   try {
     const res = await fetch(webhookUrl, {
@@ -38,18 +39,21 @@ async function triggerFeedback(athlete, summary, laps, fitS3Key, completedWorkou
   }
 }
 
-function buildPayload(athlete, summary, laps, fitS3Key, completedWorkoutId, plannedWorkout) {
+async function buildPayload(athlete, summary, laps, fitS3Key, completedWorkoutId, plannedWorkout, zwoParsed = null) {
   const durationMin = summary.duration_s ? Math.round(summary.duration_s / 60) : null;
   const distanceKm  = summary.distance_m ? Math.round(summary.distance_m / 10) / 100 : null;
   const paceFormatted = formatPace(summary.avg_pace_sec_per_km);
+  const fitDownloadUrl = await getPresignedUrl(fitS3Key, 3600);
 
   return {
     completed_workout_id: completedWorkoutId,
-    fit_s3_key: fitS3Key,
+    fit_s3_key:           fitS3Key,
+    fit_download_url:     fitDownloadUrl,
     athlete: {
       name:       athlete.name,
       weight_kg:  athlete.weight_kg ?? null,
       height_cm:  athlete.height_cm ?? null,
+      birth_date: athlete.birth_date ?? null,
     },
     session: {
       date:                     summary.executed_at?.toISOString?.().slice(0, 10) ?? null,
@@ -78,7 +82,7 @@ function buildPayload(athlete, summary, laps, fitS3Key, completedWorkoutId, plan
       ),
     })),
     planned_workout: plannedWorkout
-      ? { name: plannedWorkout.name, description: plannedWorkout.description }
+      ? { name: plannedWorkout.name, description: plannedWorkout.description, zwo_parsed: zwoParsed ?? null }
       : null,
   };
 }

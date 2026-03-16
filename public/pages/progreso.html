@@ -48,6 +48,13 @@
           Atletas
         </a>
         <a
+          href="sesiones.html"
+          class="flex items-center gap-3 px-3 py-2 rounded-md text-slate-500 hover:text-slate-900 hover:bg-slate-100 transition-all"
+        >
+          <i class="bi bi-activity"></i>
+          Sesiones
+        </a>
+        <a
           href="finance.html"
           class="flex items-center gap-3 px-3 py-2 rounded-md text-slate-500 hover:text-slate-900 hover:bg-slate-100 transition-all"
         >
@@ -71,21 +78,16 @@
       </nav>
 
       <div class="p-4 border-t border-slate-200">
-        <div
-          class="flex items-center gap-3 p-2 rounded-lg hover:bg-slate-100 transition-colors cursor-pointer"
-        >
-          <img
-            src="https://st2.depositphotos.com/4196725/6217/i/450/depositphotos_62170405-stock-photo-young-cool-black-man-proud.jpg"
-            alt="Trainer"
-            class="w-10 h-10 rounded-full border border-slate-300"
-          />
+        <div class="flex items-center gap-3 p-2 rounded-lg">
+          <img src="https://st2.depositphotos.com/4196725/6217/i/450/depositphotos_62170405-stock-photo-young-cool-black-man-proud.jpg" alt="Trainer" class="w-10 h-10 rounded-full border border-slate-300" />
           <div>
-            <p class="text-sm font-semibold">Carlos Méndez</p>
-            <p class="text-xs text-slate-400 uppercase tracking-wider">
-              Trainer
-            </p>
+            <p id="sidebar-name" class="text-sm font-semibold">Trainer</p>
+            <p class="text-xs text-slate-400 uppercase tracking-wider">Coach</p>
           </div>
         </div>
+        <button onclick="sessionStorage.clear(); window.location.href='login.html'" class="mt-2 w-full flex items-center gap-2 px-3 py-2 text-sm text-slate-500 hover:text-red-500 hover:bg-red-50 rounded-md transition-colors">
+          <i class="bi bi-box-arrow-right"></i> Cerrar sesion
+        </button>
       </div>
     </aside>
 
@@ -101,6 +103,7 @@
         </div>
         <div class="flex gap-3">
           <button
+            id="btn-export-csv"
             class="px-4 py-2 border border-slate-300 rounded-md text-sm font-medium hover:bg-slate-200 transition-colors inline-flex items-center gap-2"
           >
             <i class="bi bi-box-arrow-down"></i>
@@ -120,8 +123,8 @@
             <i class="bi bi-bar-chart-line"></i>
           </div>
           <div>
-            <p class="text-2xl font-bold">78%</p>
-            <p class="text-sm text-slate-500">Cumplimiento global</p>
+            <p id="stat-sessions" class="text-2xl font-bold">—</p>
+            <p class="text-sm text-slate-500">Total sesiones</p>
           </div>
         </div>
 
@@ -134,8 +137,8 @@
             <i class="bi bi-activity"></i>
           </div>
           <div>
-            <p class="text-2xl font-bold">142</p>
-            <p class="text-sm text-slate-500">Sesiones este mes</p>
+            <p id="stat-athletes" class="text-2xl font-bold">—</p>
+            <p class="text-sm text-slate-500">Atletas activos</p>
           </div>
         </div>
 
@@ -148,8 +151,8 @@
             <i class="bi bi-lightning-charge"></i>
           </div>
           <div>
-            <p class="text-2xl font-bold">68 km</p>
-            <p class="text-sm text-slate-500">Volumen promedio</p>
+            <p id="stat-avg-distance" class="text-2xl font-bold">—</p>
+            <p class="text-sm text-slate-500">Distancia prom.</p>
           </div>
         </div>
 
@@ -162,7 +165,7 @@
             <i class="bi bi-heart-pulse"></i>
           </div>
           <div>
-            <p class="text-2xl font-bold">143</p>
+            <p id="stat-avg-hr" class="text-2xl font-bold">—</p>
             <p class="text-sm text-slate-500">FC media global</p>
           </div>
         </div>
@@ -182,6 +185,7 @@
                 class="bi bi-search absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"
               ></i>
               <input
+                id="search-progress"
                 type="text"
                 placeholder="Buscar ..."
                 class="bg-white border border-slate-200 rounded-md pl-10 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-slate-300 transition-all w-full sm:w-64"
@@ -203,43 +207,12 @@
                   <th class="px-6 py-4 font-medium text-right">Acciones</th>
                 </tr>
               </thead>
-              <tbody class="divide-y divide-slate-200">
-                <tr class="hover:bg-slate-50 transition-colors">
-                  <td class="px-6 py-4">
-                    <div class="flex items-center gap-3">
-                      <span class="font-medium">Juan Jose</span>
-                    </div>
-                  </td>
-                  <td class="px-6 py-4">
-                    <div class="w-full bg-slate-200 rounded-full h-1.5">
-                      <div
-                        class="bg-sky-400 h-1.5 rounded-full"
-                        style="width: 10%"
-                      ></div>
-                    </div>
-                    <span class="text-xs text-slate-500 mt-1 block">10%</span>
-                  </td>
-                  <td class="px-6 py-4 text-sm text-slate-600">12.5 km</td>
-                  <td class="px-6 py-4 text-sm text-slate-600">141 bpm</td>
-                  <td class="px-6 py-4">
-                    <span
-                      class="text-xs px-2 py-1 rounded-full bg-emerald-500/10 text-emerald-500 font-medium"
-                      >Baja</span
-                    >
-                  </td>
-                  <td class="px-6 py-4 text-right">
-                    <button
-                      class="text-sky-500 hover:text-sky-700 text-sm font-medium"
-                    >
-                      Detalle
-                    </button>
-                  </td>
-                </tr>
-              </tbody>
+              <tbody id="progress-tbody" class="divide-y divide-slate-200"></tbody>
             </table>
           </div>
         </div>
       </section>
     </main>
+    <script type="module" src="../assets/js/progreso.js"></script>
   </body>
 </html>

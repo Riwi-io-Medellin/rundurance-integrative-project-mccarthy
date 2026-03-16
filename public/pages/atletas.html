@@ -23,6 +23,9 @@
         <a href="atletas.html" class="flex items-center gap-3 px-3 py-2 rounded-md bg-slate-100 text-sky-500">
           <i class="bi bi-people"></i> Atletas
         </a>
+        <a href="sesiones.html" class="flex items-center gap-3 px-3 py-2 rounded-md text-slate-500 hover:text-slate-900 hover:bg-slate-100 transition-all">
+          <i class="bi bi-activity"></i> Sesiones
+        </a>
         <a href="finance.html" class="flex items-center gap-3 px-3 py-2 rounded-md text-slate-500 hover:text-slate-900 hover:bg-slate-100 transition-all">
           <i class="bi bi-cash-coin"></i> Finanzas
         </a>
@@ -34,13 +37,16 @@
         </a>
       </nav>
       <div class="p-4 border-t border-slate-200">
-        <div class="flex items-center gap-3 p-2 rounded-lg hover:bg-slate-100 transition-colors cursor-pointer">
+        <div class="flex items-center gap-3 p-2 rounded-lg">
           <img src="https://st2.depositphotos.com/4196725/6217/i/450/depositphotos_62170405-stock-photo-young-cool-black-man-proud.jpg" alt="Trainer" class="w-10 h-10 rounded-full border border-slate-300" />
           <div>
-            <p class="text-sm font-semibold">Carlos Méndez</p>
-            <p class="text-xs text-slate-400 uppercase tracking-wider">Trainer</p>
+            <p id="sidebar-name" class="text-sm font-semibold">Trainer</p>
+            <p class="text-xs text-slate-400 uppercase tracking-wider">Coach</p>
           </div>
         </div>
+        <button onclick="sessionStorage.clear(); window.location.href='login.html'" class="mt-2 w-full flex items-center gap-2 px-3 py-2 text-sm text-slate-500 hover:text-red-500 hover:bg-red-50 rounded-md transition-colors">
+          <i class="bi bi-box-arrow-right"></i> Cerrar sesion
+        </button>
       </div>
     </aside>
 
@@ -52,11 +58,8 @@
           <p class="text-slate-500 mt-1">Gestiona y monitorea a todos tus atletas</p>
         </div>
         <div class="flex gap-3">
-          <button class="px-4 py-2 border border-slate-300 rounded-md text-sm font-medium hover:bg-slate-200 transition-colors inline-flex items-center gap-2">
-            <i class="bi bi-box-arrow-down"></i> EXPORTAR .CSV
-          </button>
-          <button class="px-4 py-2 bg-sky-400 hover:bg-sky-500 text-white rounded-md text-sm font-medium transition-colors inline-flex items-center gap-2">
-            <i class="bi bi-box-arrow-up"></i> IMPORTAR .FIT
+          <button id="btn-new-athlete" class="px-4 py-2 bg-sky-400 hover:bg-sky-500 text-white rounded-md text-sm font-medium transition-colors inline-flex items-center gap-2">
+            <i class="bi bi-plus-lg"></i> Nuevo atleta
           </button>
         </div>
       </header>
@@ -65,19 +68,19 @@
       <section class="p-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         <div class="p-6 bg-white border border-slate-200 rounded-xl flex items-center gap-4">
           <div class="w-12 h-12 rounded-lg bg-sky-500/10 flex items-center justify-center text-sky-500"><i class="bi bi-people"></i></div>
-          <div><p class="text-2xl font-bold">8</p><p class="text-sm text-slate-500">Atletas activos</p></div>
+          <div><p id="athletes-count" class="text-2xl font-bold">0</p><p class="text-sm text-slate-500">Atletas activos</p></div>
         </div>
         <div class="p-6 bg-white border border-slate-200 rounded-xl flex items-center gap-4">
           <div class="w-12 h-12 rounded-lg bg-emerald-500/10 flex items-center justify-center text-emerald-500"><i class="bi bi-check-circle"></i></div>
-          <div><p class="text-2xl font-bold">82%</p><p class="text-sm text-slate-500">Cumplimiento prom.</p></div>
+          <div><p id="stat-compliance" class="text-2xl font-bold">—</p><p class="text-sm text-slate-500">Cumplimiento prom.</p></div>
         </div>
         <div class="p-6 bg-white border border-slate-200 rounded-xl flex items-center gap-4">
           <div class="w-12 h-12 rounded-lg bg-amber-500/10 flex items-center justify-center text-amber-500"><i class="bi bi-exclamation-circle"></i></div>
-          <div><p class="text-2xl font-bold">8</p><p class="text-sm text-slate-500">Alertas activas</p></div>
+          <div><p id="stat-alerts" class="text-2xl font-bold">—</p><p class="text-sm text-slate-500">Alertas activas</p></div>
         </div>
         <div class="p-6 bg-white border border-slate-200 rounded-xl flex items-center gap-4">
           <div class="w-12 h-12 rounded-lg bg-blue-500/10 flex items-center justify-center text-blue-500"><i class="bi bi-activity"></i></div>
-          <div><p class="text-2xl font-bold">3</p><p class="text-sm text-slate-500">Sesiones hoy</p></div>
+          <div><p id="stat-sessions-today" class="text-2xl font-bold">—</p><p class="text-sm text-slate-500">Sesiones hoy</p></div>
         </div>
       </section>
 
@@ -85,11 +88,11 @@
       <section class="px-8 pb-8 grid grid-cols-1 xl:grid-cols-3 gap-8">
         <div class="xl:col-span-2 bg-white border border-slate-200 rounded-xl overflow-hidden">
           <div class="p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-200">
-            <h3 class="text-lg font-semibold">Resumen Atletas <span class="text-sm font-normal text-slate-400 ml-2">8 atletas activos</span></h3>
+            <h3 class="text-lg font-semibold">Resumen Atletas <span id="athletes-summary" class="text-sm font-normal text-slate-400 ml-2">0 atletas activos</span></h3>
             <div class="flex items-center gap-3">
               <div class="relative">
                 <i class="bi bi-search absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"></i>
-                <input type="text" placeholder="Buscar ..." class="bg-white border border-slate-200 rounded-md pl-10 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-slate-300 transition-all w-full sm:w-56" />
+                <input id="search-athletes" type="text" placeholder="Buscar ..." class="bg-white border border-slate-200 rounded-md pl-10 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-slate-300 transition-all w-full sm:w-56" />
               </div>
             </div>
           </div>
@@ -105,115 +108,9 @@
                   <th class="px-6 py-4 font-medium text-right">Acción</th>
                 </tr>
               </thead>
-              <tbody class="divide-y divide-slate-200">
-                <!-- Row template: Atleta, compliance bar, last session, alerts badge, forma/fatiga bars, detail button -->
-                <tr class="hover:bg-slate-50 transition-colors">
-                  <td class="px-6 py-4 font-medium">Carlos Méndez</td>
-                  <td class="px-6 py-4"><span class="text-xs px-2 py-1 rounded-full bg-emerald-500/10 text-emerald-600 font-semibold">95%</span></td>
-                  <td class="px-6 py-4 text-sm text-slate-500">17 feb</td>
-                  <td class="px-6 py-4"><span class="text-xs px-2 py-1 rounded-full bg-emerald-500/10 text-emerald-500">✓ OK</span></td>
-                  <td class="px-6 py-4">
-                    <div class="flex items-center gap-2 text-xs text-slate-400">
-                      <span>F</span>
-                      <div class="w-10 h-1.5 rounded-full bg-sky-400"></div>
-                      <span>72</span>
-                      <span class="ml-1">Fat</span>
-                      <div class="w-5 h-1.5 rounded-full bg-amber-400"></div>
-                      <span>35</span>
-                    </div>
-                  </td>
-                  <td class="px-6 py-4 text-right"><button class="text-sky-500 hover:text-sky-700 text-sm font-medium inline-flex items-center gap-1"><i class="bi bi-eye"></i> Detalle</button></td>
-                </tr>
-                <tr class="hover:bg-slate-50 transition-colors">
-                  <td class="px-6 py-4 font-medium">María López</td>
-                  <td class="px-6 py-4"><span class="text-xs px-2 py-1 rounded-full bg-emerald-500/10 text-emerald-600 font-semibold">82%</span></td>
-                  <td class="px-6 py-4 text-sm text-slate-500">16 feb</td>
-                  <td class="px-6 py-4"><span class="text-xs px-2 py-1 rounded-full bg-amber-500/10 text-amber-500 font-semibold">2</span></td>
-                  <td class="px-6 py-4">
-                    <div class="flex items-center gap-2 text-xs text-slate-400">
-                      <span>F</span><div class="w-9 h-1.5 rounded-full bg-sky-400"></div><span>65</span>
-                      <span class="ml-1">Fat</span><div class="w-8 h-1.5 rounded-full bg-amber-400"></div><span>58</span>
-                    </div>
-                  </td>
-                  <td class="px-6 py-4 text-right"><button class="text-sky-500 hover:text-sky-700 text-sm font-medium inline-flex items-center gap-1"><i class="bi bi-eye"></i> Detalle</button></td>
-                </tr>
-                <tr class="hover:bg-slate-50 transition-colors">
-                  <td class="px-6 py-4 font-medium">Andrés Ruiz</td>
-                  <td class="px-6 py-4"><span class="text-xs px-2 py-1 rounded-full bg-amber-500/10 text-amber-600 font-semibold">68%</span></td>
-                  <td class="px-6 py-4 text-sm text-slate-500">15 feb</td>
-                  <td class="px-6 py-4"><span class="text-xs px-2 py-1 rounded-full bg-red-500/10 text-red-500 font-semibold">3</span></td>
-                  <td class="px-6 py-4">
-                    <div class="flex items-center gap-2 text-xs text-slate-400">
-                      <span>F</span><div class="w-6 h-1.5 rounded-full bg-sky-400"></div><span>48</span>
-                      <span class="ml-1">Fat</span><div class="w-10 h-1.5 rounded-full bg-red-400"></div><span>72</span>
-                    </div>
-                  </td>
-                  <td class="px-6 py-4 text-right"><button class="text-sky-500 hover:text-sky-700 text-sm font-medium inline-flex items-center gap-1"><i class="bi bi-eye"></i> Detalle</button></td>
-                </tr>
-                <tr class="hover:bg-slate-50 transition-colors">
-                  <td class="px-6 py-4 font-medium">Lucía Torres</td>
-                  <td class="px-6 py-4"><span class="text-xs px-2 py-1 rounded-full bg-emerald-500/10 text-emerald-600 font-semibold">91%</span></td>
-                  <td class="px-6 py-4 text-sm text-slate-500">17 feb</td>
-                  <td class="px-6 py-4"><span class="text-xs px-2 py-1 rounded-full bg-amber-500/10 text-amber-500 font-semibold">1</span></td>
-                  <td class="px-6 py-4">
-                    <div class="flex items-center gap-2 text-xs text-slate-400">
-                      <span>F</span><div class="w-11 h-1.5 rounded-full bg-sky-400"></div><span>80</span>
-                      <span class="ml-1">Fat</span><div class="w-4 h-1.5 rounded-full bg-amber-400"></div><span>28</span>
-                    </div>
-                  </td>
-                  <td class="px-6 py-4 text-right"><button class="text-sky-500 hover:text-sky-700 text-sm font-medium inline-flex items-center gap-1"><i class="bi bi-eye"></i> Detalle</button></td>
-                </tr>
-                <tr class="hover:bg-slate-50 transition-colors">
-                  <td class="px-6 py-4 font-medium">Diego Fernández</td>
-                  <td class="px-6 py-4"><span class="text-xs px-2 py-1 rounded-full bg-amber-500/10 text-amber-600 font-semibold">74%</span></td>
-                  <td class="px-6 py-4 text-sm text-slate-500">14 feb</td>
-                  <td class="px-6 py-4"><span class="text-xs px-2 py-1 rounded-full bg-amber-500/10 text-amber-500 font-semibold">2</span></td>
-                  <td class="px-6 py-4">
-                    <div class="flex items-center gap-2 text-xs text-slate-400">
-                      <span>F</span><div class="w-8 h-1.5 rounded-full bg-sky-400"></div><span>55</span>
-                      <span class="ml-1">Fat</span><div class="w-9 h-1.5 rounded-full bg-amber-400"></div><span>65</span>
-                    </div>
-                  </td>
-                  <td class="px-6 py-4 text-right"><button class="text-sky-500 hover:text-sky-700 text-sm font-medium inline-flex items-center gap-1"><i class="bi bi-eye"></i> Detalle</button></td>
-                </tr>
-                <tr class="hover:bg-slate-50 transition-colors">
-                  <td class="px-6 py-4 font-medium">Valentina García</td>
-                  <td class="px-6 py-4"><span class="text-xs px-2 py-1 rounded-full bg-emerald-500/10 text-emerald-600 font-semibold">97%</span></td>
-                  <td class="px-6 py-4 text-sm text-slate-500">17 feb</td>
-                  <td class="px-6 py-4"><span class="text-xs px-2 py-1 rounded-full bg-emerald-500/10 text-emerald-500">✓ OK</span></td>
-                  <td class="px-6 py-4">
-                    <div class="flex items-center gap-2 text-xs text-slate-400">
-                      <span>F</span><div class="w-12 h-1.5 rounded-full bg-sky-400"></div><span>85</span>
-                      <span class="ml-1">Fat</span><div class="w-3 h-1.5 rounded-full bg-amber-400"></div><span>22</span>
-                    </div>
-                  </td>
-                  <td class="px-6 py-4 text-right"><button class="text-sky-500 hover:text-sky-700 text-sm font-medium inline-flex items-center gap-1"><i class="bi bi-eye"></i> Detalle</button></td>
-                </tr>
-                <tr class="hover:bg-slate-50 transition-colors">
-                  <td class="px-6 py-4 font-medium">Sebastián Morales</td>
-                  <td class="px-6 py-4"><span class="text-xs px-2 py-1 rounded-full bg-amber-500/10 text-amber-600 font-semibold">60%</span></td>
-                  <td class="px-6 py-4 text-sm text-slate-500">13 feb</td>
-                  <td class="px-6 py-4"><span class="text-xs px-2 py-1 rounded-full bg-red-500/10 text-red-500 font-semibold">4</span></td>
-                  <td class="px-6 py-4">
-                    <div class="flex items-center gap-2 text-xs text-slate-400">
-                      <span>F</span><div class="w-5 h-1.5 rounded-full bg-sky-400"></div><span>40</span>
-                      <span class="ml-1">Fat</span><div class="w-11 h-1.5 rounded-full bg-red-400"></div><span>80</span>
-                    </div>
-                  </td>
-                  <td class="px-6 py-4 text-right"><button class="text-sky-500 hover:text-sky-700 text-sm font-medium inline-flex items-center gap-1"><i class="bi bi-eye"></i> Detalle</button></td>
-                </tr>
-                <tr class="hover:bg-slate-50 transition-colors">
-                  <td class="px-6 py-4 font-medium">Camila Herrera</td>
-                  <td class="px-6 py-4"><span class="text-xs px-2 py-1 rounded-full bg-amber-500/10 text-amber-600 font-semibold">58%</span></td>
-                  <td class="px-6 py-4 text-sm text-slate-500">16 feb</td>
-                  <td class="px-6 py-4"><span class="text-xs px-2 py-1 rounded-full bg-amber-500/10 text-amber-500 font-semibold">1</span></td>
-                  <td class="px-6 py-4">
-                    <div class="flex items-center gap-2 text-xs text-slate-400">
-                      <span>F</span><div class="w-10 h-1.5 rounded-full bg-sky-400"></div><span>70</span>
-                      <span class="ml-1">Fat</span><div class="w-6 h-1.5 rounded-full bg-amber-400"></div><span>42</span>
-                    </div>
-                  </td>
-                  <td class="px-6 py-4 text-right"><button class="text-sky-500 hover:text-sky-700 text-sm font-medium inline-flex items-center gap-1"><i class="bi bi-eye"></i> Detalle</button></td>
+              <tbody id="athletes-tbody" class="divide-y divide-slate-200">
+                <tr>
+                  <td colspan="6" class="px-6 py-8 text-center text-slate-400">Cargando atletas...</td>
                 </tr>
               </tbody>
             </table>
@@ -225,7 +122,7 @@
           <div class="p-6 border-b border-slate-200">
             <h3 class="text-lg font-semibold">Detalles</h3>
           </div>
-          <div class="p-6 flex-1 flex flex-col items-center justify-center gap-2 text-center">
+          <div id="detail-panel" class="p-6 flex-1 flex flex-col items-center justify-center gap-2 text-center">
             <div class="w-12 h-12 rounded-full bg-slate-100 flex items-center justify-center text-slate-300 text-xl mb-2">
               <i class="bi bi-person"></i>
             </div>
@@ -234,5 +131,140 @@
         </div>
       </section>
     </main>
+
+    <!-- Modal: Nuevo / Editar atleta -->
+    <div id="modal-athlete" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black/40">
+      <div class="bg-white rounded-xl shadow-xl w-full max-w-md mx-4">
+        <div class="p-6 border-b border-slate-200 flex items-center justify-between">
+          <h3 id="modal-athlete-title" class="text-lg font-semibold">Nuevo atleta</h3>
+          <button id="modal-athlete-close" class="text-slate-400 hover:text-slate-600 text-xl"><i class="bi bi-x-lg"></i></button>
+        </div>
+        <form id="form-athlete" class="p-6 flex flex-col gap-4">
+          <div class="grid grid-cols-2 gap-4">
+            <div>
+              <label class="block text-sm text-slate-500 mb-1">Nombre *</label>
+              <input id="ath-first-name" type="text" required placeholder="Juan"
+                class="w-full border border-slate-200 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-sky-400" />
+            </div>
+            <div>
+              <label class="block text-sm text-slate-500 mb-1">Apellido *</label>
+              <input id="ath-last-name" type="text" required placeholder="García"
+                class="w-full border border-slate-200 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-sky-400" />
+            </div>
+          </div>
+          <div>
+            <label class="block text-sm text-slate-500 mb-1">Documento *</label>
+            <input id="ath-document" type="text" required placeholder="1234567890"
+              class="w-full border border-slate-200 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-sky-400" />
+          </div>
+          <div>
+            <label class="block text-sm text-slate-500 mb-1">Email *</label>
+            <input id="ath-email" type="email" required placeholder="juan@email.com"
+              class="w-full border border-slate-200 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-sky-400" />
+          </div>
+          <div class="grid grid-cols-2 gap-4">
+            <div>
+              <label class="block text-sm text-slate-500 mb-1">Fecha de nacimiento</label>
+              <input id="ath-birth-date" type="date"
+                class="w-full border border-slate-200 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-sky-400" />
+            </div>
+            <div>
+              <label class="block text-sm text-slate-500 mb-1">Teléfono</label>
+              <input id="ath-phone" type="tel" placeholder="+57 300 000 0000"
+                class="w-full border border-slate-200 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-sky-400" />
+            </div>
+          </div>
+          <div class="flex justify-end gap-3 pt-2">
+            <button type="button" id="modal-athlete-cancel" class="px-4 py-2 border border-slate-300 rounded-md text-sm font-medium hover:bg-slate-50 transition-colors">Cancelar</button>
+            <button type="submit" class="px-4 py-2 bg-sky-400 hover:bg-sky-500 text-white rounded-md text-sm font-medium transition-colors">Guardar</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Modal: Nuevo / Editar plan -->
+    <div id="modal-plan" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black/40">
+      <div class="bg-white rounded-xl shadow-xl w-full max-w-md mx-4">
+        <div class="p-6 border-b border-slate-200 flex items-center justify-between">
+          <h3 id="modal-plan-title" class="text-lg font-semibold">Nuevo plan</h3>
+          <button id="modal-plan-close" class="text-slate-400 hover:text-slate-600 text-xl"><i class="bi bi-x-lg"></i></button>
+        </div>
+        <form id="form-plan" class="p-6 flex flex-col gap-4">
+          <input id="plan-athlete-id" type="hidden" />
+          <div>
+            <label class="block text-sm text-slate-500 mb-1">Nombre del plan *</label>
+            <input id="plan-name" type="text" required placeholder="Ej: Preparación 10K"
+              class="w-full border border-slate-200 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-sky-400" />
+          </div>
+          <div>
+            <label class="block text-sm text-slate-500 mb-1">Descripción</label>
+            <textarea id="plan-description" rows="2" placeholder="Objetivo del plan..."
+              class="w-full border border-slate-200 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-sky-400"></textarea>
+          </div>
+          <div class="grid grid-cols-2 gap-4">
+            <div>
+              <label class="block text-sm text-slate-500 mb-1">Fecha inicio *</label>
+              <input id="plan-start-date" type="date" required
+                class="w-full border border-slate-200 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-sky-400" />
+            </div>
+            <div>
+              <label class="block text-sm text-slate-500 mb-1">Fecha fin</label>
+              <input id="plan-end-date" type="date"
+                class="w-full border border-slate-200 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-sky-400" />
+            </div>
+          </div>
+          <div class="flex justify-end gap-3 pt-2">
+            <button type="button" id="modal-plan-cancel" class="px-4 py-2 border border-slate-300 rounded-md text-sm font-medium hover:bg-slate-50 transition-colors">Cancelar</button>
+            <button type="submit" class="px-4 py-2 bg-sky-400 hover:bg-sky-500 text-white rounded-md text-sm font-medium transition-colors">Guardar</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Modal: Nueva sesión planificada -->
+    <div id="modal-planned-workout" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black/40">
+      <div class="bg-white rounded-xl shadow-xl w-full max-w-md mx-4">
+        <div class="p-6 border-b border-slate-200 flex items-center justify-between">
+          <h3 id="modal-pw-title" class="text-lg font-semibold">Nueva sesión planificada</h3>
+          <button id="modal-pw-close" class="text-slate-400 hover:text-slate-600 text-xl"><i class="bi bi-x-lg"></i></button>
+        </div>
+        <form id="form-planned-workout" class="p-6 flex flex-col gap-4">
+          <input id="pw-plan-id" type="hidden" />
+          <div>
+            <label class="block text-sm text-slate-500 mb-1">Fecha *</label>
+            <input id="pw-date" type="date" required
+              class="w-full border border-slate-200 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-sky-400" />
+          </div>
+          <div>
+            <label class="block text-sm text-slate-500 mb-1">Nombre</label>
+            <input id="pw-name" type="text" placeholder="Ej: Tempo 5K"
+              class="w-full border border-slate-200 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-sky-400" />
+          </div>
+          <div>
+            <label class="block text-sm text-slate-500 mb-1">Descripción</label>
+            <textarea id="pw-description" rows="2" placeholder="Instrucciones..."
+              class="w-full border border-slate-200 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-sky-400"></textarea>
+          </div>
+          <div class="grid grid-cols-2 gap-4">
+            <div>
+              <label class="block text-sm text-slate-500 mb-1">Duración (min)</label>
+              <input id="pw-duration" type="number" min="1" placeholder="45"
+                class="w-full border border-slate-200 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-sky-400" />
+            </div>
+            <div>
+              <label class="block text-sm text-slate-500 mb-1">Distancia (km)</label>
+              <input id="pw-distance" type="number" min="0" step="0.1" placeholder="10"
+                class="w-full border border-slate-200 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-sky-400" />
+            </div>
+          </div>
+          <div class="flex justify-end gap-3 pt-2">
+            <button type="button" id="modal-pw-cancel" class="px-4 py-2 border border-slate-300 rounded-md text-sm font-medium hover:bg-slate-50 transition-colors">Cancelar</button>
+            <button type="submit" class="px-4 py-2 bg-sky-400 hover:bg-sky-500 text-white rounded-md text-sm font-medium transition-colors">Guardar</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
   </body>
+    <script type="module" src="../assets/js/atletas.js"></script>
 </html>
