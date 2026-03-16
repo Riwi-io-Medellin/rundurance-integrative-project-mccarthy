@@ -51,43 +51,4 @@ async function getMonthlySummary(req, res) {
   }
 }
 
-<<<<<<< develop
 module.exports = { getAll, create, markPaid, getMonthlySummary };
-=======
-// TODO 4: Create function markPaid(req, res)
-// - Endpoint: PUT /api/finances/:id/pay
-// - Get paymentId from req.params.id
-// - Call financeModel.markAsPaid(paymentId)
-// - Return res.json(updated)
-
-async function getAll(req, res) {
-  await financeModel.updateOverduePayments();
-  const payments = await financeModel.findAllByTrainer(req.trainer.trainer_id);
-  res.json(payments);
-}
-
-async function create(req, res) {
-  const { athlete_id, amount, due_date, notes } = req.body;
-
-  if (!athlete_id || !amount || !due_date) {
-    return res.status(400).json({ error: 'athlete_id, amount y due_date son requeridos' });
-  }
-
-  const payment = await financeModel.create({
-    athlete_id,
-    trainer_id: req.trainer.trainer_id,
-    amount,
-    due_date,
-    notes,
-  });
-
-  res.status(201).json(payment);
-}
-
-module.exports = {
-  getAll,
-  // getByAthlete,
-  create,
-  // markPaid,
-};
->>>>>>> main
