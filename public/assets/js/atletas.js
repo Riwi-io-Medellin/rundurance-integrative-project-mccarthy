@@ -8,28 +8,40 @@ let currentPlanEditId = null;
 let currentPwEditId = null;
 let currentDetailAthleteId = null;
 
+let allAthleteRows = [];
+let athCurrentPage = 1;
+const ATH_PAGE_SIZE = 10;
+
 // ── Render table ──────────────────────────────────────────────────────────────
 
 function renderAthletes(athletes) {
+  allAthleteRows = athletes;
+  athCurrentPage = 1;
+  renderAthletesPage();
+}
+
+function renderAthletesPage() {
   const tbody = document.getElementById('athletes-tbody');
   const countEl = document.getElementById('athletes-count');
   const summaryEl = document.getElementById('athletes-summary');
 
   if (!tbody || !countEl || !summaryEl) return;
 
-  countEl.textContent = String(athletes.length);
-  summaryEl.textContent = `${athletes.length} atleta${athletes.length === 1 ? '' : 's'} activos`;
+  countEl.textContent = String(allAthleteRows.length);
+  summaryEl.textContent = `${allAthleteRows.length} atleta${allAthleteRows.length === 1 ? '' : 's'} activos`;
 
-  if (athletes.length === 0) {
-    tbody.innerHTML = `
-      <tr>
-        <td colspan="6" class="px-6 py-8 text-center text-slate-400">No hay atletas registrados aún.</td>
-      </tr>
-    `;
+  if (allAthleteRows.length === 0) {
+    tbody.innerHTML = `<tr><td colspan="6" class="px-6 py-8 text-center text-slate-400">No hay atletas registrados aún.</td></tr>`;
+    renderAthPagination(0, 1);
     return;
   }
 
-  tbody.innerHTML = athletes
+  const totalPages = Math.max(1, Math.ceil(allAthleteRows.length / ATH_PAGE_SIZE));
+  if (athCurrentPage > totalPages) athCurrentPage = totalPages;
+  const start = (athCurrentPage - 1) * ATH_PAGE_SIZE;
+  const page = allAthleteRows.slice(start, start + ATH_PAGE_SIZE);
+
+  tbody.innerHTML = page
     .map((athlete) => {
       const fullName = `${athlete.first_name || ''} ${athlete.last_name || ''}`.trim() || 'Sin nombre';
       const birthDate = athlete.birth_date ? athlete.birth_date.substring(0, 10) : '';
@@ -40,13 +52,11 @@ function renderAthletes(athletes) {
         ? `<span class="text-xs px-2 py-1 rounded-full bg-sky-100 text-sky-700 font-medium">${athlete.sessionCount} sesiones</span>`
         : `<span class="text-xs px-2 py-1 rounded-full bg-slate-100 text-slate-500 font-medium">Sin sesiones</span>`;
 
-      // Alerts badge
       const alertCount = athlete.overdueCount || 0;
       const alertBadge = alertCount > 0
         ? `<span class="text-xs px-2 py-1 rounded-full bg-red-100 text-red-700 font-medium">${alertCount} vencido${alertCount > 1 ? 's' : ''}</span>`
         : `<span class="text-xs px-2 py-1 rounded-full bg-slate-100 text-slate-500 font-medium">—</span>`;
 
-      // Forma / Fatiga badge
       const load = athlete.latestTrainingLoad;
       let loadBadge;
       if (load != null && load > 0) {
@@ -93,6 +103,32 @@ function renderAthletes(athletes) {
       `;
     })
     .join('');
+
+  renderAthPagination(totalPages, athCurrentPage);
+}
+
+function renderAthPagination(totalPages, page) {
+  const container = document.getElementById('ath-pagination');
+  if (!container) return;
+  if (totalPages <= 1) { container.innerHTML = ''; return; }
+
+  const prevDisabled = page <= 1;
+  const nextDisabled = page >= totalPages;
+  let buttons = '';
+  for (let i = 1; i <= totalPages; i++) {
+    const active = i === page;
+    buttons += `<button data-page="${i}" class="w-8 h-8 rounded-md text-sm font-medium transition-colors ${active ? 'bg-sky-400 text-white' : 'text-slate-600 hover:bg-slate-100'}">${i}</button>`;
+  }
+
+  container.innerHTML = `
+    <div class="flex items-center justify-between">
+      <p class="text-xs text-slate-400">${(page - 1) * ATH_PAGE_SIZE + 1}–${Math.min(page * ATH_PAGE_SIZE, allAthleteRows.length)} de ${allAthleteRows.length}</p>
+      <div class="flex items-center gap-1">
+        <button data-page="prev" ${prevDisabled ? 'disabled' : ''} class="w-8 h-8 rounded-md flex items-center justify-center text-slate-500 hover:bg-slate-100 transition-colors disabled:opacity-30 disabled:cursor-not-allowed"><i class="bi bi-chevron-left text-xs"></i></button>
+        ${buttons}
+        <button data-page="next" ${nextDisabled ? 'disabled' : ''} class="w-8 h-8 rounded-md flex items-center justify-center text-slate-500 hover:bg-slate-100 transition-colors disabled:opacity-30 disabled:cursor-not-allowed"><i class="bi bi-chevron-right text-xs"></i></button>
+      </div>
+    </div>`;
 }
 
 // ── Detail panel ──────────────────────────────────────────────────────────────
@@ -541,6 +577,18 @@ async function cargarAtletas() {
 
 document.addEventListener('DOMContentLoaded', () => {
   cargarAtletas();
+
+  // Pagination
+  document.getElementById('ath-pagination')?.addEventListener('click', (e) => {
+    const btn = e.target.closest('button[data-page]');
+    if (!btn || btn.disabled) return;
+    const val = btn.dataset.page;
+    const totalPages = Math.ceil(allAthleteRows.length / ATH_PAGE_SIZE);
+    if (val === 'prev') athCurrentPage = Math.max(1, athCurrentPage - 1);
+    else if (val === 'next') athCurrentPage = Math.min(totalPages, athCurrentPage + 1);
+    else athCurrentPage = Number(val);
+    renderAthletesPage();
+  });
 
   document.getElementById('athletes-tbody').addEventListener('click', (e) => {
     const detailBtn = e.target.closest('.btn-detail');

@@ -4,6 +4,9 @@ checkAuth();
 loadSidebar();
 
 let allPayments = [];
+let filteredPayments = [];
+let finCurrentPage = 1;
+const FIN_PAGE_SIZE = 10;
 
 const STATUS_STYLES = {
   pagado:    'bg-emerald-500/10 text-emerald-500',
@@ -71,11 +74,7 @@ async function loadPayments() {
   try {
     allPayments = await apiGet('/finances');
     updateStats(allPayments);
-    if (allPayments.length === 0) {
-      tbody.innerHTML = `<tr><td colspan="6" class="px-6 py-8 text-center text-slate-400">No hay pagos registrados.</td></tr>`;
-      return;
-    }
-    tbody.innerHTML = allPayments.map(renderRow).join('');
+    applyFilters();
   } catch (err) {
     tbody.innerHTML = `<tr><td colspan="6" class="px-6 py-8 text-center text-red-400">Error al cargar pagos.</td></tr>`;
     console.error(err);
@@ -85,15 +84,57 @@ async function loadPayments() {
 function applyFilters() {
   const searchTerm = (document.getElementById('search-payments')?.value || '').toLowerCase();
   const statusFilter = document.getElementById('filter-status')?.value || '';
-  const rows = document.querySelectorAll('#payments-tbody tr');
 
-  rows.forEach(row => {
-    const name = row.cells?.[0]?.textContent.toLowerCase() ?? '';
-    const status = row.dataset.status || '';
+  filteredPayments = allPayments.filter(p => {
+    const name = `${p.first_name} ${p.last_name}`.toLowerCase();
     const matchesSearch = !searchTerm || name.includes(searchTerm);
-    const matchesStatus = !statusFilter || status === statusFilter;
-    row.classList.toggle('hidden', !(matchesSearch && matchesStatus));
+    const matchesStatus = !statusFilter || p.status === statusFilter;
+    return matchesSearch && matchesStatus;
   });
+
+  finCurrentPage = 1;
+  renderFinPage();
+}
+
+function renderFinPage() {
+  const tbody = document.getElementById('payments-tbody');
+  const totalPages = Math.max(1, Math.ceil(filteredPayments.length / FIN_PAGE_SIZE));
+  if (finCurrentPage > totalPages) finCurrentPage = totalPages;
+
+  if (filteredPayments.length === 0) {
+    tbody.innerHTML = `<tr><td colspan="6" class="px-6 py-8 text-center text-slate-400">No hay pagos registrados.</td></tr>`;
+    renderFinPagination(0, 1);
+    return;
+  }
+
+  const start = (finCurrentPage - 1) * FIN_PAGE_SIZE;
+  const page = filteredPayments.slice(start, start + FIN_PAGE_SIZE);
+  tbody.innerHTML = page.map(renderRow).join('');
+  renderFinPagination(totalPages, finCurrentPage);
+}
+
+function renderFinPagination(totalPages, page) {
+  const container = document.getElementById('fin-pagination');
+  if (!container) return;
+  if (totalPages <= 1) { container.innerHTML = ''; return; }
+
+  const prevDisabled = page <= 1;
+  const nextDisabled = page >= totalPages;
+  let buttons = '';
+  for (let i = 1; i <= totalPages; i++) {
+    const active = i === page;
+    buttons += `<button data-page="${i}" class="w-8 h-8 rounded-md text-sm font-medium transition-colors ${active ? 'bg-sky-400 text-white' : 'text-slate-600 hover:bg-slate-100'}">${i}</button>`;
+  }
+
+  container.innerHTML = `
+    <div class="flex items-center justify-between">
+      <p class="text-xs text-slate-400">${(page - 1) * FIN_PAGE_SIZE + 1}–${Math.min(page * FIN_PAGE_SIZE, filteredPayments.length)} de ${filteredPayments.length}</p>
+      <div class="flex items-center gap-1">
+        <button data-page="prev" ${prevDisabled ? 'disabled' : ''} class="w-8 h-8 rounded-md flex items-center justify-center text-slate-500 hover:bg-slate-100 transition-colors disabled:opacity-30 disabled:cursor-not-allowed"><i class="bi bi-chevron-left text-xs"></i></button>
+        ${buttons}
+        <button data-page="next" ${nextDisabled ? 'disabled' : ''} class="w-8 h-8 rounded-md flex items-center justify-center text-slate-500 hover:bg-slate-100 transition-colors disabled:opacity-30 disabled:cursor-not-allowed"><i class="bi bi-chevron-right text-xs"></i></button>
+      </div>
+    </div>`;
 }
 
 function exportCsv() {
@@ -168,6 +209,18 @@ async function submitNewPayment(e) {
 
 document.addEventListener('DOMContentLoaded', () => {
   loadPayments();
+
+  // Pagination
+  document.getElementById('fin-pagination')?.addEventListener('click', (e) => {
+    const btn = e.target.closest('button[data-page]');
+    if (!btn || btn.disabled) return;
+    const val = btn.dataset.page;
+    const totalPages = Math.ceil(filteredPayments.length / FIN_PAGE_SIZE);
+    if (val === 'prev') finCurrentPage = Math.max(1, finCurrentPage - 1);
+    else if (val === 'next') finCurrentPage = Math.min(totalPages, finCurrentPage + 1);
+    else finCurrentPage = Number(val);
+    renderFinPage();
+  });
 
   document.getElementById('payments-tbody').addEventListener('click', (e) => {
     const btn = e.target.closest('.btn-pay');
