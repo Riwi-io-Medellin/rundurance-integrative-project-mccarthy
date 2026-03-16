@@ -4,6 +4,8 @@ checkAuth();
 loadSidebar();
 
 let progressData = [];
+let progCurrentPage = 1;
+const PROG_PAGE_SIZE = 10;
 
 async function loadProgress() {
   const tbody = document.getElementById('progress-tbody');
@@ -78,64 +80,103 @@ async function loadProgress() {
       : '—';
     if (el('stat-avg-hr')) el('stat-avg-hr').textContent = globalAvgHr !== '—' ? globalAvgHr + ' bpm' : '—';
 
-    // Render table rows
-    tbody.innerHTML = progressData.map(({ athlete, workouts, weeklyVolumeKm, avgHr, avgLoad, compliance, hasFeedback }) => {
-      const name = `${athlete.first_name || ''} ${athlete.last_name || ''}`.trim() || 'Sin nombre';
-      const sessionCount = workouts.length;
-
-      // Compliance badge
-      let complianceBadge;
-      if (compliance !== null) {
-        const color = compliance >= 80 ? 'emerald' : compliance >= 50 ? 'amber' : 'red';
-        complianceBadge = `<span class="text-xs px-2 py-1 rounded-full bg-${color}-100 text-${color}-700 font-medium">${compliance}%</span>`;
-      } else {
-        complianceBadge = `<span class="text-sm font-medium">${sessionCount}</span><span class="text-xs text-slate-400 ml-1">sesiones</span>`;
-      }
-
-      // Weekly volume
-      const volumeText = weeklyVolumeKm > 0 ? weeklyVolumeKm.toFixed(1) + ' km' : '—';
-
-      // Training load badge
-      let loadBadge;
-      if (avgLoad != null && avgLoad > 0) {
-        if (avgLoad > 300) loadBadge = `<span class="text-xs px-2 py-1 rounded-full bg-red-100 text-red-700 font-medium">${avgLoad}</span>`;
-        else if (avgLoad >= 100) loadBadge = `<span class="text-xs px-2 py-1 rounded-full bg-amber-100 text-amber-700 font-medium">${avgLoad}</span>`;
-        else loadBadge = `<span class="text-xs px-2 py-1 rounded-full bg-emerald-100 text-emerald-700 font-medium">${avgLoad}</span>`;
-      } else {
-        loadBadge = `<span class="text-sm text-slate-400">—</span>`;
-      }
-
-      const feedbackBadge = hasFeedback > 0
-        ? `<span class="text-xs px-2 py-1 rounded-full bg-emerald-100 text-emerald-700 font-medium">${hasFeedback} con IA</span>`
-        : `<span class="text-xs px-2 py-1 rounded-full bg-slate-100 text-slate-500 font-medium">Sin feedback</span>`;
-
-      return `
-        <tr class="hover:bg-slate-50 transition-colors">
-          <td class="px-6 py-4">
-            <div class="flex items-center gap-3">
-              <span class="font-medium">${name}</span>
-            </div>
-          </td>
-          <td class="px-6 py-4">
-            ${complianceBadge}
-          </td>
-          <td class="px-6 py-4 text-sm text-slate-600">${volumeText}</td>
-          <td class="px-6 py-4 text-sm text-slate-600">${avgHr ? avgHr + ' bpm' : '—'}</td>
-          <td class="px-6 py-4">
-            ${loadBadge}
-          </td>
-          <td class="px-6 py-4 text-right">
-            <a href="sesiones.html" class="text-sky-500 hover:text-sky-700 text-sm font-medium inline-flex items-center gap-1">
-              <i class="bi bi-activity"></i> Ver sesiones
-            </a>
-          </td>
-        </tr>`;
-    }).join('');
+    // Render table rows with pagination
+    progCurrentPage = 1;
+    renderProgPage();
 
   } catch (err) {
     console.error('Error loading progress:', err);
     tbody.innerHTML = `<tr><td colspan="6" class="px-6 py-8 text-center text-red-400">Error al cargar datos.</td></tr>`;
   }
+}
+
+function renderProgPage() {
+  const tbody = document.getElementById('progress-tbody');
+  if (!tbody) return;
+
+  const totalPages = Math.max(1, Math.ceil(progressData.length / PROG_PAGE_SIZE));
+  if (progCurrentPage > totalPages) progCurrentPage = totalPages;
+
+  if (progressData.length === 0) {
+    tbody.innerHTML = `<tr><td colspan="6" class="px-6 py-8 text-center text-slate-400">No hay atletas registrados.</td></tr>`;
+    renderProgPagination(0, 1);
+    return;
+  }
+
+  const start = (progCurrentPage - 1) * PROG_PAGE_SIZE;
+  const page = progressData.slice(start, start + PROG_PAGE_SIZE);
+
+  tbody.innerHTML = page.map(({ athlete, workouts, weeklyVolumeKm, avgHr, avgLoad, compliance, hasFeedback }) => {
+    const name = `${athlete.first_name || ''} ${athlete.last_name || ''}`.trim() || 'Sin nombre';
+    const sessionCount = workouts.length;
+
+    let complianceBadge;
+    if (compliance !== null) {
+      const color = compliance >= 80 ? 'emerald' : compliance >= 50 ? 'amber' : 'red';
+      complianceBadge = `<span class="text-xs px-2 py-1 rounded-full bg-${color}-100 text-${color}-700 font-medium">${compliance}%</span>`;
+    } else {
+      complianceBadge = `<span class="text-sm font-medium">${sessionCount}</span><span class="text-xs text-slate-400 ml-1">sesiones</span>`;
+    }
+
+    const volumeText = weeklyVolumeKm > 0 ? weeklyVolumeKm.toFixed(1) + ' km' : '—';
+
+    let loadBadge;
+    if (avgLoad != null && avgLoad > 0) {
+      if (avgLoad > 300) loadBadge = `<span class="text-xs px-2 py-1 rounded-full bg-red-100 text-red-700 font-medium">${avgLoad}</span>`;
+      else if (avgLoad >= 100) loadBadge = `<span class="text-xs px-2 py-1 rounded-full bg-amber-100 text-amber-700 font-medium">${avgLoad}</span>`;
+      else loadBadge = `<span class="text-xs px-2 py-1 rounded-full bg-emerald-100 text-emerald-700 font-medium">${avgLoad}</span>`;
+    } else {
+      loadBadge = `<span class="text-sm text-slate-400">—</span>`;
+    }
+
+    const feedbackBadge = hasFeedback > 0
+      ? `<span class="text-xs px-2 py-1 rounded-full bg-emerald-100 text-emerald-700 font-medium">${hasFeedback} con IA</span>`
+      : `<span class="text-xs px-2 py-1 rounded-full bg-slate-100 text-slate-500 font-medium">Sin feedback</span>`;
+
+    return `
+      <tr class="hover:bg-slate-50 transition-colors">
+        <td class="px-6 py-4">
+          <div class="flex items-center gap-3">
+            <span class="font-medium">${name}</span>
+          </div>
+        </td>
+        <td class="px-6 py-4">${complianceBadge}</td>
+        <td class="px-6 py-4 text-sm text-slate-600">${volumeText}</td>
+        <td class="px-6 py-4 text-sm text-slate-600">${avgHr ? avgHr + ' bpm' : '—'}</td>
+        <td class="px-6 py-4">${loadBadge}</td>
+        <td class="px-6 py-4 text-right">
+          <a href="sesiones.html" class="text-sky-500 hover:text-sky-700 text-sm font-medium inline-flex items-center gap-1">
+            <i class="bi bi-activity"></i> Ver sesiones
+          </a>
+        </td>
+      </tr>`;
+  }).join('');
+
+  renderProgPagination(totalPages, progCurrentPage);
+}
+
+function renderProgPagination(totalPages, page) {
+  const container = document.getElementById('prog-pagination');
+  if (!container) return;
+  if (totalPages <= 1) { container.innerHTML = ''; return; }
+
+  const prevDisabled = page <= 1;
+  const nextDisabled = page >= totalPages;
+  let buttons = '';
+  for (let i = 1; i <= totalPages; i++) {
+    const active = i === page;
+    buttons += `<button data-page="${i}" class="w-8 h-8 rounded-md text-sm font-medium transition-colors ${active ? 'bg-sky-400 text-white' : 'text-slate-600 hover:bg-slate-100'}">${i}</button>`;
+  }
+
+  container.innerHTML = `
+    <div class="flex items-center justify-between">
+      <p class="text-xs text-slate-400">${(page - 1) * PROG_PAGE_SIZE + 1}–${Math.min(page * PROG_PAGE_SIZE, progressData.length)} de ${progressData.length}</p>
+      <div class="flex items-center gap-1">
+        <button data-page="prev" ${prevDisabled ? 'disabled' : ''} class="w-8 h-8 rounded-md flex items-center justify-center text-slate-500 hover:bg-slate-100 transition-colors disabled:opacity-30 disabled:cursor-not-allowed"><i class="bi bi-chevron-left text-xs"></i></button>
+        ${buttons}
+        <button data-page="next" ${nextDisabled ? 'disabled' : ''} class="w-8 h-8 rounded-md flex items-center justify-center text-slate-500 hover:bg-slate-100 transition-colors disabled:opacity-30 disabled:cursor-not-allowed"><i class="bi bi-chevron-right text-xs"></i></button>
+      </div>
+    </div>`;
 }
 
 function exportCsv() {
@@ -167,6 +208,18 @@ function exportCsv() {
 
 document.addEventListener('DOMContentLoaded', () => {
   loadProgress();
+
+  // Pagination
+  document.getElementById('prog-pagination')?.addEventListener('click', (e) => {
+    const btn = e.target.closest('button[data-page]');
+    if (!btn || btn.disabled) return;
+    const val = btn.dataset.page;
+    const totalPages = Math.ceil(progressData.length / PROG_PAGE_SIZE);
+    if (val === 'prev') progCurrentPage = Math.max(1, progCurrentPage - 1);
+    else if (val === 'next') progCurrentPage = Math.min(totalPages, progCurrentPage + 1);
+    else progCurrentPage = Number(val);
+    renderProgPage();
+  });
 
   document.getElementById('search-progress')?.addEventListener('input', (e) => {
     const term = e.target.value.toLowerCase();

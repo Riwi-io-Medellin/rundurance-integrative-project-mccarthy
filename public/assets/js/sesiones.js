@@ -4,8 +4,11 @@ checkAuth();
 loadSidebar();
 
 // All loaded sessions (flat array across all athletes)
-let allSessions = [];
-let athletes    = [];
+let allSessions  = [];
+let athletes     = [];
+let currentPage  = 1;
+const PAGE_SIZE  = 10;
+let filteredSessions = [];
 
 // ─── Bootstrap ────────────────────────────────────────────────────────────────
 
@@ -14,6 +17,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   await loadSessions();
   bindUploadModal();
   bindFilter();
+  bindPagination();
 });
 
 // ─── Data loaders ─────────────────────────────────────────────────────────────
@@ -65,29 +69,40 @@ function renderStats(sessions) {
   document.getElementById('stat-total').textContent    = sessions.length;
   document.getElementById('stat-feedback').textContent = sessions.filter(s => s.feedback).length;
 
-  const withDist = sessions.filter(s => s.distance_m > 0);
-  if (withDist.length) {
-    const avgKm = withDist.reduce((s, w) => s + w.distance_m, 0) / withDist.length / 1000;
-    document.getElementById('stat-distance').textContent = avgKm.toFixed(1);
-  }
+  const withDist = sessions.filter(s => Number(s.distance_m) > 0);
+  document.getElementById('stat-distance').textContent = withDist.length
+    ? (withDist.reduce((s, w) => s + Number(w.distance_m), 0) / withDist.length / 1000).toFixed(1)
+    : '—';
 
-  const withHr = sessions.filter(s => s.avg_heart_rate_bpm > 0);
-  if (withHr.length) {
-    const avgHr = withHr.reduce((s, w) => s + w.avg_heart_rate_bpm, 0) / withHr.length;
-    document.getElementById('stat-hr').textContent = Math.round(avgHr);
-  }
+  const withHr = sessions.filter(s => Number(s.avg_heart_rate_bpm) > 0);
+  document.getElementById('stat-hr').textContent = withHr.length
+    ? Math.round(withHr.reduce((s, w) => s + Number(w.avg_heart_rate_bpm), 0) / withHr.length)
+    : '—';
 }
 
 function renderTable(sessions) {
-  const tbody = document.getElementById('sessions-tbody');
-  document.getElementById('sessions-summary').textContent = `${sessions.length} sesión${sessions.length !== 1 ? 'es' : ''}`;
+  filteredSessions = sessions;
+  currentPage = 1;
+  renderPage();
+}
 
-  if (!sessions.length) {
+function renderPage() {
+  const tbody = document.getElementById('sessions-tbody');
+  const totalPages = Math.max(1, Math.ceil(filteredSessions.length / PAGE_SIZE));
+  if (currentPage > totalPages) currentPage = totalPages;
+
+  document.getElementById('sessions-summary').textContent = `${filteredSessions.length} sesión${filteredSessions.length !== 1 ? 'es' : ''}`;
+
+  if (!filteredSessions.length) {
     tbody.innerHTML = `<tr><td colspan="7" class="px-6 py-8 text-center text-slate-400">No hay sesiones registradas</td></tr>`;
+    renderPagination(0, 1);
     return;
   }
 
-  tbody.innerHTML = sessions.map(s => {
+  const start = (currentPage - 1) * PAGE_SIZE;
+  const page  = filteredSessions.slice(start, start + PAGE_SIZE);
+
+  tbody.innerHTML = page.map(s => {
     const date        = s.executed_at ? new Date(s.executed_at).toLocaleDateString('es-CO', { day: '2-digit', month: 'short', year: 'numeric' }) : '—';
     const distKm      = s.distance_m  ? (s.distance_m / 1000).toFixed(2) + ' km' : '—';
     const dur         = s.duration_s  ? formatDuration(s.duration_s) : '—';
@@ -110,6 +125,57 @@ function renderTable(sessions) {
         <td class="px-6 py-4">${feedbackBadge}</td>
       </tr>`;
   }).join('');
+
+  renderPagination(totalPages, currentPage);
+}
+
+function renderPagination(totalPages, page) {
+  const container = document.getElementById('pagination');
+  if (!container) return;
+
+  if (totalPages <= 1) {
+    container.innerHTML = '';
+    return;
+  }
+
+  const prevDisabled = page <= 1;
+  const nextDisabled = page >= totalPages;
+
+  let buttons = '';
+  for (let i = 1; i <= totalPages; i++) {
+    const active = i === page;
+    buttons += `<button data-page="${i}" class="w-8 h-8 rounded-md text-sm font-medium transition-colors ${active ? 'bg-sky-400 text-white' : 'text-slate-600 hover:bg-slate-100'}">${i}</button>`;
+  }
+
+  container.innerHTML = `
+    <div class="flex items-center justify-between">
+      <p class="text-xs text-slate-400">${(page - 1) * PAGE_SIZE + 1}–${Math.min(page * PAGE_SIZE, filteredSessions.length)} de ${filteredSessions.length}</p>
+      <div class="flex items-center gap-1">
+        <button data-page="prev" ${prevDisabled ? 'disabled' : ''} class="w-8 h-8 rounded-md flex items-center justify-center text-slate-500 hover:bg-slate-100 transition-colors disabled:opacity-30 disabled:cursor-not-allowed">
+          <i class="bi bi-chevron-left text-xs"></i>
+        </button>
+        ${buttons}
+        <button data-page="next" ${nextDisabled ? 'disabled' : ''} class="w-8 h-8 rounded-md flex items-center justify-center text-slate-500 hover:bg-slate-100 transition-colors disabled:opacity-30 disabled:cursor-not-allowed">
+          <i class="bi bi-chevron-right text-xs"></i>
+        </button>
+      </div>
+    </div>`;
+}
+
+function bindPagination() {
+  document.getElementById('pagination')?.addEventListener('click', (e) => {
+    const btn = e.target.closest('button[data-page]');
+    if (!btn || btn.disabled) return;
+
+    const val = btn.dataset.page;
+    const totalPages = Math.ceil(filteredSessions.length / PAGE_SIZE);
+
+    if (val === 'prev') currentPage = Math.max(1, currentPage - 1);
+    else if (val === 'next') currentPage = Math.min(totalPages, currentPage + 1);
+    else currentPage = Number(val);
+
+    renderPage();
+  });
 }
 
 // ─── Session detail ───────────────────────────────────────────────────────────
